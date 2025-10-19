@@ -1,0 +1,30 @@
+/* ==========================
+   Variables globales
+========================== */
+:root {
+    --main-clr1: #000000;
+    --main-clr2: #222222;
+    --main-clr3: #1DCD9F;
+    --main-clr4: #169976;
+    --main-clr5: #2E7D32;
+    --main-clr6: #66BB6A;
+    --main-clr7: #A5D6A7;
+}
+
+/* Reset básico */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* ==========================
+   Body global
+========================== */
+body, html, #root {
+    height: 100%;
+    width: 100%;
+    font-family: 'Urbanist', sans-serif;
+    background-color: var(--main-clr5);
+}
+
