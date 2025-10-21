@@ -15,8 +15,8 @@ export const Header = () => {
           <Link to='' className="nav-links" >
             Reserva-F5
           </Link>
-          <Link to='' className="nav-links" >
-            Comida
+          <Link to='menu' className="nav-links" >
+            Menú
           </Link>
           <Link to='' className="nav-links">
             Contacto
