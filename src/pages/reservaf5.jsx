@@ -1,6 +1,6 @@
 import canchadefutbol from '../assets/img/cancha-de-futbol.png'
 import reloj from '../assets/img/reloj.png'
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, forwardRef } from "react";
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { format } from 'date-fns';
