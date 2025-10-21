@@ -14,7 +14,8 @@ export const Menu = () => {
             categoria: "Pizzas",
             items: [
                 { id: 3, nombre: "Margarita", precio: "250", descripcion: "Deliciosa" },
-                { id: 4, nombre: "Pepperoni", precio: "350", descripcion: "Picante" }
+                { id: 4, nombre: "Pepperoni", precio: "350", descripcion: "Picante" },
+                { id: 5, nombre: "Pepperonis", precio: "350", descripcion: "Picantes" }
             ]
         }
     ];
@@ -49,17 +50,20 @@ export const Menu = () => {
 
     return (
         <main>
+            <h1>Menú</h1>
             {comidas.map(categoria => (
                 <section key={categoria.categoria}>
                     <h2>{categoria.categoria}</h2>
-                    {categoria.items.map(item => (
-                        <div key={item.id}>
-                            <h3>{item.nombre}</h3>
-                            <p>{item.descripcion}</p>
-                            <p>Precio: ${item.precio}</p>
-                            <button onClick={() => AgregarAlCarrito(item)}>Agregar</button>
-                        </div>
+                    <div className='otra'>
+                        {categoria.items.map(item => (
+                            <div key={item.id} className='pestañas'>
+                                <h3>{item.nombre}</h3>
+                                <p>Precio: ${item.precio}</p>
+                                <p>{item.descripcion}</p>
+                                <button onClick={() => AgregarAlCarrito(item)}>Agregar</button>
+                            </div>
                     ))}
+                    </div>
                 </section>
             ))}
 
