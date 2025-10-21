@@ -1,6 +1,7 @@
 import canchadefutbol from '../assets/img/cancha-de-futbol.png'
 import reloj from '../assets/img/reloj.png'
 import { useState, useEffect, useRef } from "react";
+import '../styles/reserva.css'
 
 export const Reservaf5 = () => {
 
