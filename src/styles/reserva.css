@@ -19,6 +19,10 @@ h1 {
     padding: 40px 16px;
 }
 
+.calendario{
+    width: 160px;
+}
+
 .col {
     border: 1px solid #c0b8b8;
 }
