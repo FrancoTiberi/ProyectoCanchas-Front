@@ -1,10 +1,8 @@
 import { Routes, Route } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Footer } from './components/footer'
-import './styles/footer.css'
 import { Header } from './components/Header'
 import { Reservaf5 } from './pages/reservaf5';
-import './styles/reserva.css'
 import { Menu } from './pages/menu';
 
 function App() {

@@ -1,11 +1,14 @@
+import { addDays } from 'date-fns/fp';
 import canchadefutbol from '../assets/img/cancha-de-futbol.png'
 import reloj from '../assets/img/reloj.png'
 import { useState, useEffect, useRef, forwardRef } from "react";
 import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
-import { format } from 'date-fns';
-import { addDays } from 'date-fns/fp';
 import { es } from 'date-fns/locale';
+import { Row, Col } from 'react-bootstrap';
+import { format } from 'date-fns';
+import styles from '../styles/reserva.module.css';
+import 'react-datepicker/dist/react-datepicker.css';
+
 
 export const Reservaf5 = () => {
 
@@ -16,7 +19,7 @@ export const Reservaf5 = () => {
 
     const BotonDatepicker = forwardRef(({ value, onClick }, ref) => (
         <button
-            className="bg-primary text-light border-1 p-1 rounded calendario"
+            className={styles.calendario}
             onClick={onClick}
             ref={ref}
         >{value}</button>
@@ -54,12 +57,12 @@ export const Reservaf5 = () => {
     }, []);
 
      return (
-        <div className='contenedor-principal'>
-            <h1 className="text-center text-light" id="ttl-reserva">Rerserva F5</h1>
-            <section id="seccion-reserva">
-                <div className="container reserva-contenedor bg-light rounded-4 shadow-lg m-4">
-                    <h2 className="fs-3 text-center"><b>Realiza tu Reserva</b></h2>
-                    <div className="dia pb-1 d-flex justify-content-center">
+        <div className={styles.contenedorPrincipal}>
+            <h1 className={styles.tituloPag}>Rerserva F5</h1>
+            <section className='p-3'>
+                <div className={styles.reservaContenedor}>
+                    <h2 className="text-center"><b>Realiza tu Reserva</b></h2>
+                    <div className={styles.calendarioContenedor}>
                         <DatePicker
                             selected={selectedDate}
                             onChange={(date) => setSelectedDate(date)}
@@ -69,130 +72,125 @@ export const Reservaf5 = () => {
                             showIcon
                         />
                     </div>
-                    <div className="mr-5 d-flex flex-flow-wrap align-items-center">
-                        <div id="reservado"></div>
+                    <div className={styles.estado}>
+                        <div className={styles.reservado}></div>
                         <span><b>Reservado</b></span>
-                        <div id="disponible"></div>
+                        <div className={styles.disponible}></div>
                         <span><b>Disponible</b></span>
                     </div>
-                    <div className="text-center container" id="reserva">
-                        <div className="row">
-                            <div className="col grid-item-hora col-md-1 border-start-0"></div>
-                            <div className="col grid-item-hora"><b>11</b></div>
-                            <div className="col grid-item-hora"><b>12</b></div>
-                            <div className="col grid-item-hora"><b>13</b></div>
-                            <div className="col grid-item-hora"><b>14</b></div>
-                            <div className="col grid-item-hora"><b>15</b></div>
-                            <div className="col grid-item-hora"><b>16</b></div>
-                            <div className="col grid-item-hora"><b>17</b></div>
-                            <div className="col grid-item-hora"><b>18</b></div>
-                            <div className="col grid-item-hora"><b>19</b></div>
-                            <div className="col grid-item-hora"><b>20</b></div>
-                            <div className="col grid-item-hora"><b>21</b></div>
-                            <div className="col grid-item-hora"><b>22</b></div>
-                            <div className="col grid-item-hora"><b>23</b></div>
-                            <div className="col grid-item-hora"><b>24</b></div>
-                            <div className="col grid-item-hora"><b>1</b></div>
-                        </div>
+                    <div>
+                        <Row>
+                            <Col md={1} className={styles.gridItemHora}></Col>
+                            <Col className={styles.gridItemHora}><b>11</b></Col>
+                            <Col className={styles.gridItemHora}><b>12</b></Col>
+                            <Col className={styles.gridItemHora}><b>13</b></Col>
+                            <Col className={styles.gridItemHora}><b>14</b></Col>
+                            <Col className={styles.gridItemHora}><b>15</b></Col>
+                            <Col className={styles.gridItemHora}><b>16</b></Col>
+                            <Col className={styles.gridItemHora}><b>17</b></Col>
+                            <Col className={styles.gridItemHora}><b>18</b></Col>
+                            <Col className={styles.gridItemHora}><b>19</b></Col>
+                            <Col className={styles.gridItemHora}><b>20</b></Col>
+                            <Col className={styles.gridItemHora}><b>21</b></Col>
+                            <Col className={styles.gridItemHora}><b>22</b></Col>
+                            <Col className={styles.gridItemHora}><b>23</b></Col>
+                            <Col className={styles.gridItemHora}><b>24</b></Col>
+                            <Col className={styles.gridItemHora}><b>1</b></Col>
+                        </Row>
 
-
-                        <div className="row">
-                            <div className="col grid-item col-md-1 bg-black border-start-0"><b>cancha 1</b></div>
+                        <Row>
+                            <Col md={1} className={`${styles.gridItem} ${styles.numCancha}`}><b>cancha 1</b></Col>
                             {grillas.map(grilla=>(
-                                <div className="col grid-item col-vacia" onClick={() => darIndiceCelda(grilla.numGrilla)} ref={dropdownRef} key={grilla.id}>
-                                <div className={`dropdown-reserva bg-light rounded-4 ${abrirDropdown === grilla.numGrilla ? "show" : ""}`}>
-                                    <div className="d-flex flex-column align-items-center">
-                                        <div className="d-flex flex-flow-wrap mt-3 border-bottom border-black info-dd-1">
-                                            <div className="mx-4 d-flex flex-column justify-content-center align-items-center">
+                                <Col className={`${styles.gridItem} ${styles.colVacia}`} onClick={() => darIndiceCelda(grilla.numGrilla)} ref={dropdownRef} key={grilla.id}>
+                                <div className={`${styles.dropdownReserva} ${abrirDropdown === grilla.numGrilla ? styles.show : ""}`}>
+                                    <div className={styles.dropdownContenedor}>
+                                        <div className={styles.canchaNumContenedor}>
+                                            <div className={styles.infoCanchaHora}>
                                                 <img src={canchadefutbol} width="30px" height="30px" />
-                                                <span className="dpdn-span text-black"><b>Cancha 1</b></span>
+                                                <span className={styles.canchaNum}><b>Cancha 1</b></span>
                                             </div>
-                                            <div className="mx-4 d-flex flex-column align-items-center justify-content-center">
+                                            <div className={styles.canchaHoraContenedor}>
                                                 <img src={reloj} width="30px" height="30px" />
-                                                <span className="dpdn-span text-black"><b>{grilla.hora === 25 ? (grilla.hora - 24) + ":00" : grilla.hora + ":00"}</b></span>
+                                                <span className="text-black"><b>{grilla.hora === 25 ? (grilla.hora - 24) + ":00" : grilla.hora + ":00"}</b></span>
                                             </div>
                                         </div>
-                                        <div className="border-bottom border-black contenedor-info-dd-2">
-                                            <div className="my-3 py-1 border border-success rounded-4 bg-opacity-50 bg-success">
-                                                <span className="mx-4">$30.000</span>
-                                                <span className="mx-4">60 min</span>
+                                        <div className={styles.canchaPXHContenedor}>
+                                            <div className={styles.infoPXH}>    
+                                                <span className="mx-4"><b>$30.000</b></span>
+                                                <span className="mx-4"><b>60 min</b></span>
                                             </div>
                                         </div>
-                                        <a href="https://www.google.com/"><button type="button" className="m-2 btn-reserva">Reserva</button></a>
+                                        <a href="https://www.google.com/"><button type="button" className={styles.btnReserva}><b>Reservar</b></button></a>
                                     </div>
                                 </div>
-                            </div>
+                            </Col>
                             ))}
-                        </div>
+                        </Row>
 
-
-                        <div className="row">
-                            <div className="col grid-item col-md-1 bg-black border-start-0"><b>cancha 2</b></div>
+                        <Row>
+                            <Col md={1} className={`${styles.gridItem} ${styles.numCancha}`}><b>cancha 2</b></Col>
                             {grillas.map(grilla=>(
-                                <div className="col grid-item col-vacia" onClick={() => darIndiceCelda(grilla.numGrilla + 15)} ref={dropdownRef} key={grilla.id + 15}>
-                                <div className={`dropdown-reserva bg-light rounded-4 ${abrirDropdown === grilla.numGrilla + 15 ? "show" : ""}`}>
-                                    <div className="d-flex flex-column align-items-center">
-                                        <div className="d-flex flex-flow-wrap mt-3 border-bottom border-black info-dd-1">
-                                            <div className="mx-4 d-flex flex-column justify-content-center align-items-center">
+                                <Col className={`${styles.gridItem} ${styles.colVacia}`} onClick={() => darIndiceCelda(grilla.numGrilla + 15)} ref={dropdownRef} key={grilla.id + 15}>
+                                <div className={`${styles.dropdownReserva} ${abrirDropdown === grilla.numGrilla + 15 ? styles.show : ""}`}>
+                                    <div className={styles.dropdownContenedor}>
+                                        <div className={styles.canchaNumContenedor}>
+                                            <div className={styles.infoCanchaHora}>
                                                 <img src={canchadefutbol} width="30px" height="30px" />
-                                                <span className="dpdn-span text-black"><b>Cancha 2</b></span>
+                                                <span className={styles.canchaNum}><b>Cancha 2</b></span>
                                             </div>
-                                            <div className="mx-4 d-flex flex-column align-items-center justify-content-center">
+                                            <div className={styles.canchaHoraContenedor}>
                                                 <img src={reloj} width="30px" height="30px" />
-                                                <span className="dpdn-span text-black"><b>{grilla.hora === 25 ? (grilla.hora - 24) + ":00" : grilla.hora + ":00"}</b></span>
+                                                <span className="text-black"><b>{grilla.hora === 25 ? (grilla.hora - 24) + ":00" : grilla.hora + ":00"}</b></span>
                                             </div>
                                         </div>
-                                        <div className="border-bottom border-black contenedor-info-dd-2">
-                                            <div className="my-3 py-1 border border-success rounded-4 bg-opacity-50 bg-success">
-                                                <span className="mx-4">$30.000</span>
-                                                <span className="mx-4">60 min</span>
+                                        <div className={styles.canchaPXHContenedor}>
+                                            <div className={styles.infoPXH}>
+                                                <span className="mx-4"><b>$30.000</b></span>
+                                                <span className="mx-4"><b>60 min</b></span>
                                             </div>
                                         </div>
-                                        <a href="https://www.google.com/"><button type="button" className="m-2 btn-reserva">Reserva</button></a>
+                                        <a href="https://www.google.com/"><button type="button" className={styles.btnReserva}><b>Reservar</b></button></a>
                                     </div>
                                 </div>
-                            </div>
+                            </Col>
                             ))}
-                        </div>
+                        </Row>
 
-
-                        <div className="row">
-                            <div className="col grid-item col-md-1 bg-black border-start-0"><b>cancha 3</b></div>
-
+                        <Row>
+                            <Col md={1} className={`${styles.gridItem} ${styles.numCancha}`}><b>cancha 3</b></Col>
                             {grillas.map(grilla=>(
-                                <div className="col grid-item col-vacia" onClick={() => darIndiceCelda(grilla.numGrilla + 30)} ref={dropdownRef} key={grilla.id + 30}>
-                                <div className={`dropdown-reserva bg-light rounded-4 ${abrirDropdown === grilla.numGrilla + 30 ? "show" : ""}`}>
-                                    <div className="d-flex flex-column align-items-center">
-                                        <div className="d-flex flex-flow-wrap mt-3 border-bottom border-black info-dd-1">
-                                            <div className="mx-4 d-flex flex-column justify-content-center align-items-center">
+                                <Col className={`${styles.gridItem} ${styles.colVacia}`} onClick={() => darIndiceCelda(grilla.numGrilla + 30)} ref={dropdownRef} key={grilla.id + 30}>
+                                <div className={`${styles.dropdownReserva} ${abrirDropdown === grilla.numGrilla + 30 ? styles.show : ""}`}>
+                                    <div className={styles.dropdownContenedor}>
+                                        <div className={styles.canchaNumContenedor}>
+                                            <div className={styles.infoCanchaHora}>
                                                 <img src={canchadefutbol} width="30px" height="30px" />
-                                                <span className="dpdn-span text-black"><b>Cancha 3</b></span>
+                                                <span className={styles.canchaNum}><b>Cancha 3</b></span>
                                             </div>
-                                            <div className="mx-4 d-flex flex-column align-items-center justify-content-center">
+                                            <div className={styles.canchaHoraContenedor}>
                                                 <img src={reloj} width="30px" height="30px" />
-                                                <span className="dpdn-span text-black"><b>{grilla.hora === 25 ? (grilla.hora - 24) + ":00" : grilla.hora + ":00"}</b></span>
+                                                <span className="text-black"><b>{grilla.hora === 25 ? (grilla.hora - 24) + ":00" : grilla.hora + ":00"}</b></span>
                                             </div>
                                         </div>
-                                        <div className="border-bottom border-black contenedor-info-dd-2">
-                                            <div className="my-3 py-1 border border-success rounded-4 bg-opacity-50 bg-success">
-                                                <span className="mx-4">$30.000</span>
-                                                <span className="mx-4">60 min</span>
+                                        <div className={styles.canchaPXHContenedor}>
+                                            <div className={styles.infoPXH}>
+                                                <span className="mx-4"><b>$30.000</b></span>
+                                                <span className="mx-4"><b>60 min</b></span>
                                             </div>
                                         </div>
-                                        <a href="https://www.google.com/"><button type="button" className="m-2 btn-reserva">Reserva</button></a>
+                                        <a href="https://www.google.com/"><button type="button" className={styles.btnReserva}><b>Reservar</b></button></a>
                                     </div>
                                 </div>
-                            </div>
+                            </Col>
                             ))}
-
-                        </div>
+                        </Row>
                     </div>
                 </div>
             </section>
-            <section id="reserva-responsive-section">
-                <h2 className="text-center p-2 fs-2 text-success">Realiza tu reserva</h2>
+            <section className={styles.reservaResponsiveContenedor}>
+                <h2 className={styles.tituloResponsive}>Realiza tu reserva</h2>
                 <div className="shadow-lg py-3">
-                    <article className="d-flex gap-1 justify-content-center" id="reserva-dias">
+                    <article className={styles.diasReserva}>
                         <button className="">
                             <span>{format(selectedDate,"E",{locale: es}).toUpperCase()}</span>
                             <span>{format(selectedDate,"d")}</span>
