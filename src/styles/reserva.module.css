@@ -203,8 +203,8 @@ body {
 
 @media (max-width: 480px) {
     .contenedorPrincipal {
-        height: 100%;
         background-color: #fff;
+        height: auto;
     }
 
     .reservaContenedor,
@@ -220,17 +220,20 @@ body {
         border-bottom: 1px solid #c0b8b8;
     }
 
-    .tituloResponsive {
+    .tituloDias {
         text-align: center;
         padding: 8px;
-        font-size: 8px;
-        color: #78ff70;
+        font-size: 24px;
+        color: #0e8708;
     }
 
     .diasReserva {
         display: flex;
         justify-content: center;
         gap: 4px;
+        box-shadow: 0 8px 8px rgba(0, 0, 0, 0.175);
+        padding-top: 16px;
+        padding-bottom: 16px;
     }
 
     button {
@@ -245,51 +248,71 @@ body {
         font-size: 18px;
     }
 
-    button:active>span {
-        color: var(--main-clr5);
-    }
-
-    .col {
-        padding: 10px;
-        border-radius: 19px;
-        margin: 0 5px;
-    }
-
-    .col:hover {
-        border: 1px solid var(--main-clr5);
+    button:active {
         color: var(--main-clr5);
         background-color: var(--main-clr7);
     }
 
-    #cancha1-responsive {
-        background-color: var(--main-clr6);
-        display: inline-block;
-        padding: 1rem 1rem;
-        border-radius: 10px;
+    .tituloCanchaDisp {
+        padding: 10px;
+        margin-top: 18px;
+        color: #0e8708;
+        text-align: center;
     }
 
-    #cancha1-responsive a {
-        text-decoration: none;
-        color: var(--main-clr2);
-        font-size: 1rem;
-        letter-spacing: 1px;
+    .tituloHorarios {
+        text-align: center;
+        font-size: 24px;
+        margin-top: 30px;
+        color: rgba(17, 54, 147, 0.633);
     }
 
-    #cancha2-reserva-responsive {
-        border-top: 1px solid #c0b8b8;
+    .horariosContenedor {
+        text-align: center;
+        padding: 20px;
         border-bottom: 1px solid #c0b8b8;
+        box-shadow: 0 8px 8px rgba(0, 0, 0, 0.175);
     }
 
-    #cancha1-reserva-responsive {
-        border-top: 1px solid #c0b8b8;
-        border-bottom: 1px solid #c0b8b8;
-    }
-
-    .canchas-responsive {
+    .horasContenedor {
+        margin: 10px 0;
         display: flex;
-        flex-direction: column;
+        flex-wrap: wrap;
+    }
+    
+    .hora{
+        border-radius: 19px;
+        border: 1px solid #c0b8b8;
+        flex: 1 0 0;
+        margin: 0 5px;
+        padding: 10px;
+    }
+
+    .canchasDisponibles {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        margin-top: 8px;
+        padding: 0 16px;
+    }
+
+    .confirmarContenedor {
+        padding: 10px;
+        display: flex;
         justify-content: center;
-        align-items: center;
+        margin-top: 30px;
+        background-color: rgb(9, 137, 103);
+    }
+
+    .btnConfirmar {
+        background-color: #5cc256;
+        color: #fff;
+        border: none;
+    }
+
+    .btnConfirmar:active {
+        background-color: #32692f;
+        color: #fff !important;
     }
 
 }
