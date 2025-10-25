@@ -7,7 +7,7 @@ header {
     padding: 1.1rem 0.5rem;
 }
 
-.nav-contenedor {
+.navContenedor {
     display: flex;
     background-color: var(--main-clr2);
     justify-content: center;
@@ -16,54 +16,79 @@ header {
     border-radius: 1rem;
 }
 
-.header-nav {
+.headerNav {
     display: flex;
     width: 100%;
     justify-content: space-evenly;
     align-items: center;
 }
 
-.header-nav a {
+.headerNav a {
     text-decoration: none;
     color: #fff;
     font-size: 1.3rem;
 }
 
-.nav-links {
+.navLinks {
     transition: transform 0.4s ease, text-shadow 0.4s ease;
     border-radius: 0.5rem;
     border: none;
 }
 
-.nav-links:hover {
+.navLinks:hover {
     transform: translateY(-5px) scale(1);
     text-shadow: 0 12px 10px var(--main-clr7);
 }
 
-.buscador {
+.formControl {
+    display: block;
+    width: 100%;
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #212529;
+    appearance: none;
+    background-color: var(--bs-body-bg);
+    background-clip: padding-box;
+    border: 1px solid #dee2e6;
+    border-radius: 7px;
+    margin-right: 8px;
     width: 150px;
+}
+
+.formControl:focus {
+    color: #212529;
+    background-color: #fff;
+    border-color: #86b7fe;
+    outline: 0;
+    box-shadow: 0 0 0 4px rgba(13, 110, 253, .25)
 }
 
 /* ==========================
 Botones login
 ========================== */
-.login-btns {
+.loginBtns {
     display: flex;
     gap: 10px;
     padding: 10px;
     align-items: center;
 }
 
-.btn-login {
+.btnLogin {
     background-color: #adb5bd;
     border-color: rgba(255, 255, 255, 0.2);
     color: #212529;
     border-radius: 10px;
     font-size: 0.9rem;
     min-width: 120px;
+    text-decoration: none;
+    text-align: center;
+    padding: 7px 9px;
+    font-size: 16px;
 }
 
-.btn-login:hover {
+.btnLogin:hover {
     background-color: #ced4da;
     border-color: rgba(255, 255, 255, 0.2);
     color: #212529;
