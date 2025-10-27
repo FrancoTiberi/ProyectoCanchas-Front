@@ -1,30 +1,23 @@
 import '../styles/general.css';
 import styles from '../styles/Header.module.css';
-
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import { Link } from 'react-router-dom';
+import LoginModal from '../components/LoginModal.jsx';
+import { useAuth } from '../context/AuthProvider.jsx';
 
 export const Header = () => {
+  const { user, logout } = useAuth();
+
   return (
     <header className={styles.headerWrapper}>
       <Container fluid className={styles.navContenedor}>
         <Nav className={styles.headerNav}>
-          <Link to='/' className={styles.navLinks}>
-            Inicio
-          </Link>
-          <Link to='' className={styles.navLinks}>
-            Reserva-F5
-          </Link>
-          <Link to='menu' className={styles.navLinks}>
-            Menú
-          </Link>
-          <Link to='' className={styles.navLinks}>
-            Contacto
-          </Link>
-          <Link to='' className={styles.navLinks}>
-            Sobre Nosotros
-          </Link>
+          <Link to='/' className={styles.navLinks}>Inicio</Link>
+          <Link to='/reservas' className={styles.navLinks}>Reserva-F5</Link>
+          <Link to='/menu' className={styles.navLinks}>Menú</Link>
+          <Link to='#' className={styles.navLinks}>Contacto</Link>
+          <Link to='#' className={styles.navLinks}>Sobre Nosotros</Link>
 
           <form className={`d-flex ${styles.formBuscador} ms-3`} role="search">
             <input
@@ -33,19 +26,41 @@ export const Header = () => {
               placeholder="Buscar"
               type="search"
             />
-            <button className="btn btn-outline-success" type="submit">
-              Buscar
-            </button>
+            <button className="btn btn-outline-success" type="submit">Buscar</button>
           </form>
         </Nav>
 
         <div className={styles.loginBtns}>
-          <Link to='' className="btn btn-primary">
-            Iniciar Sesión
-          </Link>
-          <Link to='' className="btn btn-primary">
-            Registrar
-          </Link>
+          {user && typeof user === 'object' && user.name ? (
+            <div className="d-flex align-items-center gap-2">
+              <div
+                className={styles.userAvatarContainer}
+                title={user.role === 'admin' ? 'Administrador' : 'Usuario'}
+              >
+                {user.role === 'admin' ? (
+                  <i className="bi-award-fill fs-4"></i>
+                ) : (
+                  <i className="bi bi-person-fill fs-4"></i>
+                )}
+              </div>
+              <span
+                className={`${styles.userName} ${user.role === 'admin' ? styles.adminName : styles.userNameCommon
+                  }`}
+              >
+                {typeof user.name === 'string' ? user.name : 'Sin nombre'}
+              </span>
+              <button onClick={logout} className={`btn ${styles.btnSalir}`}>
+                Salir
+              </button>
+            </div>
+          ) : (
+            <div className="d-flex align-items-center gap-2">
+              <LoginModal />
+              <Link to="#" className={`btn ${styles.btnLogin}`}>
+                Registrar
+              </Link>
+            </div>
+          )}
         </div>
       </Container>
     </header>
