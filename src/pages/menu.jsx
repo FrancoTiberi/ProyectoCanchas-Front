@@ -1,61 +1,52 @@
-import React, { useState } from 'react';
-import styles from '../styles/menu.module.css';
+import React, { useState } from "react";
+import styles from "../styles/menu.module.css";
+import { comidas } from "../data/comida";
 
 export const Menu = () => {
-    const comidas = [
-        {
-            categoria: "Hamburguesas",
-            items: [
-                { id: 1, nombre: "Simple", precio: "200", descripcion: "Es buena" },
-                { id: 2, nombre: "Doble", precio: "300", descripcion: "Es mejor" }
-            ]
-        },
-        {
-            categoria: "Pizzas",
-            items: [
-                { id: 3, nombre: "Margarita", precio: "250", descripcion: "Deliciosa" },
-                { id: 4, nombre: "Pepperoni", precio: "350", descripcion: "Picante" },
-                { id: 5, nombre: "Pepperonis", precio: "350", descripcion: "Picantes" }
-            ]
-        }
-    ];
-
     const [carrito, setCarrito] = useState([]);
     const [mostrarCarrito, setMostrarCarrito] = useState(false);
 
-    const AgregarAlCarrito = (comida) => {
-        setCarrito(prev => {
-            const itemExistente = prev.find(item => item.id === comida.id);
+    // Agrupar comidas por categoría dinámicamente
+    const categorias = [...new Set(comidas.map(item => item.categoria))];
+    const comidasPorCategoria = categorias.map(categoria => ({
+        categoria,
+        items: comidas.filter(item => item.categoria === categoria)
+    }));
+
+    // Agregar un ítem al carrito
+    const agregarAlCarrito = (comida) => {
+        setCarrito((prev) => {
+            const itemExistente = prev.find((item) => item.id === comida.id);
             if (itemExistente) {
-                return prev.map(item =>
+                return prev.map((item) =>
                     item.id === comida.id
                         ? { ...item, cantidad: item.cantidad + 1 }
                         : item
                 );
-            } else {
-                return [...prev, { ...comida, cantidad: 1 }];
             }
+            return [...prev, { ...comida, cantidad: 1 }];
         });
     };
 
+    // Disminuir cantidad
     const disminuirCantidad = (id) => {
-        setCarrito(prev =>
+        setCarrito((prev) =>
             prev
-                .map(item =>
-                    item.id === id
-                        ? { ...item, cantidad: item.cantidad - 1 }
-                        : item
+                .map((item) =>
+                    item.id === id ? { ...item, cantidad: item.cantidad - 1 } : item
                 )
-                .filter(item => item.cantidad > 0)
+                .filter((item) => item.cantidad > 0)
         );
     };
 
-    const EliminarDelCarrito = (id) => {
-        setCarrito(prev => prev.filter(item => item.id !== id));
+    // Eliminar del carrito
+    const eliminarDelCarrito = (id) => {
+        setCarrito((prev) => prev.filter((item) => item.id !== id));
     };
 
+    // Total del carrito
     const total = carrito.reduce(
-        (acc, item) => acc + Number(item.precio) * item.cantidad,
+        (acc, item) => acc + item.precio * item.cantidad,
         0
     );
 
@@ -63,16 +54,26 @@ export const Menu = () => {
         <main className={styles.main}>
             <h1 className={styles.titulo}>Menú</h1>
 
-            {comidas.map(categoria => (
+            {/* Mostrar categorías y productos */}
+            {comidasPorCategoria.map((categoria) => (
                 <section key={categoria.categoria} className={styles.section}>
                     <h2 className={styles.sectionTitle}>{categoria.categoria}</h2>
                     <div className={styles.itemsContainer}>
-                        {categoria.items.map(item => (
+                        {categoria.items.map((item) => (
                             <div key={item.id} className={styles.card}>
+                                <img
+                                    src={item.imagen}
+                                    alt={item.nombre}
+                                    className={styles.imagen}
+                                    onError={(e) => (e.target.src = "/images/fallback.png")}
+                                />
                                 <h3>{item.nombre}</h3>
-                                <p>Precio: ${item.precio}</p>
                                 <p>{item.descripcion}</p>
-                                <button onClick={() => AgregarAlCarrito(item)} className={styles.button}>
+                                <p className={styles.precio}>${item.precio}</p>
+                                <button
+                                    onClick={() => agregarAlCarrito(item)}
+                                    className={`${styles.button} ${styles.agregar}`}
+                                >
                                     Agregar
                                 </button>
                             </div>
@@ -81,40 +82,52 @@ export const Menu = () => {
                 </section>
             ))}
 
+            {/* Botón para mostrar/ocultar carrito */}
             <button
-                className={styles.button}
-                onClick={() => setMostrarCarrito(prev => !prev)}
+                className={`${styles.button} ${styles.carritoBtn}`}
+                onClick={() => setMostrarCarrito((prev) => !prev)}
             >
-                Carrito
+                {mostrarCarrito ? "Ocultar Carrito" : "Ver Carrito"}
             </button>
 
+            {/* Carrito */}
             {mostrarCarrito && (
-                <div className={styles.carrito}>
+                <div className={styles.carritoContainer}>
                     <h3>Carrito</h3>
                     {carrito.length === 0 ? (
                         <p>Vacío</p>
                     ) : (
-                        carrito.map(item => (
+                        carrito.map((item) => (
                             <div key={item.id} className={styles.carritoItem}>
                                 <span>
                                     {item.nombre} x {item.cantidad} = $
-                                    {Number(item.precio) * item.cantidad}
+                                    {item.precio * item.cantidad}
                                 </span>
                                 <div>
-                                    <button onClick={() => disminuirCantidad(item.id)} className={styles.button}>
+                                    <button
+                                        onClick={() => disminuirCantidad(item.id)}
+                                        className={styles.button}
+                                        disabled={item.cantidad === 1}
+                                    >
                                         -
                                     </button>
-                                    <button onClick={() => AgregarAlCarrito(item)} className={styles.button}>
+                                    <button
+                                        onClick={() => agregarAlCarrito(item)}
+                                        className={styles.button}
+                                    >
                                         +
                                     </button>
-                                    <button onClick={() => EliminarDelCarrito(item.id)} className={styles.button}>
+                                    <button
+                                        onClick={() => eliminarDelCarrito(item.id)}
+                                        className={styles.button}
+                                    >
                                         Quitar
                                     </button>
                                 </div>
                             </div>
                         ))
                     )}
-                    <p>Total: ${total}</p>
+                    <p className={styles.total}>Total: ${total}</p>
                 </div>
             )}
         </main>
