@@ -1,5 +1,6 @@
-/* Header */
-header {
+
+/* Contenedor principal del header */
+.headerWrapper {
     display: flex;
     justify-content: center;
     background-color: var(--main-clr1);
@@ -16,6 +17,7 @@ header {
     border-radius: 1rem;
 }
 
+/* Nav principal */
 .headerNav {
     display: flex;
     width: 100%;
@@ -23,13 +25,11 @@ header {
     align-items: center;
 }
 
-.headerNav a {
+/* Enlaces de navegación */
+.navLinks {
     text-decoration: none;
     color: #fff;
     font-size: 1.3rem;
-}
-
-.navLinks {
     transition: transform 0.4s ease, text-shadow 0.4s ease;
     border-radius: 0.5rem;
     border: none;
@@ -40,33 +40,19 @@ header {
     text-shadow: 0 12px 10px var(--main-clr7);
 }
 
-.formControl {
-    display: block;
-    width: 100%;
-    padding: .375rem .75rem;
-    font-size: 1rem;
-    font-weight: 400;
-    line-height: 1.5;
-    color: #212529;
-    appearance: none;
-    background-color: var(--bs-body-bg);
-    background-clip: padding-box;
-    border: 1px solid #dee2e6;
-    border-radius: 7px;
-    margin-right: 8px;
-    width: 150px;
+/* Buscador */
+.formBuscador {
+    display: flex;
+    align-items: center;
 }
 
-.formControl:focus {
-    color: #212529;
-    background-color: #fff;
-    border-color: #86b7fe;
-    outline: 0;
-    box-shadow: 0 0 0 4px rgba(13, 110, 253, .25)
+.buscador {
+    width: 150px;
+    /* Ajusta el ancho del input */
 }
 
 /* ==========================
-Botones login
+   Botones de login
 ========================== */
 .loginBtns {
     display: flex;
@@ -77,19 +63,52 @@ Botones login
 
 .btnLogin {
     background-color: #adb5bd;
-    border-color: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.2);
     color: #212529;
     border-radius: 10px;
     font-size: 0.9rem;
     min-width: 120px;
-    text-decoration: none;
-    text-align: center;
-    padding: 7px 9px;
-    font-size: 16px;
+    padding: 6px 12px;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .btnLogin:hover {
     background-color: #ced4da;
-    border-color: rgba(255, 255, 255, 0.2);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     color: #212529;
+}
+
+.userAvatarContainer {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: #e0e0e0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.userName {
+  color: gold; 
+  font-weight: bold;}
+  .btnSalir {
+  background-color: var(--main-clr3); 
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 6px 14px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.btnSalir:hover {
+  background-color: var(--main-clr7); 
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+.btnSalir:active {
+  transform: scale(0.98);
+  background-color: var(--main-clr6);
 }
