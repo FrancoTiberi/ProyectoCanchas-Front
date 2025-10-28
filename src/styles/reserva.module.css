@@ -1,0 +1,318 @@
+/* ==========================
+   Body
+========================== */
+
+body {
+    background-color: var(--main-clr5);
+}
+
+.tituloPag {
+    background-image: url(../Assets/img/imagecf55.jpg);
+    background-position: center;
+    padding: 50px;
+    text-align: center;
+    color: #fff;
+}
+
+/* ====== Estilos de la sección reserva ====== */
+.reservaContenedor {
+    padding: 40px 35px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.175);
+    margin: 16px;
+}
+
+.calendarioContenedor {
+    display: flex;
+    justify-content: center;
+    padding-bottom: 5px;
+}
+
+.calendario{
+    width: 160px;
+    background-color: rgba(13,110,253, 1);
+    color: #fff;
+    border-width: 1px;
+    border-radius: 10px;
+    padding: 5px;
+}
+
+.estado {
+    margin-right: 5px;
+    display: flex;
+    flex-flow: wrap;
+    align-items: center;
+}
+
+.numCancha {
+    background-color: #000;
+}
+
+.gridItemHora {
+    border: 1px solid #c0b8b8;
+    padding: 10px;
+    background-color: #000;
+    color: #fff;
+    text-align: center;
+}
+
+.gridItem {
+    padding: 13px;
+    border-bottom: 1px solid #000;
+    color: #fff;
+    border: 1px solid #c0b8b8;
+}
+
+.colVacia {
+    background-color: #6b9488;
+    position: relative;
+}
+
+.colVacia:hover {
+    background-color: #78ff70;
+    cursor: pointer;
+}
+
+/* ==========================
+   Dropdown
+========================== */
+
+.dropdownReserva {
+  position: absolute;
+  top: 80%;
+  left: 50%;
+  transform: translateX(-50%);
+  height: 200px;
+  width: 220px;
+  display: none;
+  max-width: 0;
+  z-index: 1000;
+  background-color: #fff;
+  border-radius: 20px;
+}
+
+.dropdownReserva::before {
+    content: " ";
+    width: 14px;
+    height: 14px;
+    position: absolute;
+    left: calc(50% - 7px);
+    background-color: rgba(248,249,250, 1);
+    top: -7px;
+    transform: rotate(45deg);
+}
+
+.show {
+    max-width: 300px;
+    display: inherit;
+}
+
+.dropdownContenedor {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.canchaNumContenedor {
+    display: flex;
+    flex-flow: wrap;
+    margin-top: 15px;
+    border-bottom: 1px solid #dee2e6;
+    border-color: #000;
+}
+
+.infoCanchaHora {
+    margin-left: 24px;
+    margin-right: 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.canchaNum {
+    margin: 10px 100px;
+    margin: 0;
+    color: #000;
+}
+
+.canchaHoraContenedor {
+    margin-right: 24px;
+    margin-left: 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.canchaPXHContenedor {
+    border-bottom: 1px solid #000;
+    color: #000;
+}
+
+.infoPXH {
+    margin-top: 16px;
+    margin-bottom: 16px;
+    padding-top: 4px;
+    padding-bottom: 4px;
+    border-radius: 16px;
+    background-color: rgb(69, 202, 140);
+    border: 1px solid #dee2e6;
+}
+
+.btnReserva {
+    background-color: rgba(38, 197, 211, 0.633);
+    padding: 8px;
+    border-radius: 20px;
+    width: 88%;
+    color: #000;
+    margin: 10px;
+}
+
+.btnReserva:hover {
+    background-color: rgba(25, 135, 145, 0.633);
+}
+
+/* ==========================
+   Informacion de las reservas
+========================== */
+
+.reservado {
+    background-color: #e94c0e;
+    width: 10px;
+    height: 10px;
+    margin-right: 3px;
+}
+
+.disponible {
+    background-color: #6b9488;
+    width: 10px;
+    height: 10px;
+    margin-right: 3px;
+    margin-left: 15px;
+}
+
+.reservaResponsiveContenedor {
+    display: none;
+}
+
+/* ==========================
+   Responsive
+========================== */
+
+@media (max-width: 480px) {
+    .contenedorPrincipal {
+        background-color: #fff;
+        height: auto;
+    }
+
+    .reservaContenedor,
+    .tituloPag,
+    .seccion-comentarios-contenedor {
+        display: none;
+    }
+
+    .reservaResponsiveContenedor {
+        display: initial;
+        width: 100%;
+        height: 100%;
+        border-bottom: 1px solid #c0b8b8;
+    }
+
+    .tituloDias {
+        text-align: center;
+        padding: 8px;
+        font-size: 24px;
+        color: #0e8708;
+    }
+
+    .diasReserva {
+        display: flex;
+        justify-content: center;
+        gap: 4px;
+        box-shadow: 0 8px 8px rgba(0, 0, 0, 0.175);
+        padding-top: 16px;
+        padding-bottom: 16px;
+    }
+
+    button {
+        background-color: #fcf9f9;
+        border: none;
+        display: flex;
+        flex-direction: column;
+        padding: 10px 14px;
+        border-radius: 10px;
+        border: 1px solid;
+        color: #c0b8b8;
+        font-size: 18px;
+    }
+
+    button:active {
+        color: var(--main-clr5);
+        background-color: var(--main-clr7);
+    }
+
+    .tituloCanchaDisp {
+        padding: 10px;
+        margin-top: 18px;
+        color: #0e8708;
+        text-align: center;
+    }
+
+    .tituloHorarios {
+        text-align: center;
+        font-size: 24px;
+        margin-top: 30px;
+        color: rgba(17, 54, 147, 0.633);
+    }
+
+    .horariosContenedor {
+        text-align: center;
+        padding: 20px;
+        border-bottom: 1px solid #c0b8b8;
+        box-shadow: 0 8px 8px rgba(0, 0, 0, 0.175);
+    }
+
+    .horasContenedor {
+        margin: 10px 0;
+        display: flex;
+        flex-wrap: wrap;
+    }
+    
+    .hora{
+        border-radius: 19px;
+        border: 1px solid #c0b8b8;
+        flex: 1 0 0;
+        margin: 0 5px;
+        padding: 10px;
+    }
+
+    .canchasDisponibles {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        margin-top: 8px;
+        padding: 0 16px;
+    }
+
+    .confirmarContenedor {
+        padding: 10px;
+        display: flex;
+        justify-content: center;
+        margin-top: 30px;
+        background-color: rgb(9, 137, 103);
+    }
+
+    .btnConfirmar {
+        background-color: #5cc256;
+        color: #fff;
+        border: none;
+    }
+
+    .btnConfirmar:active {
+        background-color: #32692f;
+        color: #fff !important;
+    }
+
+}
