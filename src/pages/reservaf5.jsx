@@ -9,7 +9,6 @@ import { format } from 'date-fns';
 import styles from '../styles/reserva.module.css';
 import 'react-datepicker/dist/react-datepicker.css';
 
-
 export const Reservaf5 = () => {
 
     const [abrirDropdown, setAbrirDropdown] = useState(null);

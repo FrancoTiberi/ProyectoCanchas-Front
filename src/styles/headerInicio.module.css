@@ -1,0 +1,79 @@
+/* ==========================
+   Header y fondo principal
+========================== */
+.contenedorPrincipal {
+    display: grid;
+    grid-template-rows: 0fr 0.8fr;
+    background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url(../assets/img/bgheader.jpg);
+    min-height: 65vh;
+    background-position: center;
+    background-size: cover;
+    justify-content: center;
+    padding: 17px 8px;
+}
+
+.logo {
+    border-radius: 10px;
+}
+
+/* ==========================
+   Navegación: enlaces y contenedores
+========================== */
+
+.navContenedor {
+    grid-template-columns: 1fr;
+    background-color: transparent;
+    height: 13vh;
+    width: 90vw;
+    padding: 10px;
+}
+
+.headerNav {
+    display: flex;
+    width: 100%;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+.headerNav a {
+    text-decoration: none;
+    color: #fff;
+    font-size: 1.4rem;
+}
+
+.navLinks {
+    transition: transform 0.4s ease, text-shadow 0.4s ease;
+    border-radius: 0.5rem;
+    border: none;
+}
+
+.navLinks:hover {
+    transform: translateY(-5px) scale(1);
+    text-shadow: 0 12px 10px var(--main-clr7);
+}
+
+.tituloContenedor {
+    display: flex;
+    justify-content: space-evenly;
+    text-align: center;
+    flex-direction: column;
+}
+/* ==========================
+   Botones de login
+========================== */
+
+.btnLogin {
+    background-color: #7fffd4;
+    border: none;
+    border-radius: 10px;
+    padding: 8px 20px;
+    text-align: center;
+    width: 300px;
+    max-width: 250px;
+    margin-left: 4px;
+    margin-right: 4px;
+}
+
+.btnLogin:hover {
+    background-color: #5fb598;
+}
