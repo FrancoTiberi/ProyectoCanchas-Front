@@ -1,7 +1,7 @@
 import { Routes, Route } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Footer } from './components/footer';
-import  { Header }  from './components/Header';
+import { Header } from './components/Header';
 import { Reservaf5 } from './pages/reservaf5';
 import { Menu } from './pages/menu';
 import { ROLES } from './roles';
@@ -19,6 +19,7 @@ function App() {
         <Route path='/contacto' element={<Construccion />} />
         <Route path='/sobrenosotros' element={<Construccion />} />
         <Route path='/registrar' element={<Construccion />} />
+        <Route path='/construccion' element={<Construccion />} />
       </Routes>
       <Footer />
     </>
