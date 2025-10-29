@@ -1,0 +1,171 @@
+/* Tamaño y estructura del modal */
+.modalDialog {
+    max-width: 420px;
+    min-height: 480px;
+    margin: auto;
+}
+
+/* Fondo y borde del modal */
+.modal {
+    background-color: #2E7D32;
+    border: 5px solid black;
+    padding: 0;
+    position: relative; /* necesario para posicionar el botón de cerrar */
+}
+
+/* Botón de cerrar en la esquina superior derecha */
+.bodymodal :global(.btn-close) {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    filter: invert(1);
+    opacity: 0.9;
+    transition: all 0.3s ease;
+    border-radius: 50%;
+    padding: 0.4rem;
+    background-color: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    z-index: 10;
+}
+
+.bodymodal :global(.btn-close:hover) {
+    opacity: 1;
+    background-color: rgba(255, 255, 255, 0.2);
+    transform: scale(1.1);
+}
+
+/* Cuerpo del modal */
+.bodymodal {
+    background-color: #2E7D32;
+    color: white;
+    border: none;
+    padding: 40px 30px;
+    text-align: center;
+    position: relative; /* para que el botón de cerrar se posicione correctamente */
+}
+
+.bodymodal :global(.modal-title) {
+    margin-bottom: 1.5rem;
+}
+
+.bodymodal input {
+    margin-bottom: 1rem;
+}
+
+.bodymodal .form-control {
+    font-size: 0.95rem;
+    padding: 0.5rem 0.75rem;
+}
+
+/* Botón de iniciar sesión dentro del modal */
+.btnModalLogin {
+    background-color: #ffffff;
+    color: #2E7D32;
+    border: 1px solid #dadce0;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    padding: 8px 16px;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    display: block;
+    margin: 0 auto;
+}
+
+.btnModalLogin:hover {
+    background-color: #e8f0fe;
+    box-shadow: 0 4px 8px rgba(66, 133, 244, 0.3);
+    color: #1b5e20;
+}
+
+/* Botón exterior de login */
+.btnLogin {
+    background-color: #adb5bd;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #212529;
+    border-radius: 10px;
+    font-size: 0.9rem;
+    min-width: 120px;
+    padding: 6px 12px;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.btnLogin:hover {
+    background-color: #ced4da;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    color: #212529;
+}
+
+/* Contenedor de botones sociales */
+.bton {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+/* Botones sociales */
+.socialBtn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    border-radius: 0.375rem;
+    font-weight: 600;
+    font-size: 1rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    border: 1px solid transparent;
+    width: 100%;
+    justify-content: center;
+}
+
+/* Botón Google */
+.google {
+    background-color: #fff;
+    color: #5f6368;
+    border: 1px solid #dadce0;
+}
+
+.google:hover {
+    background-color: #e8f0fe;
+    color: #202124;
+    border-color: #4285f4;
+    box-shadow: 0 6px 12px rgba(66, 133, 244, 0.3);
+}
+
+/* Botón Facebook */
+.facebook {
+    background-color: #1877f2;
+    color: #fff;
+}
+
+.facebook:hover {
+    background-color: #0f65d4;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Íconos */
+.icon {
+    font-size: 1.25rem;
+}
+
+/* Link de registro con estilo moderno y sutil */
+.bodymodal a {
+    color: #c8e6c9;
+    font-weight: 500;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.bodymodal a:hover {
+    color: #ffffff;
+    text-decoration: underline;
+}
+
+/* Footer del modal centrado */
+.footerModal {
+    margin-top: 2rem;
+    display: flex;
+    justify-content: center;
+}
