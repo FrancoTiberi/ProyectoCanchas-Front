@@ -2,9 +2,9 @@ import { useState } from "react";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import { loginUser } from "../data/user";
-import { useAuth } from "../context/AuthProvider"; 
-import styles from '../styles/Header.module.css';
-
+import { useAuth } from "../context/AuthProvider";
+import styles from '../styles/modal.module.css';
+import { Link } from 'react-router-dom';
 
 export default function LoginModal() {
     const [show, setShow] = useState(false);
@@ -23,7 +23,7 @@ export default function LoginModal() {
         if (result.success) {
             setError('');
             setUser(result.user);
-                    localStorage.setItem('user', JSON.stringify(user));
+            localStorage.setItem('user', JSON.stringify(result.user));
             handleClose();
 
             const destino = result.user.role === 'admin' ? '/admin' : '/';
@@ -31,7 +31,6 @@ export default function LoginModal() {
         } else {
             setError(result.message);
         }
-
     };
 
     return (
@@ -40,35 +39,57 @@ export default function LoginModal() {
                 Iniciar Sesión
             </Button>
 
-            <Modal show={show} onHide={handleClose} backdrop="static" keyboard={false}>
-                <Modal.Header closeButton>
-                    <Modal.Title>Iniciar Sesión</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
+            <Modal
+                show={show}
+                onHide={handleClose}
+                centered
+                dialogClassName={styles.modalDialog}
+            >
+                <Modal.Body className={styles.bodymodal}>
+                    <button type="button" className="btn-close" onClick={handleClose}></button>
+
+                    <Modal.Title className="mb-4">Iniciar Sesión</Modal.Title>
+
                     <input
                         type="text"
-                        className="form-control mb-2"
+                        className="form-control mb-3"
                         placeholder="Usuario"
                         value={username}
                         onChange={(e) => setUsername(e.target.value)}
                     />
                     <input
                         type="password"
-                        className="form-control mb-2"
+                        className="form-control mb-4"
                         placeholder="Contraseña"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                     />
-                    {error && <p className="text-danger">{error}</p>}
+
+                    <div className={styles.bton}>
+                        <button type="button" className={`${styles.socialBtn} ${styles.google}`}>
+                            <i className={`bi bi-google ${styles.icon}`}></i>
+                            Continuar con Google
+                        </button>
+
+                        <button type="button" className={`${styles.socialBtn} ${styles.facebook}`}>
+                            <i className={`bi bi-facebook ${styles.icon}`}></i>
+                            Continuar con Facebook
+                        </button>
+
+                        <p className="mt-3">
+                            ¿No tienes cuenta?
+                            <Link to="/construccion" onClick={handleClose}> ¡Registrate!</Link>
+                        </p>
+                    </div>
+
+                    {error && <p className="text-danger mt-3">{error}</p>}
+
+                    <div className={styles.footerModal}>
+                        <Button className={styles.btnModalLogin} onClick={handleLogin}>
+                            Iniciar Sesión
+                        </Button>
+                    </div>
                 </Modal.Body>
-                <Modal.Footer>
-                    <Button variant="secondary" onClick={handleClose}>
-                        Cerrar
-                    </Button>
-                    <Button variant="primary" onClick={handleLogin}>
-                        Iniciar Sesión
-                    </Button>
-                </Modal.Footer>
             </Modal>
         </>
     );

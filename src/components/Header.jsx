@@ -16,8 +16,8 @@ export const Header = () => {
           <Link to='/' className={styles.navLinks}>Inicio</Link>
           <Link to='/reservas' className={styles.navLinks}>Reserva-F5</Link>
           <Link to='/menu' className={styles.navLinks}>Menú</Link>
-          <Link to='#' className={styles.navLinks}>Contacto</Link>
-          <Link to='#' className={styles.navLinks}>Sobre Nosotros</Link>
+          <span className={styles.navLinks}>Contacto</span>
+          <span className={styles.navLinks}>Sobre Nosotros</span>
 
           <form className={`d-flex ${styles.formBuscador} ms-3`} role="search">
             <input
@@ -31,7 +31,7 @@ export const Header = () => {
         </Nav>
 
         <div className={styles.loginBtns}>
-          {user && typeof user === 'object' && user.name ? (
+          {user?.name ? (
             <div className="d-flex align-items-center gap-2">
               <div
                 className={styles.userAvatarContainer}
@@ -44,10 +44,9 @@ export const Header = () => {
                 )}
               </div>
               <span
-                className={`${styles.userName} ${user.role === 'admin' ? styles.adminName : styles.userNameCommon
-                  }`}
+                className={`${styles.userName} ${user.role === 'admin' ? styles.adminName : styles.userNameCommon}`}
               >
-                {typeof user.name === 'string' ? user.name : 'Sin nombre'}
+                {user.name || 'Sin nombre'}
               </span>
               <button onClick={logout} className={`btn ${styles.btnSalir}`}>
                 Salir
@@ -56,7 +55,7 @@ export const Header = () => {
           ) : (
             <div className="d-flex align-items-center gap-2">
               <LoginModal />
-              <Link to="#" className={`btn ${styles.btnLogin}`}>
+              <Link to="/construccion" className={`btn ${styles.btnLogin}`}>
                 Registrar
               </Link>
             </div>
