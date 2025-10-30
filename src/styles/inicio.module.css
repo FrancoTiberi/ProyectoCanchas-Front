@@ -1,0 +1,164 @@
+/* ==========================
+   Main y fondo principal
+========================== */
+main {
+    background-color: #2E7D32;
+    min-height: 100vh;
+}
+
+/* ==========================
+   Sección F5 (canchas)
+========================== */
+.f5 {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 50px;
+    justify-content: center;
+    place-items: center;
+    padding: 0 10vw;
+    text-align: center;
+}
+
+/* ==========================
+   Sección food (comida)
+========================== */
+.food {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    background-color: #e6c200;
+    gap: 40px;
+    padding: 5vw 5vw;
+    place-items: center;
+}
+
+/* ==========================
+   Cards (tarjetas)
+========================== */
+.card {
+    background-color: white;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 16rem;
+}
+
+.cardBody {
+    font-size: 0.9rem;
+    padding: 1rem 1rem;
+    flex: 1 1 auto;
+}
+
+.cardImg {
+    width: 100%;
+    height: 230px;
+    object-fit: cover;
+    overflow: hidden;
+}
+
+.card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 12px 20px rgba(0, 0, 0, 0.2);
+}
+
+/* ==========================
+   Subtítulo sección
+========================== */
+.subti {
+    padding: 50px;
+}
+
+.subti h2 {
+    text-align: center;
+    font-size: 3rem;
+    color: white;
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+}
+
+/* ==========================
+   Botón central
+========================== */
+.botonContenedor {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 3rem;
+}
+
+/* ==========================
+   Menú food
+========================== */
+.menu {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+}
+
+.menu h2 {
+    font-size: 3rem;
+    text-align: center;
+    font-weight: 600;
+}
+
+.carousel-item {
+    height: 700px;
+    object-fit: cover;
+}
+
+.carousel-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center center;
+}
+
+/* ==========================
+   Textos secundarios en food
+========================== */
+.ps2 {
+    font-size: 0.8rem;
+    text-align: center;
+}
+
+.h2s2 {
+    text-align: center;
+    font-weight: 600;
+    font-size: 30px;
+}
+
+/* ==========================
+  Header (responsive)
+========================== */
+@media (max-width: 480px) {
+    header {
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-template-rows: 2fr 1fr;
+        justify-content: center;
+        align-items: center;
+        gap: 0.8rem;
+        padding: 1rem;
+    }
+
+    .headerNav {
+        width: 100%;
+    }
+
+    .btnLogin {
+        max-width: 150px;
+    }
+
+    .nav-contenedor {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-evenly;
+        height: 100%;
+        width: 100%;
+        padding: 0;
+    }
+
+    h1 {
+        border-bottom: 2px solid var(--main-clr4);
+    }
+
+}
