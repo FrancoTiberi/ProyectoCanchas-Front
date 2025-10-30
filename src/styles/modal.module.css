@@ -1,171 +1,212 @@
-/* Tamaño y estructura del modal */
+/* ============================================================
+   📦 TAMAÑO Y ESTRUCTURA DEL MODAL
+============================================================ */
 .modalDialog {
-    max-width: 420px;
-    min-height: 480px;
-    margin: auto;
+  max-width: 26.25rem; /* 420px */
+  min-height: 30rem;   /* 480px */
+  margin: auto;
 }
 
-/* Fondo y borde del modal */
+/* ============================================================
+   🎨 FONDO Y BORDE DEL MODAL
+============================================================ */
 .modal {
-    background-color: #2E7D32;
-    border: 5px solid black;
-    padding: 0;
-    position: relative; /* necesario para posicionar el botón de cerrar */
+  background-color: #2E7D32;
+  border: 0.3125rem solid black;
+  padding: 0;
+  position: relative;
 }
 
-/* Botón de cerrar en la esquina superior derecha */
+/* ============================================================
+   ❌ BOTÓN DE CERRAR
+============================================================ */
 .bodymodal :global(.btn-close) {
-    position: absolute;
-    top: 16px;
-    right: 16px;
-    filter: invert(1);
-    opacity: 0.9;
-    transition: all 0.3s ease;
-    border-radius: 50%;
-    padding: 0.4rem;
-    background-color: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    z-index: 10;
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  filter: invert(1);
+  opacity: 0.9;
+  transition: all 0.3s ease;
+  border-radius: 50%;
+  padding: 0.4rem;
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  z-index: 10;
 }
 
 .bodymodal :global(.btn-close:hover) {
-    opacity: 1;
-    background-color: rgba(255, 255, 255, 0.2);
-    transform: scale(1.1);
+  opacity: 1;
+  background-color: rgba(255, 255, 255, 0.2);
+  transform: scale(1.1);
 }
 
-/* Cuerpo del modal */
+/* ============================================================
+   🧱 CUERPO DEL MODAL
+============================================================ */
 .bodymodal {
-    background-color: #2E7D32;
-    color: white;
-    border: none;
-    padding: 40px 30px;
-    text-align: center;
-    position: relative; /* para que el botón de cerrar se posicione correctamente */
+  background-color: #2E7D32;
+  color: white;
+  border: none;
+  padding: 2.5rem 1.875rem;
+  text-align: center;
+  position: relative;
 }
 
 .bodymodal :global(.modal-title) {
-    margin-bottom: 1.5rem;
+  margin-bottom: 1.5rem;
 }
 
 .bodymodal input {
-    margin-bottom: 1rem;
+  margin-bottom: 1rem;
 }
 
 .bodymodal .form-control {
-    font-size: 0.95rem;
-    padding: 0.5rem 0.75rem;
+  font-size: 0.95rem;
+  padding: 0.5rem 0.75rem;
 }
 
-/* Botón de iniciar sesión dentro del modal */
+/* ============================================================
+   🔘 BOTÓN DE LOGIN PRINCIPAL
+============================================================ */
 .btnModalLogin {
-    background-color: #ffffff;
-    color: #2E7D32;
-    border: 1px solid #dadce0;
-    border-radius: 8px;
-    font-weight: 600;
-    font-size: 0.95rem;
-    padding: 8px 16px;
-    transition: background-color 0.3s ease, box-shadow 0.3s ease;
-    display: block;
-    margin: 0 auto;
+  background-color: #ffffff;
+  color: #2E7D32;
+  border: 1px solid #dadce0;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  font-size: 0.95rem;
+  padding: 0.5rem 1rem;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  display: block;
+  margin: 0 auto;
 }
 
 .btnModalLogin:hover {
-    background-color: #e8f0fe;
-    box-shadow: 0 4px 8px rgba(66, 133, 244, 0.3);
-    color: #1b5e20;
+  background-color: #e8f0fe;
+  box-shadow: 0 0.25rem 0.5rem rgba(66, 133, 244, 0.3);
+  color: #1b5e20;
 }
 
-/* Botón exterior de login */
+/* ============================================================
+   🔘 BOTÓN DE LOGIN SECUNDARIO
+============================================================ */
 .btnLogin {
-    background-color: #adb5bd;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    color: #212529;
-    border-radius: 10px;
-    font-size: 0.9rem;
-    min-width: 120px;
-    padding: 6px 12px;
-    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  background-color: #adb5bd;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #212529;
+  border-radius: 0.625rem;
+  font-size: 0.9rem;
+  min-width: 7.5rem;
+  padding: 0.375rem 0.75rem;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .btnLogin:hover {
-    background-color: #ced4da;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    color: #212529;
+  background-color: #ced4da;
+  box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.2);
+  color: #212529;
 }
 
-/* Contenedor de botones sociales */
+/* ============================================================
+   📲 CONTENEDOR DE BOTONES SOCIALES
+============================================================ */
 .bton {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1rem;
-    margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1rem;
 }
 
-/* Botones sociales */
+/* ============================================================
+   🔘 BOTONES SOCIALES
+============================================================ */
 .socialBtn {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.5rem 1rem;
-    border-radius: 0.375rem;
-    font-weight: 600;
-    font-size: 1rem;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    transition: all 0.3s ease;
-    border: 1px solid transparent;
-    width: 100%;
-    justify-content: center;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  font-weight: 600;
+  font-size: 1rem;
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  border: 1px solid transparent;
+  width: 100%;
+  justify-content: center;
 }
 
-/* Botón Google */
+/* Google */
 .google {
-    background-color: #fff;
-    color: #5f6368;
-    border: 1px solid #dadce0;
+  background-color: #fff;
+  color: #5f6368;
+  border: 1px solid #dadce0;
 }
 
 .google:hover {
-    background-color: #e8f0fe;
-    color: #202124;
-    border-color: #4285f4;
-    box-shadow: 0 6px 12px rgba(66, 133, 244, 0.3);
+  background-color: #e8f0fe;
+  color: #202124;
+  border-color: #4285f4;
+  box-shadow: 0 0.375rem 0.75rem rgba(66, 133, 244, 0.3);
 }
 
-/* Botón Facebook */
+/* Facebook */
 .facebook {
-    background-color: #1877f2;
-    color: #fff;
+  background-color: #1877f2;
+  color: #fff;
 }
 
 .facebook:hover {
-    background-color: #0f65d4;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  background-color: #0f65d4;
+  box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.15);
 }
 
-/* Íconos */
+/* ============================================================
+   🔣 ÍCONOS
+============================================================ */
 .icon {
-    font-size: 1.25rem;
+  font-size: 1.25rem;
 }
 
-/* Link de registro con estilo moderno y sutil */
+/* ============================================================
+   🔗 LINK DE REGISTRO
+============================================================ */
 .bodymodal a {
-    color: #c8e6c9;
-    font-weight: 500;
-    text-decoration: none;
-    transition: color 0.3s ease;
+  color: #c8e6c9;
+  font-weight: 500;
+  text-decoration: none;
+  transition: color 0.3s ease;
 }
 
 .bodymodal a:hover {
-    color: #ffffff;
-    text-decoration: underline;
+  color: #ffffff;
+  text-decoration: underline;
 }
 
-/* Footer del modal centrado */
+/* ============================================================
+   📍 FOOTER DEL MODAL
+============================================================ */
 .footerModal {
-    margin-top: 2rem;
-    display: flex;
-    justify-content: center;
+  margin-top: 2rem;
+  display: flex;
+  justify-content: center;
+}
+
+/* ============================================================
+   🟢 BOTÓN DE REGISTRO INICIO
+============================================================ */
+.btnLoginInicio {
+  background-color: #7fffd4;
+  border: none;
+  border-radius: 0.625rem;
+  padding: 0.5rem 1.25rem;
+  text-align: center;
+  width: clamp(12rem, 80%, 18.75rem);
+  color: black;
+  font-weight: 600;
+}
+
+.btnLoginInicio:hover {
+  background-color: #5fb598;
+  color: white;
 }

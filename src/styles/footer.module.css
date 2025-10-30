@@ -1,11 +1,18 @@
+/* ============================================================
+   📦 CONTENEDOR PRINCIPAL DEL FOOTER
+============================================================ */
 .footer {
   padding-top: 2rem;
-  margin-bottom: 0px;
+  margin-bottom: 0;
 }
 
+/* ============================================================
+   🧱 ESTRUCTURA DE PIE DE PÁGINA
+============================================================ */
 .pie-pag {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
 }
 
 .redes {
@@ -14,37 +21,38 @@
   height: 100%;
 }
 
+/* ============================================================
+   🎯 ELEMENTOS VISUALES
+============================================================ */
 .logo {
-  max-height: 50px;
-  border-radius: 10px;
+  max-height: 3.125rem; /* equivalente a 50px */
+  border-radius: 0.625rem;
 }
 
 .icono {
   vertical-align: -0.125em;
-  margin-right: 3px;
+  margin-right: 0.25rem;
 }
 
 #nav-footer,
 #logo-footer {
-  margin: 10px;
+  margin: 0.625rem;
 }
 
-/* ==========================
-  Footer (responsive)
-========================== */
-
-@media (max-width: 480px) {
+/* ============================================================
+   📱 FOOTER RESPONSIVE
+============================================================ */
+@media (max-width: 30rem) { /* 480px */
   .pie-pag {
-    display: grid;
     grid-template-columns: 1fr;
     place-items: center;
-    gap: 0.3rem;
+    gap: 0.5rem;
   }
 
   .text-center {
     display: grid;
     place-content: center;
-    gap: 0.5rem;
+    gap: 0.75rem;
   }
 
   .text-center small {
