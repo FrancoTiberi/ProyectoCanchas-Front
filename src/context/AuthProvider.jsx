@@ -25,10 +25,10 @@ export function AuthProvider({ children }) {
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
-    if (storedUser && !user) {
+    if (storedUser) {
       setUser(JSON.parse(storedUser));
     }
-  }, [user]);
+  }, []);
 
   return (
     <AuthContext.Provider value={{ user, login, logout, setUser }}>

@@ -1,73 +1,81 @@
-/* ----- ESTRUCTURA GENERAL ----- */
+/* ============================================================
+   📦 ESTRUCTURA GENERAL
+============================================================ */
 .main {
-  padding: 40px 20px;
+  padding: 2.5rem 1.25rem;
   background-color: #f5f5f5;
-  min-height: 100vh;
+  min-height: 100dvh;
   font-family: "Poppins", sans-serif;
 }
 
 .titulo {
   text-align: center;
   color: #2E7D32;
-  font-size: 2.4rem;
+  font-size: clamp(1.8rem, 5vw, 2.4rem);
   font-weight: 600;
-  margin-bottom: 40px;
+  margin-bottom: 2.5rem;
 }
 
-/* ----- SECCIONES ----- */
+/* ============================================================
+   🧱 SECCIONES
+============================================================ */
 .section {
-  margin-bottom: 50px;
+  margin-bottom: 3rem;
 }
 
 .sectionTitle {
   color: #1b5e20;
-  font-size: 1.6rem;
-  margin-bottom: 20px;
+  font-size: clamp(1.2rem, 4vw, 1.6rem);
+  margin-bottom: 1.25rem;
   text-align: center;
 }
 
-/* ----- GRID DE COMIDAS ----- */
+/* ============================================================
+   🍽️ GRID DE COMIDAS
+============================================================ */
 .itemsContainer {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 24px;
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  gap: 1.5rem;
 }
 
 .card {
   background: #fff;
-  border-radius: 16px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
-  padding: 16px;
+  border-radius: 1rem;
+  box-shadow: 0 0.25rem 0.625rem rgba(0, 0, 0, 0.08);
+  padding: 1rem;
   text-align: center;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.12);
+  transform: translateY(-0.25rem);
+  box-shadow: 0 0.375rem 0.875rem rgba(0, 0, 0, 0.12);
 }
 
 .imagen {
   width: 100%;
-  height: 160px;
+  height: 10rem;
   object-fit: cover;
-  border-radius: 12px;
-  margin-bottom: 12px;
+  border-radius: 0.75rem;
+  margin-bottom: 0.75rem;
 }
 
 .precio {
   font-weight: 600;
   color: #2E7D32;
-  margin: 6px 0;
+  margin: 0.375rem 0;
 }
 
-/* ----- BOTONES GENERALES ----- */
+/* ============================================================
+   🔘 BOTONES GENERALES
+============================================================ */
 .button {
   background-color: #2E7D32;
   color: white;
   border: none;
-  padding: 10px 16px;
-  border-radius: 10px;
+  padding: 0.625rem 1rem;
+  border-radius: 0.625rem;
   cursor: pointer;
   font-size: 0.95rem;
   transition: background 0.2s ease, transform 0.1s ease;
@@ -78,20 +86,22 @@
   transform: scale(1.03);
 }
 
-/* ----- BOTÓN DE CARRITO (flotante) ----- */
+/* ============================================================
+   🛒 BOTÓN DE CARRITO (FLOTANTE)
+============================================================ */
 .carritoBtn {
   position: fixed;
-  bottom: 30px;
-  right: 30px;
-  width: 60px;
-  height: 60px;
+  bottom: 2rem;
+  right: 2rem;
+  width: 3.75rem;
+  height: 3.75rem;
   border-radius: 50%;
   background-color: #2E7D32;
   color: white;
   font-size: 1.2rem;
   font-weight: bold;
   border: none;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 0.25rem 0.625rem rgba(0, 0, 0, 0.2);
   cursor: pointer;
   transition: background 0.2s ease, transform 0.15s ease;
   z-index: 1000;
@@ -102,16 +112,18 @@
   transform: scale(1.1);
 }
 
-/* ----- CONTENEDOR DEL CARRITO ----- */
+/* ============================================================
+   🧺 CONTENEDOR DEL CARRITO
+============================================================ */
 .carritoContainer {
   position: fixed;
-  bottom: 100px;
-  right: 30px;
-  width: 300px;
+  bottom: 6.25rem;
+  right: 2rem;
+  width: clamp(16rem, 30vw, 18.75rem);
   background: #fff;
-  border-radius: 16px;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
-  padding: 20px;
+  border-radius: 1rem;
+  box-shadow: 0 0.375rem 1.125rem rgba(0, 0, 0, 0.15);
+  padding: 1.25rem;
   z-index: 999;
   animation: slideUp 0.3s ease;
 }
@@ -119,7 +131,7 @@
 @keyframes slideUp {
   from {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(1.25rem);
   }
 
   to {
@@ -132,13 +144,13 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 10px;
+  margin-bottom: 0.625rem;
   font-size: 0.9rem;
 }
 
 .total {
   text-align: right;
   font-weight: bold;
-  margin-top: 15px;
+  margin-top: 0.9375rem;
   color: #2E7D32;
 }

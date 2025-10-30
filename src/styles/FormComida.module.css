@@ -1,0 +1,64 @@
+/* ============================================================
+   🧾 CONTENEDOR DEL FORMULARIO
+============================================================ */
+.formulario {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem; /* equivalente a 12px */
+  padding: 0.5rem;
+}
+
+/* ============================================================
+   ✏️ CAMPOS DE ENTRADA
+============================================================ */
+.formulario input,
+.formulario textarea,
+.formulario select {
+  padding: 0.5rem 0.625rem; /* 8px 10px */
+  border: 1px solid #ccc;
+  border-radius: 0.375rem;
+  font-size: 1rem;
+  font-family: inherit;
+  resize: vertical;
+}
+
+/* Textarea más alto */
+.formulario textarea {
+  min-height: 5rem; /* 80px */
+}
+
+/* ============================================================
+   🔘 BOTÓN PRINCIPAL DEL FORMULARIO
+============================================================ */
+.formulario button {
+  background-color: #0d6efd;
+  color: white;
+  border: none;
+  padding: 0.625rem 0.875rem; /* 10px 14px */
+  border-radius: 0.375rem;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.formulario button:hover {
+  background-color: #0b5ed7;
+}
+
+/* ============================================================
+   🟢 BOTÓN DE APERTURA DEL MODAL
+============================================================ */
+.agregarBtn {
+  background-color: #198754;
+  color: white;
+  border: none;
+  padding: 0.5rem 0.75rem; /* 8px 12px */
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.agregarBtn:hover {
+  background-color: #157347;
+}

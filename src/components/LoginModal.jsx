@@ -1,12 +1,11 @@
 import { useState } from "react";
-import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import { loginUser } from "../data/user";
 import { useAuth } from "../context/AuthProvider";
 import styles from '../styles/modal.module.css';
 import { Link } from 'react-router-dom';
 
-export default function LoginModal() {
+export default function LoginModal({ variant, className }) {
     const [show, setShow] = useState(false);
     const handleShow = () => setShow(true);
     const handleClose = () => setShow(false);
@@ -24,6 +23,7 @@ export default function LoginModal() {
             setError('');
             setUser(result.user);
             localStorage.setItem('user', JSON.stringify(result.user));
+            localStorage.setItem('rol', result.user.role);
             handleClose();
 
             const destino = result.user.role === 'admin' ? '/admin' : '/';
@@ -35,9 +35,12 @@ export default function LoginModal() {
 
     return (
         <>
-            <Button className={styles.btnLogin} onClick={handleShow}>
+            <button
+                className={className}
+                onClick={handleShow}
+            >
                 Iniciar Sesión
-            </Button>
+            </button>
 
             <Modal
                 show={show}
@@ -85,9 +88,9 @@ export default function LoginModal() {
                     {error && <p className="text-danger mt-3">{error}</p>}
 
                     <div className={styles.footerModal}>
-                        <Button className={styles.btnModalLogin} onClick={handleLogin}>
+                        <button className={styles.btnModalLogin} onClick={handleLogin}>
                             Iniciar Sesión
-                        </Button>
+                        </button>
                     </div>
                 </Modal.Body>
             </Modal>

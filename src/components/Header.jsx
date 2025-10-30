@@ -38,7 +38,7 @@ export const Header = () => {
                 title={user.role === 'admin' ? 'Administrador' : 'Usuario'}
               >
                 {user.role === 'admin' ? (
-                  <i className="bi-award-fill fs-4"></i>
+                  <Link to="/admin"><i className="bi-award-fill fs-4"></i></Link>
                 ) : (
                   <i className="bi bi-person-fill fs-4"></i>
                 )}
@@ -49,12 +49,12 @@ export const Header = () => {
                 {user.name || 'Sin nombre'}
               </span>
               <button onClick={logout} className={`btn ${styles.btnSalir}`}>
-                Salir
+                Cerrar Sesión
               </button>
             </div>
           ) : (
             <div className="d-flex align-items-center gap-2">
-              <LoginModal />
+              <LoginModal className={styles.btnLogin} />
               <Link to="/construccion" className={`btn ${styles.btnLogin}`}>
                 Registrar
               </Link>
