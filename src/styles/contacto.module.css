@@ -1,0 +1,138 @@
+/* Contenedor principal */
+.main {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.cajaPrincipal {
+  background-color: var(--main-clr6);
+  width: 95%;
+  border-radius: 60px;
+  padding: 1rem;
+}
+
+.titulo {
+  text-align: center;
+  color: white;
+  height: 10vh;
+  padding: 3vw;
+}
+
+/* Contenedor de cajas */
+.contenedorbtns {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  height: 65vh;
+  justify-content: center;
+  place-items: center;
+  gap: 1.5rem;
+  padding: 1rem;
+  text-align: center;
+  color: white;
+}
+
+.caja {
+  width: 100%;
+  height: 95%;
+}
+
+/* Caja del formulario */
+.caja1 {
+  display: grid;
+  justify-content: center;
+  background-color: var(--main-clr7);
+  border-radius: 20px;
+  color: black;
+  margin-top: 10px;
+  font-size: 1.1rem;
+}
+
+.tituloCaja1 {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+/* Caja del mapa */
+.caja2 {
+  display: grid;
+  grid-template-rows: 0.4fr 1fr;
+  background-color: var(--main-clr7);
+  height: 95%;
+  padding: 30px;
+  color: black;
+  border-radius: 20px;
+}
+
+.mapaH2 {
+  height: 20%;
+  font-size: 1.4rem;
+}
+
+.boton {
+  margin-top: 1.5rem;
+}
+
+/* Mapa */
+.cajaMapa {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.mapa {
+  height: 100%;
+  border-radius: 10px;
+  transition: box-shadow 0.3s ease;
+}
+
+.mapa:hover {
+  box-shadow: 0 0 15px rgba(0, 123, 255, 0.5);
+}
+
+/* Media Queries */
+@media (max-width: 480px) {
+  .main {
+    height: 100%;
+  }
+
+  .cajaPrincipal {
+    width: 100%;
+    background-color: transparent;
+  }
+
+  .contenedorbtns {
+    grid-template-columns: 1fr;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+  }
+
+  .caja {
+    height: 100%;
+    padding: 1.5rem;
+  }
+
+  .mapa {
+    height: 30vh;
+    width: 100%;
+  }
+
+  .titulo {
+    height: 80%;
+  }
+}
+
+@media (width: 1280px) {
+  .contenedorbtns * {
+    font-size: 1.5rem;
+  }
+
+  .tituloCaja1 {
+    font-size: 2.5rem;
+  }
+}

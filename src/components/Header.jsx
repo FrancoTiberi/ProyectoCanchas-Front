@@ -16,8 +16,8 @@ export const Header = () => {
           <Link to='/' className={styles.navLinks}>Inicio</Link>
           <Link to='/reservas' className={styles.navLinks}>Reserva-F5</Link>
           <Link to='/menu' className={styles.navLinks}>Menú</Link>
-          <span className={styles.navLinks}>Contacto</span>
-          <span className={styles.navLinks}>Sobre Nosotros</span>
+          <Link to='/contacto' className={styles.navLinks}>Contacto</Link>
+          <Link to='/sobrenosotros' className={styles.navLinks}>Sobre Nosotros</Link>
 
           <form className={`d-flex ${styles.formBuscador} ms-3`} role="search">
             <input

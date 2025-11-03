@@ -4,7 +4,7 @@ import styles from '../styles/Footer.module.css';
 export const Footer = () => {
   return (
     <div className={`${styles.footer} bg-dark text-white`}>
-      <div className={styles['pie-pag']}>
+      <div className={styles.piePag}>
         <div className="text-center">
           <h2>Contactanos</h2>
           <p>Comunicate con nuestro equipo</p>
@@ -15,6 +15,7 @@ export const Footer = () => {
             <li>✔ Sponsor</li>
           </ul>
         </div>
+
         <div className="text-center">
           <h2>Información</h2>
           <p>
@@ -36,24 +37,39 @@ export const Footer = () => {
             Av. Perón 125, Tucumán, Argentina
           </p>
         </div>
+
         <div className={`text-center ${styles.redes}`}>
           <h2>Redes Sociales</h2>
-          <nav id="nav-footer">
-            <a href="./404Page.html" className="text-white fs-4 me-3">
+          <div className={styles.iconosRedes}>
+            <a
+              href="https://www.instagram.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-white fs-4 me-3"
+            >
               <i className="bi bi-instagram"></i>
             </a>
-            <a href="./404Page.html" className="text-white fs-4 me-3">
+            <a
+              href="https://wa.me/54"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-white fs-4 me-3"
+            >
               <i className="bi bi-whatsapp"></i>
             </a>
-            <a href="./404Page.html" className="text-white fs-4">
+            <a
+              href="https://twitter.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-white fs-4"
+            >
               <i className="bi bi-twitter-x"></i>
             </a>
-          </nav>
-          <div id="logo-footer">
-            <img src={logo} alt="logo" className={styles.logo} />
           </div>
+            <img src={logo} alt="logo" className={styles.logo} />
         </div>
       </div>
+
       <div className="text-center">
         <small>© 2025 Golazo Gourmet. Todos los derechos reservados.</small>
       </div>
