@@ -22,8 +22,8 @@ export default function HeaderInicio() {
                     <Link to="/" className={styles.navLinks}>Inicio</Link>
                     <Link to="/reservas" className={styles.navLinks}>Reserva-F5</Link>
                     <Link to="/menu" className={styles.navLinks}>Comida</Link>
-                    <Link to="/construccion" className={styles.navLinks}>Contacto</Link>
-                    <Link to="/construccion" className={styles.navLinks}>Sobre Nosotros</Link>
+                    <Link to="/contacto" className={styles.navLinks}>Contacto</Link>
+                    <Link to="/sobrenosotros" className={styles.navLinks}>Sobre Nosotros</Link>
 
                     <form className={`d-flex ${styles.formBuscador}`} role="search">
                         <input className={`form-control me-2 ${styles.buscador}`} type="search" placeholder="Buscar" aria-label="Buscar" />

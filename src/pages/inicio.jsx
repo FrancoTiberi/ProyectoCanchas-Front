@@ -14,6 +14,8 @@ import Carousel from 'react-bootstrap/Carousel';
 import Image from 'react-bootstrap/Image';
 import HeaderInicio from '../components/HeaderInicio';
 import { Footer } from '../components/footer';
+import { Link } from 'react-router-dom';
+
 
     export function Inicio() {
 
@@ -51,7 +53,7 @@ import { Footer } from '../components/footer';
                     </Card>
                 </div>
                 <article className={styles.botonContenedor}>
-                    <Button href="./Pages/reservaf5.html" type='button' variant='primary' size='lg'>Reservá Ya!</Button>
+                    <Link to='/reservas'><Button type='button' variant='primary' size='lg'>Reservá Ya!</Button></Link>
                 </article>
             </section>
             <Carousel activeIndex={index} onSelect={handleSelect}>
@@ -68,7 +70,7 @@ import { Footer } from '../components/footer';
             <section className={styles.food}>
                 <article className={styles.menu}>
                     <h2>En el Menú</h2>
-                    <a href="./Pages/MenuPage.html" className="btn btn-primary" type="button">Ver Menú</a>
+                    <Link to='/menu'><Button className="btn btn-primary" type="button">Ver Menú</Button></Link>
                 </article>
                 <Card className={styles.card}>
                      <Card.Img src={hamburguesa} variant='top' className={styles.cardImg}></Card.Img>

@@ -1,0 +1,114 @@
+.contenedornosotros {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    background-color: var(--main-clr5);
+    padding: 2rem;
+    gap: 2rem;
+}
+
+.contenedor1 {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+}
+
+.titulo1 {
+    font-size: 2.5rem;
+    color: white;
+    border-bottom: 2px solid var(--main-clr3);
+    padding-bottom: 0.5rem;
+}
+
+.parrafo1 {
+    background-color: var(--main-clr6);
+    border-radius: 10px;
+    text-align: center;
+    color: white;
+    width: 80%;
+    padding: 1.5rem;
+    line-height: 1.6;
+}
+
+.contenedor2 {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(225px, 1fr));
+    gap: 1.5rem;
+    align-items: center;
+    justify-content: center;
+}
+
+.integrante {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    opacity: 0;
+    animation: sobreNosotrosFadeIn 2s ease forwards;
+}
+
+.imagen {
+    width: 225px;
+    height: 225px;
+    object-fit: cover;
+    border-radius: 50%;
+    background-color: var(--main-clr6);
+    margin-bottom: 1rem;
+    opacity: 0;
+    animation: sobreNosotrosFadeIn 2s ease forwards;
+}
+
+.nombre {
+    color: white;
+    text-align: center;
+    font-weight: bold;
+    font-size: 1.2rem;
+    border-bottom: 1px solid var(--main-clr3);
+    padding-bottom: 0.3rem;
+    opacity: 0;
+    animation: sobreNosotrosFadeInText 2s ease forwards;
+}
+
+@keyframes sobreNosotrosFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes sobreNosotrosFadeInText {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (max-width: 768px) {
+    .contenedornosotros {
+        flex-direction: column;
+        display: flex;
+        align-items: center;
+    }
+
+    .parrafo1 {
+        width: 90%;
+    }
+
+    .contenedor2 {
+        grid-template-columns: 1fr;
+    }
+
+    .titulo1 {
+        font-size: 2rem;
+    }
+}
