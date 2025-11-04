@@ -8,12 +8,12 @@ import { Row, Col } from 'react-bootstrap';
 import { format } from 'date-fns';
 import styles from '../styles/reserva.module.css';
 import 'react-datepicker/dist/react-datepicker.css';
+import { reservaEjemplo } from '../data/reserva';
 
 export const Reservaf5 = () => {
 
     const [abrirDropdown, setAbrirDropdown] = useState(null);
-    const [grillas, setGrillas] = useState([]);
-    const [canchas, setCanchas] = useState([]);
+    const [grilla, setGrilla] = useState([]);
     const [horas, setHoras] = useState([]);
     const [selectedDate, setSelectedDate] = useState(new Date());
     const dropdownRef = useRef(null);
@@ -26,39 +26,34 @@ export const Reservaf5 = () => {
         >{value}</button>
     ));
 
-    function generarGrillas(num) {
-        let grillasTotales = [];
-        for (let i = 0; i <= num; i++) {
-            grillasTotales.push({
-                id: i,
-                numGrilla: i,
-                hora: (i + 11)
-            })
-        }
-        return grillasTotales;
-    }
-
-    function generarCanchas(num) {
-        let canchasTotales = [];
-        for (let i = 1; i <= num; i++) {
-            canchasTotales.push({
-                id: i,
-                cantCanchas: "cancha " + i
-            })
-        }
-        return canchasTotales;
-    }
-
-    function generarHoras(desde,hasta) {
+    function generarHoras(desde, hasta) {
         let horasTotales = [];
-        let num = hasta < desde ? hasta + 24 : hasta;
-        for (let i = desde; i <= num; i++) {
+        let rango = hasta < desde ? hasta + 24 : hasta;
+
+        for (let i = desde; i <= rango; i++) {
             horasTotales.push({
-                id: i,
+                id: Date.now() + i,
                 cantHoras: i >= 24 ? i - 24 : i
             })
         }
         return horasTotales;
+    }
+
+    function generarCanchasyFilas(obj) {
+        let canchasTotales = [];
+        let limite = parseInt(obj.canchas)
+        let celdasTotales = generarHoras(parseInt(obj.desde), parseInt(obj.hasta))
+        for (let i = 0; i < limite; i++) {
+            canchasTotales.push({
+                canchaID: i + 1,
+                celdas: celdasTotales.map(celda => ({
+                    disponible: true,
+                    celdaId: `${i + 1}-${celda.cantHoras}`,
+                    horaCelda: parseInt(celda.cantHoras)
+                }))
+            })
+        }
+        return canchasTotales;
     }
 
     const darIndiceCelda = (indice) => {
@@ -66,21 +61,34 @@ export const Reservaf5 = () => {
     };
 
     useEffect(() => {
-        const cerrarDropdown = (e) => {
-            if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
-                setAbrirDropdown(null);
-            }
-        };
+    const cerrarDropdown = (e) => {
+        if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+            setAbrirDropdown(null);
+        }
+    };
 
-        document.addEventListener("mousedown", cerrarDropdown);
-        setGrillas(generarGrillas(14))
-        setCanchas(generarCanchas(3))
-        setHoras(generarHoras(11,1))
+    document.addEventListener("mousedown", cerrarDropdown);
 
-        return () => {
-            document.removeEventListener("mousedown", cerrarDropdown);
-        };
-    }, []);
+    const reservasLS = JSON.parse(localStorage.getItem("reservas")) || [];
+
+    const reservasTotales = [reservaEjemplo, ...reservasLS];
+
+    let canchasAcumuladas = [];
+    let horasGeneradas = [];
+
+    reservasTotales.forEach((reserva) => {
+        const nuevasCanchas = generarCanchasyFilas(reserva);
+        horasGeneradas = generarHoras(parseInt(reserva.desde), parseInt(reserva.hasta));
+        canchasAcumuladas = [...canchasAcumuladas, ...nuevasCanchas];
+    });
+
+    setHoras(horasGeneradas);
+    setGrilla(canchasAcumuladas);
+
+    return () => {
+        document.removeEventListener("mousedown", cerrarDropdown);
+    };
+}, []);
 
     return (
         <div className={styles.contenedorPrincipal}>
@@ -108,38 +116,48 @@ export const Reservaf5 = () => {
                         <Row>
                             <Col md={1} className={styles.gridItemHora}></Col>
                             {horas.map(hora => (
-                                <Col className={styles.gridItemHora} key={hora.id}><b>{hora.cantHoras == 0 ? hora.cantHoras + "0" : hora.cantHoras}</b></Col>
-                            ))}
-                        </Row>
-                        {canchas.map(cancha => (
-                            <Row key={cancha.id}>
-                            <Col md={1} className={`${styles.gridItem} ${styles.numCancha}`}><b>{cancha.cantCanchas}</b></Col>
-                            {grillas.map(grilla => (
-                                <Col className={`${styles.gridItem} ${styles.colVacia}`} onClick={() => darIndiceCelda(grilla.numGrilla)} ref={dropdownRef} key={grilla.id}>
-                                    <div className={`${styles.dropdownReserva} ${abrirDropdown === grilla.numGrilla ? styles.show : ""}`}>
-                                        <div className={styles.dropdownContenedor}>
-                                            <div className={styles.canchaNumContenedor}>
-                                                <div className={styles.infoCanchaHora}>
-                                                    <img src={canchadefutbol} width="30px" height="30px" />
-                                                    <span className={styles.canchaNum}><b>Cancha 1</b></span>
-                                                </div>
-                                                <div className={styles.canchaHoraContenedor}>
-                                                    <img src={reloj} width="30px" height="30px" />
-                                                    <span className="text-black"><b>{grilla.hora === 25 ? (grilla.hora - 24) + ":00" : grilla.hora + ":00"}</b></span>
-                                                </div>
-                                            </div>
-                                            <div className={styles.canchaPXHContenedor}>
-                                                <div className={styles.infoPXH}>
-                                                    <span className="mx-4"><b>$30.000</b></span>
-                                                    <span className="mx-4"><b>60 min</b></span>
-                                                </div>
-                                            </div>
-                                            <a href="https://www.google.com/"><button type="button" className={styles.btnReserva}><b>Reservar</b></button></a>
-                                        </div>
-                                    </div>
+                                <Col className={styles.gridItemHora} key={hora.id}>
+                                    <b>{hora.cantHoras == 0 ? hora.cantHoras + "0" : hora.cantHoras}</b>
                                 </Col>
                             ))}
                         </Row>
+                        {grilla.map((cancha,i) => (
+                            <Row key={cancha.canchaID + i}>
+                                <Col md={1} className={`${styles.gridItem} ${styles.numCancha}`}>
+                                    <b>cancha {cancha.canchaID}</b>
+                                </Col>
+                                {cancha.celdas.map((celda) => (
+                                    <Col className={`${styles.gridItem} ${styles.colVacia}`} onClick={() => darIndiceCelda(celda.celdaId)} ref={dropdownRef} key={celda.celdaId}>
+                                        <div className={`${styles.dropdownReserva} ${abrirDropdown === celda.celdaId ? styles.show : ""}`}>
+                                            <div className={styles.dropdownContenedor}>
+                                                <div className={styles.canchaNumContenedor}>
+                                                    <div className={styles.infoCanchaHora}>
+                                                        <img src={canchadefutbol} width="30px" height="30px" />
+                                                        <span className={styles.canchaNum}>
+                                                            <b>Cancha {cancha.canchaID}</b>
+                                                        </span>
+                                                    </div>
+                                                    <div className={styles.canchaHoraContenedor}>
+                                                        <img src={reloj} width="30px" height="30px" />
+                                                        <span className="text-black">
+                                                            <b> {celda.horaCelda == 0 ? celda.horaCelda + "0" : celda.horaCelda}:00</b>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                <div className={styles.canchaPXHContenedor}>
+                                                    <div className={styles.infoPXH}>
+                                                        <span className="mx-4"><b>$30.000</b></span>
+                                                        <span className="mx-4"><b>60 min</b></span>
+                                                    </div>
+                                                </div>
+                                                <a href="https://www.google.com/">
+                                                    <button type="button" className={styles.btnReserva}><b>Reservar</b></button>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </Col>
+                                ))}
+                            </Row>
                         ))}
                     </div>
                 </div>
@@ -176,8 +194,8 @@ export const Reservaf5 = () => {
                 <h2 className={styles.tituloHorarios}>Horarios Disponibles</h2>
                 <div className={styles.horariosContenedor}>
                     <div className={styles.horasGridContenedor}>
-                        {horas.map(hora => (
-                            <button className={styles.hora} key={hora.id}>
+                        {horas.map((hora, i) => (
+                            <button className={styles.hora} key={hora.id + (i + 2)}>
                                 {hora.cantHoras == 0 ? hora.cantHoras + "0:00" : hora.cantHoras + ":00"}
                             </button>
                         ))}
@@ -186,9 +204,9 @@ export const Reservaf5 = () => {
                 <article>
                     <h3 className={styles.tituloCanchaDisp}>Canchas Disponibles</h3>
                     <div className={styles.canchasDisponibles}>
-                        {canchas.map(cancha => (
-                            <button key={cancha.id}>
-                                {cancha.cantCanchas}
+                        {grilla.map((cancha,i) => (
+                            <button key={cancha.canchaID + i}>
+                                Cancha {cancha.canchaID}
                             </button>
                         ))}
                     </div>
