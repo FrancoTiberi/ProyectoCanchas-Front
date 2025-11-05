@@ -17,7 +17,7 @@ import { Footer } from '../components/footer';
 import { Link } from 'react-router-dom';
 
 
-    export function Inicio() {
+export function Inicio() {
 
     const [index, setIndex] = useState(0);
 
@@ -27,7 +27,7 @@ import { Link } from 'react-router-dom';
 
     return (
         <main>
-            <HeaderInicio/>
+            <HeaderInicio />
             <section className={styles.subti}>
                 <h2>El mejor lugar para F5</h2>
             </section>
@@ -58,13 +58,13 @@ import { Link } from 'react-router-dom';
             </section>
             <Carousel activeIndex={index} onSelect={handleSelect}>
                 <Carousel.Item>
-                    <Image src={sandwichOferta} width="1270px" height="550px"/>
+                    <Image src={sandwichOferta} width="1270px" height="550px" />
                 </Carousel.Item>
                 <Carousel.Item>
-                    <Image src={burguerOferta} width="1270px" height="550px"/>
+                    <Image src={burguerOferta} width="1270px" height="550px" />
                 </Carousel.Item>
                 <Carousel.Item>
-                    <Image src={pizzaOferta} width="1270px" height="550px"/>
+                    <Image src={pizzaOferta} width="1270px" height="550px" />
                 </Carousel.Item>
             </Carousel>
             <section className={styles.food}>
@@ -73,7 +73,7 @@ import { Link } from 'react-router-dom';
                     <Link to='/menu'><Button className="btn btn-primary" type="button">Ver Menú</Button></Link>
                 </article>
                 <Card className={styles.card}>
-                     <Card.Img src={hamburguesa} variant='top' className={styles.cardImg}></Card.Img>
+                    <Card.Img src={hamburguesa} variant='top' className={styles.cardImg}></Card.Img>
                     <Card.Body className={styles.cardBody}>
                         <Card.Title className={styles.h2s2}>Hamburguesas</Card.Title>
                         <Card.Text className={styles.ps2}>El sabor clásico que nunca falla. Pan dorado, carne a la parrilla y todo el
@@ -81,7 +81,7 @@ import { Link } from 'react-router-dom';
                     </Card.Body>
                 </Card>
                 <Card className={styles.card}>
-                     <Card.Img src={sandwich} variant='top' className={styles.cardImg}></Card.Img>
+                    <Card.Img src={sandwich} variant='top' className={styles.cardImg}></Card.Img>
                     <Card.Body className={styles.cardBody}>
                         <Card.Title className={styles.h2s2}>Sándwiches</Card.Title>
                         <Card.Text className={styles.ps2}>Frescos, variados y listos para cualquier momento del día. Elegí tu
@@ -89,7 +89,7 @@ import { Link } from 'react-router-dom';
                     </Card.Body>
                 </Card>
                 <Card className={styles.card}>
-                     <Card.Img src={pizza} variant='top' className={styles.cardImg}></Card.Img>
+                    <Card.Img src={pizza} variant='top' className={styles.cardImg}></Card.Img>
                     <Card.Body className={styles.cardBody}>
                         <Card.Title className={styles.h2s2}>Pizza</Card.Title>
                         <Card.Text className={styles.ps2}>Masa fina, ingredientes seleccionados y el toque perfecto de horno. Ideal
@@ -97,7 +97,7 @@ import { Link } from 'react-router-dom';
                     </Card.Body>
                 </Card>
             </section>
-            <Footer/>
+            <Footer />
         </main>
     )
 }

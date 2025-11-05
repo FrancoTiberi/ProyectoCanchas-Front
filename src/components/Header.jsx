@@ -55,7 +55,7 @@ export const Header = () => {
           ) : (
             <div className="d-flex align-items-center gap-2">
               <LoginModal className={styles.btnLogin} />
-              <Link to="/construccion" className={`btn ${styles.btnLogin}`}>
+              <Link to="/registrar" className={`btn ${styles.btnLogin}`}>
                 Registrar
               </Link>
             </div>

@@ -58,7 +58,7 @@ export default function HeaderInicio() {
                 ) : (
                     <div className={styles.botonesSesion}>
                         <LoginModal className={styles.btnLoginInicio} variant="inicio" />
-                        <Link to="/construccion" className={`btn ${styles.btnLoginInicio}`}>
+                        <Link to="/registrar" className={`btn ${styles.btnLoginInicio}`}>
                             Registrar
                         </Link>
                     </div>
