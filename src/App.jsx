@@ -27,9 +27,8 @@ function App() {
         <Route path='/menu' element={<Menu />} />
         <Route path='/contacto' element={<Contacto />} />
         <Route path='/sobrenosotros' element={<SobreNosotros />} />
-        <Route path='/registrar' element={<Construccion />} />
-        <Route path='/construccion' element={<Construccion />} />
         <Route path='/registrar' element={<Registrar />} />
+        <Route path='/construccion' element={<Construccion />} />
       </Route>
 
       {/* Admin */}
