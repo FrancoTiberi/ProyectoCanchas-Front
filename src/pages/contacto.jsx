@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { useForm, ValidationError } from '@formspree/react';
 import styles from '../styles/contacto.module.css';
+import CajaDeComentarios from '../components/CajaDeComentarios';
 
 
 const Contacto = () => {
@@ -15,6 +16,7 @@ const Contacto = () => {
     }, [state.succeeded]);
 
     return (
+        <>
         <main className={styles.main}>
             <section className={styles.cajaPrincipal}>
                 <h1 className={styles.titulo}>Ponete en contacto con nuestro equipo</h1>
@@ -75,7 +77,10 @@ const Contacto = () => {
                     </article>
                 </div>
             </section>
+            
         </main>
+        <CajaDeComentarios/>
+        </>
     );
 };
 
