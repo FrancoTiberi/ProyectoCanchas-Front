@@ -90,7 +90,7 @@ export default function CajaDeComentarios() {
                 </article>
             )}
             {!usuario.comentario && (
-                <form onSubmit={enviarComentario}>
+                <form className={styles.formComentario} onSubmit={enviarComentario}>
                     <div className="usuario-redactor d-flex">
                         <img className={styles.fotoRedactor} src="../Assets/img/fotoPerfil1.jpeg" alt="" />
                         <div className="nombre-redactor"><b>{usuario.username}</b></div>
