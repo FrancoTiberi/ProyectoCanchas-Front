@@ -27,16 +27,16 @@ export default function LoginModal({ variant, className }) {
       localStorage.setItem('rol', result.user.role);
       handleClose();
 
-      // 🔐 Redirige según el rol
+      // 🔐 Redirige solo si es admin
       if (result.user.role === 'admin') {
         navigate('/admin');
-      } else {
-        navigate('/');
       }
+
     } else {
       setError(result.message);
     }
   };
+
 
   return (
     <>

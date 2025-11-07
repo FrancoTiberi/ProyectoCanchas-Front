@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import styles from '../styles/registro.module.css';
+import { useAuth } from '../context/AuthProvider';
 
 export const Registrar = () => {
   const [formData, setFormData] = useState({
@@ -13,6 +14,8 @@ export const Registrar = () => {
     tyc: false
   });
 
+  const { setUser } = useAuth();
+
   const handleChange = (e) => {
     const { id, value, type, checked } = e.target;
     setFormData(prev => ({
@@ -23,9 +26,43 @@ export const Registrar = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log('Datos registrados:', formData);
-  };
 
+    const storedUsers = JSON.parse(localStorage.getItem("users")) || [];
+
+    const exists = storedUsers.some(u => u.username === formData.usuario);
+    if (exists) {
+      alert("⚠️ El nombre de usuario ya está registrado.");
+      return;
+    }
+
+    const newUser = {
+      id: Date.now(),
+      name: formData.nombre,
+      username: formData.usuario,
+      password: formData.contraseña,
+      role: "user"
+    };
+
+    const updatedUsers = [...storedUsers, newUser];
+    localStorage.setItem("users", JSON.stringify(updatedUsers));
+    localStorage.setItem("currentUser", JSON.stringify(newUser));
+    localStorage.setItem("role", "user");
+
+    setUser(newUser);
+
+    alert(`✅ Registro exitoso. Bienvenido/a, ${newUser.name}!`);
+    setFormData({
+      nombre: '',
+      usuario: '',
+      correo: '',
+      celular: '',
+      domicilio: '',
+      cp: '',
+      contraseña: '',
+      tyc: false
+    });
+  };
+  const isComplete = formData.nombre && formData.usuario && formData.correo && formData.contraseña && formData.tyc;
   return (
     <div className={styles.body}>
       <form onSubmit={handleSubmit} className={styles.formulario}>
@@ -102,10 +139,15 @@ export const Registrar = () => {
           Aceptar los Términos y Condiciones
         </label>
 
-        <button type="submit" className={styles.registrar}>Registrar</button>
+        <button
+          type="submit"
+          className={`${styles.registrar} ${isComplete ? styles.activo : ''}`}
+        >
+          Registrar
+        </button>
       </form>
     </div>
   );
 };
 
-export default Registrar
+export default Registrar;

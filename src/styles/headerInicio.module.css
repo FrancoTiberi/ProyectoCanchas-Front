@@ -51,16 +51,6 @@
 }
 
 /* SESIÓN Y USUARIO */
-.usuarioContenedor {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.75rem;
-  flex-wrap: wrap;
-  margin-top: 1rem;
-  text-align: center;
-}
-
 .userAvatarContainer {
   width: 2.625rem;
   height: 2.625rem;
@@ -72,21 +62,23 @@
 }
 
 .userName {
+  color: gold;
   font-weight: bold;
   max-width: 7.5rem;
   text-align: center;
-  font-size: 0.9rem;
-}
-
-.adminName {
-  color: #ffc107;
-}
-
-.userNameCommon {
-  color: #f8f9fa;
 }
 
 /* BOTONES */
+
+.loginBtns {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.625rem;
+  padding: 0.625rem;
+  align-items: center;
+  justify-content: center;
+}
+
 .btnLoginInicio {
   background-color: #7fffd4;
   color: black;
@@ -111,20 +103,15 @@
 .btnSalir {
   background-color: var(--main-clr3);
   color: #fff;
-  font-size: 0.9rem;
-  font-weight: 600;
-  border-radius: 10px;
-  padding: 0.5rem 1.25rem;
-  width: 100%;
-  max-width: 5em;
-  text-align: center;
   border: none;
-  cursor: pointer;
-  transition: background-color 0.3s ease, box-shadow 0.3s ease;
-  display: inline-flex;
-  justify-content: center;
-  align-items: center;
-  text-decoration: none;
+  border-radius: 0.5rem;
+  padding: 0.375rem 0.625rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  max-width: 100%;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .btnSalir:hover {

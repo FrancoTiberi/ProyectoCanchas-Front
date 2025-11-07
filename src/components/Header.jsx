@@ -31,7 +31,7 @@ export const Header = () => {
         </Nav>
 
         <div className={styles.loginBtns}>
-          {user?.name ? (
+          {user ? (
             <div className="d-flex align-items-center gap-2">
               <div
                 className={styles.userAvatarContainer}
