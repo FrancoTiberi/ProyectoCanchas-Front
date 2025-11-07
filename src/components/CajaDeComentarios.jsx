@@ -4,9 +4,10 @@ import styles from '../styles/cajaDeComentarios.module.css'
 export default function CajaDeComentarios() {
     const [comentario, setComentario] = useState('');
 
-    const [usuario, setUsuario] = useState(
-        JSON.parse(localStorage.getItem('currentUser'))
-    );
+    const [usuario, setUsuario] = useState(() => {
+        const stored = localStorage.getItem('currentUser');
+        return stored ? JSON.parse(stored) : { username: 'Invitado', comentario: '' };
+    });
 
     function guardarComentario(e) {
         setComentario(e.target.value);
