@@ -39,8 +39,8 @@ export default function HeaderInicio() {
                     Reservá tu cancha, jugá con amigos y disfrutá de platos únicos después del partido
                 </p>
 
-                {user?.name ? (
-                    <div className={styles.usuarioContenedor}>
+                {user ? (
+                    <div className={styles.loginBtns}>
                         <div className={styles.userAvatarContainer}>
                             {user.role === 'admin' ? (
                                 <Link to="/admin"><i className="bi-award-fill fs-4"></i></Link>
@@ -48,11 +48,11 @@ export default function HeaderInicio() {
                                 <i className="bi bi-person-fill fs-4"></i>
                             )}
                         </div>
-                        <span className={`${styles.userName} ${user.role === 'admin' ? styles.adminName : styles.userNameCommon}`}>
-                            {user.name}
+                        <span className={styles.userName}>
+                            {user.name || 'Sin nombre'}
                         </span>
-                        <button onClick={handleLogout} className={styles.btnSalir}>
-                            Cerrar
+                        <button onClick={handleLogout} className={`btn ${styles.btnSalir}`}>
+                            Cerrar Sesión
                         </button>
                     </div>
                 ) : (
@@ -63,6 +63,7 @@ export default function HeaderInicio() {
                         </Link>
                     </div>
                 )}
+
             </section>
         </div>
     );

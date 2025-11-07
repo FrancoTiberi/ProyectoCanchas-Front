@@ -2,6 +2,8 @@
   --main-clr5: #f4f6f9;
   --main-clr6: #ffffff;
   --main-clr7: #4CAF50;
+  --main-clr7-hover: #91C89E;
+  --main-clr7-active: #388E3C;
 }
 
 .body {
@@ -59,6 +61,7 @@
   accent-color: var(--main-clr7);
 }
 
+/* Botón base */
 .registrar {
   background-color: var(--main-clr7);
   color: white;
@@ -71,6 +74,13 @@
   transition: background-color 0.3s ease;
 }
 
+/* Hover suave */
 .registrar:hover {
-  background-color: #91C89E;
+  background-color: var(--main-clr7-hover);
+}
+
+/* Estado activo cuando todos los campos están completos */
+.registrar.activo {
+  background-color: var(--main-clr7-active);
+  box-shadow: 0 0 10px rgba(76, 175, 80, 0.4);
 }

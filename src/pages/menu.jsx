@@ -3,10 +3,12 @@ import styles from "../styles/menu.module.css";
 import { comidasbc } from "../data/comida";
 
 export const Menu = () => {
+  // 🧠 Estados principales
   const [comidas, setComidas] = useState([]);
   const [carrito, setCarrito] = useState([]);
   const [mostrarCarrito, setMostrarCarrito] = useState(false);
 
+  // 📦 Cargar comidas visibles desde localStorage y base
   useEffect(() => {
     const comidasLocales = JSON.parse(localStorage.getItem("comidas")) || [];
     const visiblesLocales = comidasLocales.filter((c) => c.visible);
@@ -14,6 +16,7 @@ export const Menu = () => {
     setComidas([...visiblesBase, ...visiblesLocales]);
   }, []);
 
+  // ➕ Agregar comida al carrito
   const agregarAlCarrito = (comida) => {
     setCarrito((prev) => {
       const itemExistente = prev.find((item) => item.id === comida.id);
@@ -28,6 +31,7 @@ export const Menu = () => {
     });
   };
 
+  // ➖ Disminuir cantidad de un ítem
   const disminuirCantidad = (id) => {
     setCarrito((prev) =>
       prev
@@ -38,27 +42,30 @@ export const Menu = () => {
     );
   };
 
+  // ❌ Eliminar ítem del carrito
   const eliminarDelCarrito = (id) => {
     setCarrito((prev) => prev.filter((item) => item.id !== id));
   };
 
+  // 💰 Calcular total del carrito
   const total = carrito.reduce(
     (acc, item) => acc + item.precio * item.cantidad,
     0
   );
 
-  // Agrupar comidas por categoría
+  // 🍽️ Agrupar comidas por categoría
   const categorias = [...new Set(comidas.map((item) => item.categoria))];
   const comidasPorCategoria = categorias.map((categoria) => ({
     categoria,
     items: comidas.filter((item) => item.categoria === categoria),
   }));
 
+  // 🖼️ Render principal
   return (
     <main className={styles.main}>
       <h1 className={styles.titulo}>Menú</h1>
 
-      {/* Mostrar comidas por categoría */}
+      {/* 🧱 Secciones por categoría */}
       {comidasPorCategoria.map((categoria) => (
         <section key={categoria.categoria} className={styles.section}>
           <h2 className={styles.sectionTitle}>{categoria.categoria}</h2>
@@ -88,15 +95,16 @@ export const Menu = () => {
         </section>
       ))}
 
-      {/* Botón para mostrar/ocultar carrito */}
+      {/* 🛒 Botón flotante para mostrar/ocultar carrito */}
       <button
         className={`${styles.button} ${styles.carritoBtn}`}
         onClick={() => setMostrarCarrito((prev) => !prev)}
+        aria-label="Abrir carrito"
       >
-        {mostrarCarrito ? "Ocultar Carrito" : "Ver Carrito"}
+        🛒
       </button>
 
-      {/* Carrito */}
+      {/* 🧺 Contenedor del carrito */}
       {mostrarCarrito && (
         <div className={styles.carritoContainer}>
           <h3>Carrito</h3>

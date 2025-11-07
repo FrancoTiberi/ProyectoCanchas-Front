@@ -31,7 +31,7 @@ export default function CajaDeComentarios() {
             <article className={styles.postComentario}>
                 <div className={styles.usuarioContenedor}>
                     <div className={styles.usuarioComentario}>
-                        <img className={styles.usuarioImagenComentario} src="../Assets/img/fotoPerfil3.jpeg" alt="foto de perfil" />
+                        <img className={styles.usuarioImagenComentario} src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTT1_dE9qZfqb02VVXib12uyOodSlsS5BRyPQ&s" alt="foto de perfil" />
                         <div className={styles.usuarioDatos}>
                             <span className="nombre-perfil-comentario"><b>Juan Rodriguez</b></span>
                             <br />
@@ -46,7 +46,7 @@ export default function CajaDeComentarios() {
             <article className={styles.postComentario}>
                 <div className={styles.usuarioContenedor}>
                     <div className={styles.usuarioComentario}>
-                        <img className={styles.usuarioImagenComentario} src="../Assets/img/fotoPerfil2.jpeg" alt="foto de perfil" />
+                        <img className={styles.usuarioImagenComentario} src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTT1_dE9qZfqb02VVXib12uyOodSlsS5BRyPQ&s" alt="foto de perfil" />
                         <div className="usuario-datos">
                             <span className="nombre-perfil-comentario"><b>Roberto</b></span>
                             <br />
@@ -61,7 +61,7 @@ export default function CajaDeComentarios() {
             <article className={styles.postComentario}>
                 <div className={styles.usuarioContenedor}>
                     <div className={styles.usuarioComentario}>
-                        <img className={styles.usuarioImagenComentario} src="../Assets/img/fotoPerfil1.jpeg" alt="foto de perfil" />
+                        <img className={styles.usuarioImagenComentario} src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTT1_dE9qZfqb02VVXib12uyOodSlsS5BRyPQ&s" alt="foto de perfil" />
                         <div className="usuario-datos">
                             <span className="nombre-perfil-comentario"><b>Pepe</b></span>
                             <br />
@@ -77,7 +77,7 @@ export default function CajaDeComentarios() {
                 <article className={styles.postComentario}>
                     <div className={styles.usuarioContenedor}>
                         <div className={styles.usuarioComentario}>
-                            <img className={styles.usuarioImagenComentario} src="../Assets/img/fotoPerfil1.jpeg" alt="foto de perfil" />
+                            <img className={styles.usuarioImagenComentario} src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTT1_dE9qZfqb02VVXib12uyOodSlsS5BRyPQ&s" alt="foto de perfil" />
                             <div className="usuario-datos">
                                 <span className="nombre-perfil-comentario"><b>Tú</b></span>
                                 <br />
