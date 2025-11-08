@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import FormComida from '../Forms/FormComida';
+import styles from '../../styles/FormComida.module.css';
 
 export default function ComidasAdmin() {
   const [comidas, setComidas] = useState([]);
@@ -22,33 +23,26 @@ export default function ComidasAdmin() {
   };
 
   return (
-    <div>
-      <h2>Gestión de Comidas Dinámicas</h2>
+    <div className={styles.adminContainer}>
+      <h2 className={styles.titulo}>Gestión de Comidas Dinámicas</h2>
       <FormComida onComidaCreada={handleNuevaComida} />
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '16px', marginTop: '24px' }}>
+      <div className={styles.grid}>
         {comidas.map((comida) =>
           comida.visible && (
-            <div key={comida.id} style={{ border: '1px solid #ccc', padding: '12px', borderRadius: '8px', width: '240px' }}>
+            <div key={comida.id} className={styles.card}>
               <img
-                src={comida.imagen || '/images/fallback.png'}
+                src={comida.imagen || 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRd8LWlb8l34MXvr3BonwEYsd11lw1QKQVEiQ&s'}
                 alt={comida.nombre}
-                style={{ width: '100%', height: '140px', objectFit: 'cover', borderRadius: '6px' }}
-                onError={(e) => (e.target.src = '/images/fallback.png')}
+                className={styles.imagen}
+                onError={(e) => (e.target.src = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRd8LWlb8l34MXvr3BonwEYsd11lw1QKQVEiQ&s')}
               />
+              <p><strong>{comida.categoria}</strong></p>
               <h3>{comida.nombre}</h3>
               <p>{comida.descripcion}</p>
               <p><strong>${comida.precio}</strong></p>
               <button
                 onClick={() => eliminarComida(comida.id)}
-                style={{
-                  backgroundColor: '#ef4444',
-                  color: 'white',
-                  border: 'none',
-                  padding: '6px 12px',
-                  borderRadius: '6px',
-                  cursor: 'pointer',
-                  marginTop: '8px'
-                }}
+                className={styles.btndelete}
               >
                 Eliminar
               </button>

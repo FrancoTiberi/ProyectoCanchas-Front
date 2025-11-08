@@ -12,14 +12,13 @@ export default function FormComida({ onComidaCreada }) {
   const [descripcion, setDescripcion] = useState('');
   const [precio, setPrecio] = useState('');
   const [imagen, setImagen] = useState('');
-  const [categoria, setCategoria] = useState('Parrilla');
+  const [categoria, setCategoria] = useState('Pizzas');
   const [categoriaPersonalizada, setCategoriaPersonalizada] = useState('');
 
   const categoriasBase = [
-    "Parrilla",
-    "Snacks de Tribuna",
-    "Dulces del Kiosco",
-    "Bebidas de Tribuna",
+    "Pizzas",
+    "Hamburguesas",
+    "Sándwiches",
     "Nueva categoría"
   ];
 
@@ -28,20 +27,20 @@ export default function FormComida({ onComidaCreada }) {
 
     const categoriaFinal = categoria === "Nueva categoría"
       ? categoriaPersonalizada.trim()
-      : categoria;
+      : categoria?.trim();
 
-    if (!categoriaFinal) {
+    if (!categoriaFinal || categoriaFinal.length < 2) {
       alert("Debes ingresar una categoría válida.");
       return;
     }
+
 
     const nuevaComida = {
       id: Date.now(),
       nombre,
       descripcion,
       precio: parseFloat(precio),
-      imagen, // queda como "" si no se completa
-      visible: true,
+      imagen: imagen?.trim() || "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQd7S5iS77v4PL22VL4m7St-gcwzcg7o1DE2Q&s", visible: true,
       categoria: categoriaFinal
     };
 
@@ -56,7 +55,7 @@ export default function FormComida({ onComidaCreada }) {
     setDescripcion('');
     setPrecio('');
     setImagen('');
-    setCategoria('Parrilla');
+    setCategoria('Pizzas');
     setCategoriaPersonalizada('');
     handleClose();
   };

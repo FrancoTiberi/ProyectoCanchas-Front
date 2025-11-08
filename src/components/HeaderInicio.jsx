@@ -21,7 +21,7 @@ export default function HeaderInicio() {
                     <img src={logo} height="50px" alt="logo" className={styles.logo} />
                     <Link to="/" className={styles.navLinks}>Inicio</Link>
                     <Link to="/reservas" className={styles.navLinks}>Reserva-F5</Link>
-                    <Link to="/menu" className={styles.navLinks}>Comida</Link>
+                    <Link to="/menu" className={styles.navLinks}>Menú</Link>
                     <Link to="/contacto" className={styles.navLinks}>Contacto</Link>
                     <Link to="/sobrenosotros" className={styles.navLinks}>Sobre Nosotros</Link>
 

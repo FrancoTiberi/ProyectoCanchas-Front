@@ -3,7 +3,7 @@
 ============================================================ */
 .container {
   display: flex;
-  min-height: 100dvh; /* más responsivo que 100vh */
+  min-height: 100dvh; 
   font-family: 'Segoe UI', Roboto, sans-serif;
   background-color: #f5f7fa;
 }
