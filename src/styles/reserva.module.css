@@ -29,15 +29,15 @@ body {
     padding-bottom: 5px;
 }
 
-.calendario{
+.calendario {
     width: 160px;
-    background-color: rgba(13,110,253, 1);
+    background-color: rgba(13, 110, 253, 1);
     color: #fff;
     border-width: 1px;
     border-radius: 10px;
     padding: 5px;
     margin-right: 4px;
-    margin-left: 4px;
+    margin-left: 5px;
 }
 
 .estado {
@@ -53,10 +53,15 @@ body {
 
 .gridItemHora {
     border: 1px solid #c0b8b8;
-    padding: 10px;
     background-color: #000;
     color: #fff;
     text-align: center;
+    padding: 13px;
+    width: 70px;
+    height: 50px;
+    flex: 0 0 70px;
+    max-width: 70px;
+    box-sizing: border-box;
 }
 
 .gridItem {
@@ -69,6 +74,10 @@ body {
 .colVacia {
     background-color: #6b9488;
     position: relative;
+    width: 70px;
+    height: 51px;
+    flex: 0 0 70px;
+    max-width: 70px;
 }
 
 .colVacia:hover {
@@ -76,22 +85,48 @@ body {
     cursor: pointer;
 }
 
+.celdaInterseccion {
+    background-color: #000;
+}
+
+.scrollHorizontal {
+    overflow-x: auto;
+    white-space: nowrap;
+    padding-bottom: 10px;
+}
+
+.scrollHorizontal::-webkit-scrollbar {
+    height: 8px;
+}
+
+.scrollHorizontal::-webkit-scrollbar-thumb {
+    background: #aaa;
+    border-radius: 4px;
+}
+
+.filaHoras {
+    position: sticky;
+    top: 0;
+    background-color: white;
+    z-index: 2;
+}
+
 /* ==========================
    Dropdown
 ========================== */
 
 .dropdownReserva {
-  position: absolute;
-  top: 80%;
-  left: 50%;
-  transform: translateX(-50%);
-  height: 200px;
-  width: 220px;
-  display: none;
-  max-width: 0;
-  z-index: 1000;
-  background-color: #fff;
-  border-radius: 20px;
+    position: absolute;
+    top: 80%;
+    left: 50%;
+    transform: translateX(-50%);
+    height: 200px;
+    width: 220px;
+    display: none;
+    max-width: 0;
+    z-index: 1000;
+    background-color: #fff;
+    border-radius: 20px;
 }
 
 .dropdownReserva::before {
@@ -100,7 +135,7 @@ body {
     height: 14px;
     position: absolute;
     left: calc(50% - 7px);
-    background-color: rgba(248,249,250, 1);
+    background-color: rgba(248, 249, 250, 1);
     top: -7px;
     transform: rotate(45deg);
 }
@@ -195,8 +230,70 @@ body {
     margin-left: 15px;
 }
 
+.misReservas {
+    width: 30%;
+    height: 100%;
+    display: none;
+    padding: 10px;
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    background-color: #fff;
+    border: none;
+    box-shadow: 0 0.25rem 0.625rem rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    max-height: 100vh;
+    overflow-y: auto;
+}
+
+.checkbox {
+    display: none;
+}
+
+.checkbox:checked~.misReservas {
+    display: initial;
+}
+
+.desplegable {
+    color: #0e8708;
+    position: fixed;
+    z-index: 1001;
+    bottom: 26px;
+    right: 30px;
+    background-color: #000;
+    border-radius: 10px;
+    padding: 10px;
+    font-size: 1.2rem;
+    cursor: pointer;
+}
+
+.desplegable:hover {
+    transform: scale(1.1);
+}
+
+.btnEliminar {
+    background-color: #ef4444;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-top: 8px;
+}
+
 .reservaResponsiveContenedor {
     display: none;
+}
+
+.reservaConfirmada {
+    border-radius: 10px;
+    padding: 10px;
+    border: 1px solid #000;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 24px;
+
 }
 
 /* ==========================
@@ -279,11 +376,11 @@ body {
     .horasGridContenedor {
         margin: 10px 0;
         display: grid;
-        grid-template-columns: repeat(5,1fr);
+        grid-template-columns: repeat(5, 1fr);
         gap: 5px;
     }
-    
-    .hora{
+
+    .hora {
         border-radius: 19px;
         border: 1px solid #c0b8b8;
         margin: 0 5px;
