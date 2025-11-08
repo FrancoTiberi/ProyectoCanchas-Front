@@ -3,20 +3,23 @@ import styles from "../styles/menu.module.css";
 import { comidasbc } from "../data/comida";
 
 export const Menu = () => {
-  // 🧠 Estados principales
   const [comidas, setComidas] = useState([]);
   const [carrito, setCarrito] = useState([]);
   const [mostrarCarrito, setMostrarCarrito] = useState(false);
+  const [usuarioLogueado, setUsuarioLogueado] = useState(null);
 
-  // 📦 Cargar comidas visibles desde localStorage y base
   useEffect(() => {
     const comidasLocales = JSON.parse(localStorage.getItem("comidas")) || [];
     const visiblesLocales = comidasLocales.filter((c) => c.visible);
     const visiblesBase = comidasbc.filter((c) => c.visible);
     setComidas([...visiblesBase, ...visiblesLocales]);
+
+    const usuario = JSON.parse(localStorage.getItem("currentUser"));
+    if (usuario && usuario.username) {
+      setUsuarioLogueado(usuario);
+    }
   }, []);
 
-  // ➕ Agregar comida al carrito
   const agregarAlCarrito = (comida) => {
     setCarrito((prev) => {
       const itemExistente = prev.find((item) => item.id === comida.id);
@@ -31,7 +34,6 @@ export const Menu = () => {
     });
   };
 
-  // ➖ Disminuir cantidad de un ítem
   const disminuirCantidad = (id) => {
     setCarrito((prev) =>
       prev
@@ -42,30 +44,49 @@ export const Menu = () => {
     );
   };
 
-  // ❌ Eliminar ítem del carrito
   const eliminarDelCarrito = (id) => {
     setCarrito((prev) => prev.filter((item) => item.id !== id));
   };
 
-  // 💰 Calcular total del carrito
   const total = carrito.reduce(
     (acc, item) => acc + item.precio * item.cantidad,
     0
   );
 
-  // 🍽️ Agrupar comidas por categoría
+  const confirmarPedido = () => {
+    const ventasActuales = carrito.reduce((acc, item) => acc + item.cantidad, 0);
+    const ingresosActuales = total;
+
+    const dashboardPrevio = JSON.parse(localStorage.getItem("dashboardData")) || {
+      ventasHoy: 0,
+      ingresosHoy: 0,
+      reservasPendientes: 0,
+      productosActivos: 0
+    };
+
+    const actualizado = {
+      ...dashboardPrevio,
+      ventasHoy: dashboardPrevio.ventasHoy + ventasActuales,
+      ingresosHoy: dashboardPrevio.ingresosHoy + ingresosActuales
+    };
+
+    localStorage.setItem("dashboardData", JSON.stringify(actualizado));
+
+    alert(`✅ Pedido confirmado:\n\nProductos: ${ventasActuales}\nTotal: $${ingresosActuales}\n\n¡Gracias por tu compra!`);
+    setCarrito([]);
+    setMostrarCarrito(false);
+  };
+
   const categorias = [...new Set(comidas.map((item) => item.categoria))];
   const comidasPorCategoria = categorias.map((categoria) => ({
     categoria,
     items: comidas.filter((item) => item.categoria === categoria),
   }));
 
-  // 🖼️ Render principal
   return (
     <main className={styles.main}>
       <h1 className={styles.titulo}>Menú</h1>
 
-      {/* 🧱 Secciones por categoría */}
       {comidasPorCategoria.map((categoria) => (
         <section key={categoria.categoria} className={styles.section}>
           <h2 className={styles.sectionTitle}>{categoria.categoria}</h2>
@@ -76,9 +97,7 @@ export const Menu = () => {
                   src={item.imagen}
                   alt={item.nombre}
                   className={styles.imagen}
-                  onError={(e) =>
-                    (e.target.src = "/images/fallback.png")
-                  }
+                  onError={(e) => (e.target.src = "/images/fallback.png")}
                 />
                 <h3>{item.nombre}</h3>
                 <p>{item.descripcion}</p>
@@ -95,7 +114,6 @@ export const Menu = () => {
         </section>
       ))}
 
-      {/* 🛒 Botón flotante para mostrar/ocultar carrito */}
       <button
         className={`${styles.button} ${styles.carritoBtn}`}
         onClick={() => setMostrarCarrito((prev) => !prev)}
@@ -104,7 +122,6 @@ export const Menu = () => {
         🛒
       </button>
 
-      {/* 🧺 Contenedor del carrito */}
       {mostrarCarrito && (
         <div className={styles.carritoContainer}>
           <h3>Carrito</h3>
@@ -114,8 +131,7 @@ export const Menu = () => {
             carrito.map((item) => (
               <div key={item.id} className={styles.carritoItem}>
                 <span>
-                  {item.nombre} x {item.cantidad} = $
-                  {item.precio * item.cantidad}
+                  {item.nombre} x {item.cantidad} = ${item.precio * item.cantidad}
                 </span>
                 <div>
                   <button
@@ -142,6 +158,19 @@ export const Menu = () => {
             ))
           )}
           <p className={styles.total}>Total: ${total}</p>
+
+          {usuarioLogueado ? (
+            <button
+              onClick={confirmarPedido}
+              className={`${styles.button} ${styles.confirmarBtn}`}
+            >
+              Confirmar pedido
+            </button>
+          ) : (
+            <p className={styles.avisoLogin}>
+              Iniciá sesión para confirmar tu pedido.
+            </p>
+          )}
         </div>
       )}
     </main>
