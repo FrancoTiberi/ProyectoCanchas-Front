@@ -8,16 +8,23 @@ export default function DashboardAdmin() {
     reservasPendientes: 0,
   });
 
+  const [reservasActivasUsuario, setReservasActivasUsuario] = useState(0);
+
   useEffect(() => {
+    // Cargar métricas generales
     const guardados = localStorage.getItem('dashboardData');
     if (guardados) {
       try {
         const parsed = JSON.parse(guardados);
         setDatos(parsed);
       } catch (error) {
-        console.error("Error al parsear localStorage:", error);
+        console.error("Error al parsear dashboardData:", error);
       }
     }
+
+    // Cargar reservas activas del usuario
+    const reservasUsuario = JSON.parse(localStorage.getItem("misReservas")) || [];
+    setReservasActivasUsuario(reservasUsuario.length);
   }, []);
 
   return (
@@ -34,8 +41,8 @@ export default function DashboardAdmin() {
           <p>${datos.ingresosHoy}</p>
         </div>
         <div className={styles.card}>
-          <h3>Reservas pendientes</h3>
-          <p>{datos.reservasPendientes}</p>
+          <h3>Reservas activas</h3>
+          <p>{reservasActivasUsuario}</p>
         </div>
       </div>
     </div>
