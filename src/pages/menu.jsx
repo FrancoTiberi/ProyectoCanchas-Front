@@ -13,11 +13,6 @@ export const Menu = () => {
     const visiblesLocales = comidasLocales.filter((c) => c.visible);
     const visiblesBase = comidasbc.filter((c) => c.visible);
     setComidas([...visiblesBase, ...visiblesLocales]);
-
-    const usuario = JSON.parse(localStorage.getItem("currentUser"));
-    if (usuario && usuario.username) {
-      setUsuarioLogueado(usuario);
-    }
   }, []);
 
   const agregarAlCarrito = (comida) => {
@@ -158,19 +153,12 @@ export const Menu = () => {
             ))
           )}
           <p className={styles.total}>Total: ${total}</p>
-
-          {usuarioLogueado ? (
             <button
               onClick={confirmarPedido}
               className={`${styles.button} ${styles.confirmarBtn}`}
             >
               Confirmar pedido
             </button>
-          ) : (
-            <p className={styles.avisoLogin}>
-              Iniciá sesión para confirmar tu pedido.
-            </p>
-          )}
         </div>
       )}
     </main>
