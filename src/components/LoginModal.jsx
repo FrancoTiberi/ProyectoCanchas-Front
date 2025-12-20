@@ -10,33 +10,33 @@ export default function LoginModal({ variant, className }) {
   const handleShow = () => setShow(true);
   const handleClose = () => setShow(false);
 
-  const [username, setUsername] = useState('');
+  const [correo, setCorreo] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
   const { setUser } = useAuth();
   const navigate = useNavigate();
 
-  const handleLogin = () => {
-    const result = loginUser(username, password);
+  const handleLogin = async () => {
+    const result = await loginUser(correo, password);
 
     if (result.success) {
       setError('');
       setUser(result.user);
       localStorage.setItem('user', JSON.stringify(result.user));
-      localStorage.setItem('rol', result.user.role);
+      localStorage.setItem('token', result.token);
+      localStorage.setItem('rol', result.user.rol);
+
       handleClose();
 
       // 🔐 Redirige solo si es admin
-      if (result.user.role === 'admin') {
+      if (result.user.rol === 'ADMIN_ROLE') {
         navigate('/admin');
       }
-
     } else {
       setError(result.message);
     }
   };
-
 
   return (
     <>
@@ -58,9 +58,9 @@ export default function LoginModal({ variant, className }) {
           <input
             type="text"
             className="form-control mb-3"
-            placeholder="Usuario"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            placeholder="Correo"
+            value={correo}
+            onChange={(e) => setCorreo(e.target.value)}
           />
           <input
             type="password"
