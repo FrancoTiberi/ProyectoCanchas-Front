@@ -2,6 +2,7 @@ import { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import styles from '../../styles/FormComida.module.css';
+import { crearCancha } from '../../helpers/canchaApi';
 
 export default function FormCanchas({onCanchaCreada}) {
   const [show, setShow] = useState(false);
@@ -15,15 +16,12 @@ export default function FormCanchas({onCanchaCreada}) {
     e.preventDefault();
 
     const nuevaCancha = {
-        id: Date.now(),
         canchas,
         desde,
         hasta
     }
 
-    const reservasGuardadas = JSON.parse(localStorage.getItem('reservas')) || [];
-    reservasGuardadas.push(nuevaCancha);
-    localStorage.setItem('reservas', JSON.stringify(reservasGuardadas));
+    crearCancha(nuevaCancha);
 
     if (onCanchaCreada) onCanchaCreada(nuevaCancha);
 
