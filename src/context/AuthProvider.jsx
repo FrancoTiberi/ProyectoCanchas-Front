@@ -1,16 +1,20 @@
 import { createContext, useContext, useState, useEffect } from "react";
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 const AuthContext = createContext();
 
-export function AuthProvider({ children }) {
+export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(() => {
-    const storedUser = localStorage.getItem("user");
-    return storedUser ? JSON.parse(storedUser) : null;
+    const savedUser = localStorage.getItem("currentUser");
+    return savedUser ? JSON.parse(savedUser) : null;
   });
 
+  const [token, setToken] = useState(() => localStorage.getItem("token") || null);
+
   const login = async (correo, password) => {
-    try {       
-      const resp = await fetch(`${import.meta.env.VITE_API_URL}/auth`, {
+    try {
+      const resp = await fetch(`${API_URL}/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ correo, password })
@@ -19,12 +23,13 @@ export function AuthProvider({ children }) {
       const data = await resp.json();
 
       if (resp.ok) {
-        setUser(data.usuario);
-        localStorage.setItem("user", JSON.stringify(data.usuario));
+        localStorage.setItem("currentUser", JSON.stringify(data.usuario));
         localStorage.setItem("token", data.token);
-        return { success: true, user: data.usuario };
+        setUser(data.usuario);
+        setToken(data.token);
+        return { success: true, user:data.usuario, token:data.token };
       } else {
-        return { success: false, message: data.msg || "Error en login" };
+        return { success: false, message: data.msg || "Usuario o contraseña incorrectos" };
       }
     } catch (error) {
       return { success: false, message: "Error de conexión con el servidor" };
@@ -32,23 +37,28 @@ export function AuthProvider({ children }) {
   };
 
   const logout = () => {
-    setUser(null);
-    localStorage.removeItem("user");
+    localStorage.removeItem("currentUser");
     localStorage.removeItem("token");
+    setUser(null);
+    setToken(null);
   };
 
   useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
-    }
+    const syncAuth = () => {
+      const savedUser = localStorage.getItem("currentUser");
+      const savedToken = localStorage.getItem("token");
+      setUser(savedUser ? JSON.parse(savedUser) : null);
+      setToken(savedToken || null);
+    };
+    window.addEventListener("storage", syncAuth);
+    return () => window.removeEventListener("storage", syncAuth);
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, setUser }}>
+    <AuthContext.Provider value={{ user, token, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
-}
+};
 
 export const useAuth = () => useContext(AuthContext);

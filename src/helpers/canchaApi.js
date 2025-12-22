@@ -91,3 +91,39 @@ export const borrarCancha = async (id) => {
         return { msg: 'No se conectó con backend' };
     }
 };
+
+export const obtenerHorasDisponibles = async (id, fecha) => {
+    try {
+        const resp = await fetch(url + '/' + id + '?fecha=' + fecha, {
+            method: 'GET',
+            headers: {
+                'content-type': 'application/json; charset=UTF-8'
+            }
+        });
+
+        const data = await resp.json();
+
+        return data.horasDisponibles;
+    } catch (error) {
+        console.log(error);
+        throw new Error("No se pudo obtener la info");
+    }
+}
+
+export const obtenerDisponibilidadTodas = async (fecha) => {
+    try {
+        const resp = await fetch(url + '/disponibilidadTodas?fecha=' + fecha, {
+            method: 'GET',
+            headers: {
+                'content-type': 'application/json; charset=UTF-8'
+            }
+        });
+
+        const data = await resp.json();
+
+        return data.canchas
+    } catch (error) {
+        console.log(error)
+        throw new Error("Fallo al obtener las horas");
+    }
+}
