@@ -14,11 +14,12 @@ export default function LoginModal({ variant, className }) {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
-  const { setUser } = useAuth();
+  const { user, setUser } = useAuth();
   const navigate = useNavigate();
 
   const handleLogin = async () => {
     const result = await loginUser(correo, password);
+    console.log("Usuario autenticado:", result.user); // 👀 útil para debug
 
     if (result.success) {
       setError('');
@@ -29,8 +30,7 @@ export default function LoginModal({ variant, className }) {
 
       handleClose();
 
-      // 🔐 Redirige solo si es admin
-      if (result.user.rol === 'ADMIN_ROLE') {
+      if (result.user.rol?.toUpperCase() === 'ADMIN_ROLE') {
         navigate('/admin');
       }
     } else {
@@ -54,6 +54,12 @@ export default function LoginModal({ variant, className }) {
           <button type="button" className="btn-close" onClick={handleClose}></button>
 
           <Modal.Title className="mb-4">Iniciar Sesión</Modal.Title>
+
+          {user && (
+            <div className="mb-3 text-center">
+              <strong>Bienvenido:</strong> {user.nombre} {user.apellido}
+            </div>
+          )}
 
           <input
             type="text"

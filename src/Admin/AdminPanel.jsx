@@ -18,15 +18,13 @@ export default function AdminPanel() {
 
   return (
     <div className={styles.container}>
-      <SidebarAdmin onLogout={handleCerrarSesion} />
+      <SidebarAdmin
+        onLogout={handleCerrarSesion}
+        onVolverInicio={handleVolverInicio}
+      />
       <main className={styles.main}>
         <header className={styles.header}>
-          <h1>Bienvenido de nuevo, {user?.name || 'Invitado'}</h1>
-          <div className={styles.headerButtons}>
-            <button onClick={handleVolverInicio} className={styles.btnVolver}>
-              Volver al inicio
-            </button>
-          </div>
+          <h1>Bienvenido de nuevo, {user?.nombre || 'Invitado'}</h1>
         </header>
         <section className={styles.content}>
           <Outlet />

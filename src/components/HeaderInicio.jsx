@@ -42,14 +42,14 @@ export default function HeaderInicio() {
                 {user ? (
                     <div className={styles.loginBtns}>
                         <div className={styles.userAvatarContainer}>
-                            {user.role === 'admin' ? (
+                            {user.rol === 'ADMIN_ROLE' ? (
                                 <Link to="/admin"><i className="bi-award-fill fs-4"></i></Link>
                             ) : (
                                 <i className="bi bi-person-fill fs-4"></i>
                             )}
                         </div>
                         <span className={styles.userName}>
-                            {user.name || 'Sin nombre'}
+                            {user.nombre}
                         </span>
                         <button onClick={handleLogout} className={`btn ${styles.btnSalir}`}>
                             Cerrar Sesión

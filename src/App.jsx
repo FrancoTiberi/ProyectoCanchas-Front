@@ -40,7 +40,7 @@ function App() {
       </Route>
 
       {/* Rutas protegidas para admin */}
-      <Route element={<ProtectedRoute allowedRoles={['admin']} />}>
+      <Route element={<ProtectedRoute allowedRoles={['ADMIN_ROLE']} />}>
         <Route element={<LayoutSinNada />}>
           <Route path="/admin" element={<AdminPanel />}>
             <Route index element={<DashboardAdmin />} />
@@ -49,6 +49,7 @@ function App() {
           </Route>
         </Route>
       </Route>
+
     </Routes>
   );
 }
