@@ -1,10 +1,7 @@
 import { useState } from "react";
-import Modal from "react-bootstrap/Modal";
-import Button from "react-bootstrap/Button";
-import styles from "../../styles/FormComida.module.css";
+import styles from "../../styles/forms.module.css";
 
 export default function FormCategoria({ onCategoriaCreada }) {
-    const [show, setShow] = useState(false);
     const [nombreCategoria, setNombreCategoria] = useState("");
 
     const API_URL = import.meta.env.VITE_API_URL;
@@ -26,34 +23,22 @@ export default function FormCategoria({ onCategoriaCreada }) {
         if (onCategoriaCreada) onCategoriaCreada(nueva);
 
         setNombreCategoria("");
-        setShow(false);
     };
 
     return (
-        <>
-            <Button variant="secondary" onClick={() => setShow(true)}>
-                + Crear categoría
-            </Button>
-
-            <Modal show={show} onHide={() => setShow(false)} centered>
-                <Modal.Header closeButton>
-                    <Modal.Title>Nueva Categoría</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <form onSubmit={handleSubmit} className={styles.formulario}>
-                        <input
-                            type="text"
-                            placeholder="Nombre de la categoría"
-                            value={nombreCategoria}
-                            onChange={(e) => setNombreCategoria(e.target.value)}
-                            required
-                        />
-                        <button type="submit" className={styles.crearBtn}>
-                            Crear Categoría
-                        </button>
-                    </form>
-                </Modal.Body>
-            </Modal>
-        </>
+        <form onSubmit={handleSubmit} className={styles.formulario}>
+            <input
+                type="text"
+                placeholder="Nombre de la categoría"
+                value={nombreCategoria}
+                onChange={(e) => setNombreCategoria(e.target.value)}
+                required
+            />
+            <div className={styles.botones}>
+                <button type="submit" className={styles.crearBtn}>
+                    Crear Categoría
+                </button>
+            </div>
+        </form>
     );
 }

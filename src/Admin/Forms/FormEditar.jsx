@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import Modal from "react-bootstrap/Modal";
-import Button from "react-bootstrap/Button";
-import styles from "../../styles/FormComida.module.css";
+import styles from "../../styles/forms.module.css";
 
 export default function EditComidaModal({ show, onClose, comida, categorias, onComidaActualizada }) {
   const [formData, setFormData] = useState(comida || {});
@@ -44,91 +43,102 @@ export default function EditComidaModal({ show, onClose, comida, categorias, onC
   };
 
   return (
-    <Modal show={show} onHide={onClose} centered>
-      <Modal.Header closeButton>
-        <Modal.Title>Editar comida</Modal.Title>
-      </Modal.Header>
-      <Modal.Body>
-        {formData && (
-          <form onSubmit={handleSubmit} className={styles.formulario}>
-            <input
-              type="text"
-              name="nombre"
-              value={formData.nombre || ""}
-              onChange={handleChange}
-              placeholder="Nombre"
-              required
-            />
-            <textarea
-              name="descripcion"
-              value={formData.descripcion || ""}
-              onChange={handleChange}
-              placeholder="Descripción"
-              required
-            />
-            <input
-              type="number"
-              name="precio"
-              value={formData.precio || ""}
-              onChange={handleChange}
-              placeholder="Precio"
-              required
-            />
-            <input
-              type="text"
-              name="img"
-              value={formData.img || ""}
-              onChange={handleChange}
-              placeholder="URL de imagen"
-            />
-            <input
-              type="number"
-              name="stock"
-              value={formData.stock || 0}
-              onChange={handleChange}
-              placeholder="Stock"
-              min="0"
-            />
-            <label>
+    <Modal show={show} onHide={onClose} centered dialogClassName={styles.modalDialog}>
+      <div className={styles.modalContent}>
+        <Modal.Header closeButton className={styles.modalHeader}>
+          <Modal.Title className={styles.modalTitle}>Editar comida</Modal.Title>
+        </Modal.Header>
+        <Modal.Body className={styles.modalBody}>
+          {formData && (
+            <form onSubmit={handleSubmit} className={styles.formulario}>
               <input
-                type="checkbox"
-                name="destacado"
-                checked={formData.destacado || false}
+                type="text"
+                name="nombre"
+                value={formData.nombre || ""}
                 onChange={handleChange}
+                placeholder="Nombre"
+                required
               />
-              Destacado
-            </label>
-            <label>
+              <textarea
+                name="descripcion"
+                value={formData.descripcion || ""}
+                onChange={handleChange}
+                placeholder="Descripción"
+                required
+              />
               <input
-                type="checkbox"
-                name="estado"
-                checked={formData.estado || false}
+                type="number"
+                name="precio"
+                value={formData.precio || ""}
                 onChange={handleChange}
+                placeholder="Precio"
+                required
               />
-              Activo
-            </label>
-            <select
-              name="categoria"
-              value={formData.categoria?._id || formData.categoria || ""}
-              onChange={handleChange}
-              required
-            >
-              <option value="" disabled>
-                Categoría
-              </option>
-              {categorias.map((cat) => (
-                <option key={cat._id} value={cat._id}>
-                  {cat.nombre}
+              <input
+                type="text"
+                name="img"
+                value={formData.img || ""}
+                onChange={handleChange}
+                placeholder="URL de imagen"
+              />
+              <select
+                name="categoria"
+                value={formData.categoria?._id || formData.categoria || ""}
+                onChange={handleChange}
+                required
+              >
+                <option value="" disabled>
+                  Categoría
                 </option>
-              ))}
-            </select>
+                {categorias.map((cat) => (
+                  <option key={cat._id} value={cat._id}>
+                    {cat.nombre}
+                  </option>
+                ))}
+              </select>
+              <input
+                type="number"
+                name="stock"
+                value={formData.stock || 0}
+                onChange={handleChange}
+                placeholder="Stock"
+                min="0"
+              />
 
-            <Button type="submit" className={styles.btnedit}>
-              Guardar cambios
-            </Button>
-          </form>
-        )}
-      </Modal.Body>
+              <div className={styles.checkboxRow}>
+                <input
+                  type="checkbox"
+                  name="destacado"
+                  checked={formData.destacado || false}
+                  onChange={handleChange}
+                  id="destacado"
+                />
+                <label htmlFor="destacado">Destacado</label>
+              </div>
+
+              <div className={styles.checkboxRow}>
+                <input
+                  type="checkbox"
+                  name="estado"
+                  checked={formData.estado || false}
+                  onChange={handleChange}
+                  id="estado"
+                />
+                <label htmlFor="estado">Activo</label>
+              </div>
+
+              <div className={styles.botones}>
+                <button type="submit" className={styles.crearBtn}>
+                  Guardar cambios
+                </button>
+                <button type="button" className={styles.cancelarBtn} onClick={onClose}>
+                  Cancelar
+                </button>
+              </div>
+            </form>
+          )}
+        </Modal.Body>
+      </div>
     </Modal>
   );
 }

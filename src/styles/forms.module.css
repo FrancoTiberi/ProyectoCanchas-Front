@@ -1,0 +1,191 @@
+/* 🌿 MODAL TITLE centrado */
+.modalTitle {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #374151;
+  text-align: center; 
+  width: 100%;      
+}
+
+.modalContent {
+    border-radius: 10px;
+    background-color: #f3f6f4;
+    /* color uniforme para header y body */
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+    border: none;
+}
+
+.modalHeader {
+    background-color: transparent;
+    /* mismo color que el body */
+    border-bottom: none;
+    padding: 16px 20px;
+    text-align: center;
+}
+
+.modalTitle {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #374151;
+}
+
+.modalBody {
+    padding: 24px;
+    background-color: transparent;
+    /* mismo color que el header */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modalFooter {
+    background-color: transparent;
+    border-top: none;
+    padding: 16px;
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+}
+
+/* 🌿 FORMULARIO CENTRADO */
+.formulario {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    width: 100%;
+    max-width: 420px;
+    text-align: center;
+}
+
+/* 🌿 INPUTS */
+.formulario input,
+.formulario textarea,
+.formulario select {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 1rem;
+    background-color: #fff;
+    /* resaltan sobre el fondo */
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.formulario input:focus,
+.formulario textarea:focus,
+.formulario select:focus {
+    outline: none;
+    border-color: #4caf50;
+    box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.2);
+}
+
+textarea {
+    min-height: 90px;
+    resize: vertical;
+}
+
+/* 🌿 CHECKBOXES */
+.checkboxRow {
+    display: flex;
+    text-align: center;
+    gap: 8px;
+    font-size: 0.9rem;
+    color: #374151;
+}
+
+.checkboxRow input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    accent-color: #4caf50;
+}
+
+/* 🌿 BOTONES DE ACCIÓN */
+.botones {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 12px;
+}
+
+.crearBtn,
+.cancelarBtn,
+.btnModalLogin {
+    border: none;
+    border-radius: 6px;
+    padding: 10px 16px;
+    font-size: 0.95rem;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+}
+
+.crearBtn,
+.btnModalLogin {
+    background-color: #4caf50;
+    color: #fff;
+}
+
+.crearBtn:hover,
+.btnModalLogin:hover {
+    background-color: #43a047;
+    transform: scale(1.02);
+}
+
+.cancelarBtn {
+    background-color: #ef5350;
+    color: #fff;
+}
+
+.cancelarBtn:hover {
+    background-color: #e53935;
+    transform: scale(1.02);
+}
+
+/* 🌿 MENSAJE DE ERROR */
+.errorMsg {
+    color: #e53935;
+    font-size: 0.85rem;
+    margin-top: -6px;
+    text-align: center;
+}
+
+/* 🌿 BOTÓN PRINCIPAL PARA ABRIR MODAL */
+.agregarBtn {
+    background-color: #4caf50;
+    color: #fff;
+    font-weight: 500;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 14px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.agregarBtn:hover {
+    background-color: #43a047;
+    transform: scale(1.02);
+}
+
+/* 🌿 RESPONSIVE */
+@media (max-width: 576px) {
+    .formulario {
+        gap: 14px;
+    }
+
+    .botones {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .crearBtn,
+    .cancelarBtn,
+    .btnModalLogin {
+        width: 100%;
+    }
+}
