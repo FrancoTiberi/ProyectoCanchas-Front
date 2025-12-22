@@ -1,72 +1,78 @@
-import { useState } from 'react';
-import Modal from 'react-bootstrap/Modal';
-import Button from 'react-bootstrap/Button';
-import styles from '../../styles/FormComida.module.css';
+import { useState } from "react";
+import Modal from "react-bootstrap/Modal";
+import Button from "react-bootstrap/Button";
+import FormCategoria from "../Forms/FormCategorias";
+import styles from "../../styles/FormComida.module.css";
 
-export default function FormComida({ onComidaCreada }) {
+export default function FormComida({ categorias, onComidaCreada, onCategoriaCreada }) {
   const [show, setShow] = useState(false);
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+  const [nombre, setNombre] = useState("");
+  const [descripcion, setDescripcion] = useState("");
+  const [precio, setPrecio] = useState("");
+  const [imagen, setImagen] = useState("");
+  const [categoriaSeleccionada, setCategoriaSeleccionada] = useState("");
+  const [destacado, setDestacado] = useState(false);
+  const [stock, setStock] = useState(0);
+  const [estado, setEstado] = useState(true);
+  const [errorMsg, setErrorMsg] = useState("");
 
-  const [nombre, setNombre] = useState('');
-  const [descripcion, setDescripcion] = useState('');
-  const [precio, setPrecio] = useState('');
-  const [imagen, setImagen] = useState('');
-  const [categoria, setCategoria] = useState('Pizzas');
-  const [categoriaPersonalizada, setCategoriaPersonalizada] = useState('');
+  const API_URL = import.meta.env.VITE_API_URL;
 
-  const categoriasBase = [
-    "Pizzas",
-    "Hamburguesas",
-    "Sándwiches",
-    "Nueva categoría"
-  ];
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-
-    const categoriaFinal = categoria === "Nueva categoría"
-      ? categoriaPersonalizada.trim()
-      : categoria?.trim();
-
-    if (!categoriaFinal || categoriaFinal.length < 2) {
-      alert("Debes ingresar una categoría válida.");
-      return;
-    }
-
+    setErrorMsg("");
 
     const nuevaComida = {
-      id: Date.now(),
-      nombre,
-      descripcion,
+      nombre: nombre.trim(),
+      descripcion: descripcion.trim(),
       precio: parseFloat(precio),
-      imagen: imagen?.trim() || "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQd7S5iS77v4PL22VL4m7St-gcwzcg7o1DE2Q&s", visible: true,
-      categoria: categoriaFinal
+      img: imagen?.trim(),
+      destacado,
+      stock: parseInt(stock),
+      estado,
+      categoria: categoriaSeleccionada,
+      usuario: JSON.parse(localStorage.getItem("user"))?._id
     };
 
-    const comidasGuardadas = JSON.parse(localStorage.getItem('comidas')) || [];
-    comidasGuardadas.push(nuevaComida);
-    localStorage.setItem('comidas', JSON.stringify(comidasGuardadas));
+    try {
+      const res = await fetch(`${API_URL}/comidas`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        body: JSON.stringify(nuevaComida),
+      });
 
-    if (onComidaCreada) onComidaCreada(nuevaComida);
+      if (!res.ok) {
+        const errMsg = await res.text();
+        throw new Error(errMsg || "Error al crear comida");
+      }
 
-    // Limpiar y cerrar
-    setNombre('');
-    setDescripcion('');
-    setPrecio('');
-    setImagen('');
-    setCategoria('Pizzas');
-    setCategoriaPersonalizada('');
-    handleClose();
+      const creada = await res.json();
+      if (onComidaCreada) onComidaCreada(creada);
+
+      setNombre("");
+      setDescripcion("");
+      setPrecio("");
+      setImagen("");
+      setCategoriaSeleccionada("");
+      setDestacado(false);
+      setStock(0);
+      setEstado(true);
+      setShow(false);
+    } catch {
+      setErrorMsg("No se pudo crear la comida. Verifica los datos ingresados.");
+    }
   };
 
   return (
     <>
-      <Button className={styles.agregarBtn} onClick={handleShow}>
-        Agregar comida
+      <Button className={styles.agregarBtn} onClick={() => setShow(true)}>
+        <i className="bi bi-plus-circle"></i> Agregar comida
       </Button>
 
-      <Modal show={show} onHide={handleClose} centered>
+      <Modal show={show} onHide={() => setShow(false)} centered>
         <Modal.Header closeButton>
           <Modal.Title>Crear nueva comida</Modal.Title>
         </Modal.Header>
@@ -98,23 +104,66 @@ export default function FormComida({ onComidaCreada }) {
               value={imagen}
               onChange={(e) => setImagen(e.target.value)}
             />
-            <select value={categoria} onChange={(e) => setCategoria(e.target.value)}>
-              {categoriasBase.map((cat) => (
-                <option key={cat} value={cat}>{cat}</option>
-              ))}
-            </select>
-            {categoria === "Nueva categoría" && (
-              <input
-                type="text"
-                placeholder="Escribí la nueva categoría"
-                value={categoriaPersonalizada}
-                onChange={(e) => setCategoriaPersonalizada(e.target.value)}
+
+            <div className={styles.categoriaRow}>
+              <select
+                value={categoriaSeleccionada}
+                onChange={(e) => setCategoriaSeleccionada(e.target.value)}
                 required
+              >
+                <option value="" disabled>
+                  Categoría
+                </option>
+                {categorias
+                  .slice()
+                  .sort((a, b) => a.nombre.localeCompare(b.nombre))
+                  .map((cat) => (
+                    <option key={cat._id} value={cat._id}>
+                      {cat.nombre}
+                    </option>
+                  ))}
+              </select>
+              <FormCategoria onCategoriaCreada={onCategoriaCreada} />
+            </div>
+
+            <div className={styles.checkboxRow}>
+              <input
+                type="checkbox"
+                id="destacado"
+                checked={destacado}
+                onChange={(e) => setDestacado(e.target.checked)}
               />
-            )}
-            <button type="submit" className={styles.crearBtn}>
-              Crear comida
-            </button>
+              <label htmlFor="destacado">Destacado</label>
+            </div>
+
+            <input
+              type="number"
+              placeholder="Stock"
+              value={stock}
+              onChange={(e) => setStock(e.target.value)}
+              min="0"
+            />
+
+            <div className={styles.checkboxRow}>
+              <input
+                type="checkbox"
+                id="estado"
+                checked={estado}
+                onChange={(e) => setEstado(e.target.checked)}
+              />
+              <label htmlFor="estado">Activo</label>
+            </div>
+
+            {errorMsg && <p className={styles.errorMsg}>{errorMsg}</p>}
+
+            <div className={styles.botones}>
+              <button type="submit" className={styles.crearBtn}>
+                <i className="bi bi-save"></i> Crear
+              </button>
+              <button type="button" className={styles.cancelarBtn} onClick={() => setShow(false)}>
+                <i className="bi bi-x-circle"></i> Cancelar
+              </button>
+            </div>
           </form>
         </Modal.Body>
       </Modal>
