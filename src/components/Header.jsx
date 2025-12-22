@@ -32,31 +32,30 @@ export const Header = () => {
 
         <div className={styles.loginBtns}>
           {user ? (
-            <div className="d-flex align-items-center gap-2">
+            <div className="d-flex align-items-center gap-3">
               <div
                 className={styles.userAvatarContainer}
-                title={user.role === 'admin' ? 'Administrador' : 'Usuario'}
+                title={user.rol === 'ADMIN_ROLE' ? 'Administrador' : 'Usuario'}
               >
-                {user.role === 'admin' ? (
-                  <Link to="/admin"><i className="bi-award-fill fs-4"></i></Link>
+                {user.rol === 'ADMIN_ROLE' ? (
+                  <Link to="/admin"><i className="bi bi-award-fill fs-4"></i></Link>
                 ) : (
                   <i className="bi bi-person-fill fs-4"></i>
                 )}
               </div>
-              <span
-                className={`${styles.userName} ${user.role === 'admin' ? styles.adminName : styles.userNameCommon}`}
-              >
-                {user.name || 'Sin nombre'}
+              <span className={styles.userName}>
+                {user.nombre || 'Sin nombre'}
               </span>
+
               <button onClick={logout} className={`btn ${styles.btnSalir}`}>
-                Cerrar Sesión
+                <i className="bi bi-box-arrow-right"></i> Cerrar Sesión
               </button>
             </div>
           ) : (
             <div className="d-flex align-items-center gap-2">
               <LoginModal className={styles.btnLogin} />
               <Link to="/registrar" className={`btn ${styles.btnLogin}`}>
-                Registrar
+                <i className="bi bi-person-plus"></i> Registrar
               </Link>
             </div>
           )}

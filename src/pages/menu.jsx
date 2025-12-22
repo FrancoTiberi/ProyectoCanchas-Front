@@ -1,26 +1,37 @@
 import { useEffect, useState } from "react";
 import styles from "../styles/menu.module.css";
-import { comidasbc } from "../data/comida";
+import { useAuth } from "../context/AuthProvider";
+import LoginModal from "../components/LoginModal";
 
 export const Menu = () => {
   const [comidas, setComidas] = useState([]);
   const [carrito, setCarrito] = useState([]);
   const [mostrarCarrito, setMostrarCarrito] = useState(false);
-  const [usuarioLogueado, setUsuarioLogueado] = useState(null);
+  const [showLoginModal, setShowLoginModal] = useState(false); // ✅ estado para modal
+  const { user } = useAuth();
+  const API_URL = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
-    const comidasLocales = JSON.parse(localStorage.getItem("comidas")) || [];
-    const visiblesLocales = comidasLocales.filter((c) => c.visible);
-    const visiblesBase = comidasbc.filter((c) => c.visible);
-    setComidas([...visiblesBase, ...visiblesLocales]);
-  }, []);
+    const fetchComidas = async () => {
+      try {
+        const res = await fetch(`${API_URL}/comidas`);
+        const data = await res.json();
+        const visibles = data.filter((c) => c.estado === true);
+        setComidas(visibles);
+      } catch (error) {
+        console.error("Error al traer comidas:", error);
+      }
+    };
+    fetchComidas();
+  }, [API_URL]);
 
   const agregarAlCarrito = (comida) => {
+    if (comida.stock === 0) return;
     setCarrito((prev) => {
-      const itemExistente = prev.find((item) => item.id === comida.id);
+      const itemExistente = prev.find((item) => item._id === comida._id);
       if (itemExistente) {
         return prev.map((item) =>
-          item.id === comida.id
+          item._id === comida._id
             ? { ...item, cantidad: item.cantidad + 1 }
             : item
         );
@@ -33,14 +44,14 @@ export const Menu = () => {
     setCarrito((prev) =>
       prev
         .map((item) =>
-          item.id === id ? { ...item, cantidad: item.cantidad - 1 } : item
+          item._id === id ? { ...item, cantidad: item.cantidad - 1 } : item
         )
         .filter((item) => item.cantidad > 0)
     );
   };
 
   const eliminarDelCarrito = (id) => {
-    setCarrito((prev) => prev.filter((item) => item.id !== id));
+    setCarrito((prev) => prev.filter((item) => item._id !== id));
   };
 
   const total = carrito.reduce(
@@ -49,47 +60,59 @@ export const Menu = () => {
   );
 
   const confirmarPedido = () => {
-    const ventasActuales = carrito.reduce((acc, item) => acc + item.cantidad, 0);
-    const ingresosActuales = total;
+    if (!user) {
+      alert("Debes iniciar sesión para confirmar el pedido.");
+      setShowLoginModal(true); // ✅ abre el modal
+      return;
+    }
 
-    const dashboardPrevio = JSON.parse(localStorage.getItem("dashboardData")) || {
-      ventasHoy: 0,
-      ingresosHoy: 0,
-      reservasPendientes: 0,
-      productosActivos: 0
+    const pedido = {
+      usuario: user._id,
+      nombreUsuario: user.nombre,
+      fecha: new Date().toISOString(),
+      items: carrito.map((item) => ({
+        comida: item._id,
+        nombre: item.nombre,
+        cantidad: item.cantidad,
+        precioUnitario: item.precio,
+        subtotal: item.precio * item.cantidad,
+      })),
+      total,
     };
 
-    const actualizado = {
-      ...dashboardPrevio,
-      ventasHoy: dashboardPrevio.ventasHoy + ventasActuales,
-      ingresosHoy: dashboardPrevio.ingresosHoy + ingresosActuales
-    };
+    const pedidosPrevios = JSON.parse(localStorage.getItem("pedidos")) || [];
+    localStorage.setItem("pedidos", JSON.stringify([...pedidosPrevios, pedido]));
 
-    localStorage.setItem("dashboardData", JSON.stringify(actualizado));
-
-    alert(`✅ Pedido confirmado:\n\nProductos: ${ventasActuales}\nTotal: $${ingresosActuales}\n\n¡Gracias por tu compra!`);
+    alert(`✅ Pedido confirmado:\n\nTotal: $${total}\n\n¡Gracias por tu compra!`);
     setCarrito([]);
     setMostrarCarrito(false);
   };
 
-  const categorias = [...new Set(comidas.map((item) => item.categoria))];
-  const comidasPorCategoria = categorias.map((categoria) => ({
-    categoria,
-    items: comidas.filter((item) => item.categoria === categoria),
-  }));
+  // Agrupar comidas por categoría
+  const categoriasMap = new Map();
+  comidas.forEach((item) => {
+    const cat = item.categoria;
+    if (cat && !categoriasMap.has(cat._id)) {
+      categoriasMap.set(cat._id, { _id: cat._id, nombre: cat.nombre, items: [] });
+    }
+    if (cat) {
+      categoriasMap.get(cat._id).items.push(item);
+    }
+  });
+  const comidasPorCategoria = Array.from(categoriasMap.values());
 
   return (
     <main className={styles.main}>
       <h1 className={styles.titulo}>Menú</h1>
 
       {comidasPorCategoria.map((categoria) => (
-        <section key={categoria.categoria} className={styles.section}>
-          <h2 className={styles.sectionTitle}>{categoria.categoria}</h2>
+        <section key={categoria._id} className={styles.section}>
+          <h2 className={styles.sectionTitle}>{categoria.nombre}</h2>
           <div className={styles.itemsContainer}>
             {categoria.items.map((item) => (
-              <div key={item.id} className={styles.card}>
+              <div key={item._id} className={styles.card}>
                 <img
-                  src={item.imagen}
+                  src={item.img}
                   alt={item.nombre}
                   className={styles.imagen}
                   onError={(e) => (e.target.src = "/images/fallback.png")}
@@ -97,12 +120,17 @@ export const Menu = () => {
                 <h3>{item.nombre}</h3>
                 <p>{item.descripcion}</p>
                 <p className={styles.precio}>${item.precio}</p>
-                <button
-                  onClick={() => agregarAlCarrito(item)}
-                  className={`${styles.button} ${styles.agregar}`}
-                >
-                  Agregar
-                </button>
+
+                {item.stock > 0 ? (
+                  <button
+                    onClick={() => agregarAlCarrito(item)}
+                    className={`${styles.button} ${styles.agregar}`}
+                  >
+                    Agregar
+                  </button>
+                ) : (
+                  <span className={styles.agotado}>Agotado</span>
+                )}
               </div>
             ))}
           </div>
@@ -124,13 +152,13 @@ export const Menu = () => {
             <p>Vacío</p>
           ) : (
             carrito.map((item) => (
-              <div key={item.id} className={styles.carritoItem}>
+              <div key={item._id} className={styles.carritoItem}>
                 <span>
                   {item.nombre} x {item.cantidad} = ${item.precio * item.cantidad}
                 </span>
                 <div>
                   <button
-                    onClick={() => disminuirCantidad(item.id)}
+                    onClick={() => disminuirCantidad(item._id)}
                     className={styles.button}
                     disabled={item.cantidad === 1}
                   >
@@ -143,7 +171,7 @@ export const Menu = () => {
                     +
                   </button>
                   <button
-                    onClick={() => eliminarDelCarrito(item.id)}
+                    onClick={() => eliminarDelCarrito(item._id)}
                     className={styles.button}
                   >
                     Quitar
@@ -153,12 +181,12 @@ export const Menu = () => {
             ))
           )}
           <p className={styles.total}>Total: ${total}</p>
-            <button
-              onClick={confirmarPedido}
-              className={`${styles.button} ${styles.confirmarBtn}`}
-            >
-              Confirmar pedido
-            </button>
+          <button
+            onClick={confirmarPedido}
+            className={`${styles.button} ${styles.confirmarBtn}`}
+          >
+            Confirmar pedido
+          </button>
         </div>
       )}
     </main>

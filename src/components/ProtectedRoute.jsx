@@ -4,7 +4,15 @@ import { useAuth } from '../context/AuthProvider';
 export const ProtectedRoute = ({ allowedRoles }) => {
   const { user } = useAuth();
 
-  if (!user || !allowedRoles.includes(user.role)) {
+  // Si no hay usuario, redirige
+  if (!user) {
+    return <Navigate to="/" replace />;
+  }
+
+  // Normaliza el rol a mayúsculas
+  const userRole = user.rol?.toUpperCase();
+
+  if (!allowedRoles.map(r => r.toUpperCase()).includes(userRole)) {
     return <Navigate to="/" replace />;
   }
 

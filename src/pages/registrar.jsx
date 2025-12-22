@@ -5,16 +5,14 @@ import { useAuth } from '../context/AuthProvider';
 export const Registrar = () => {
   const [formData, setFormData] = useState({
     nombre: '',
-    usuario: '',
+    apellido: '',
     correo: '',
-    celular: '',
-    domicilio: '',
-    cp: '',
-    contraseña: '',
+    password: '',
     tyc: false
   });
 
   const { setUser } = useAuth();
+  const API_URL = import.meta.env.VITE_API_URL;
 
   const handleChange = (e) => {
     const { id, value, type, checked } = e.target;
@@ -24,126 +22,121 @@ export const Registrar = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const storedUsers = JSON.parse(localStorage.getItem("users")) || [];
-
-    const exists = storedUsers.some(u => u.username === formData.usuario);
-    if (exists) {
-      alert("⚠️ El nombre de usuario ya está registrado.");
+    if (!formData.tyc) {
+      alert("⚠️ Debes aceptar los Términos y Condiciones.");
       return;
     }
 
-    const newUser = {
-      id: Date.now(),
-      name: formData.nombre,
-      username: formData.usuario,
-      password: formData.contraseña,
-      role: "user"
-    };
+    try {
+      const res = await fetch(`${API_URL}/usuarios`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          nombre: formData.nombre,
+          apellido: formData.apellido,
+          correo: formData.correo,
+          password: formData.password,
+          rol: "USER_ROLE" // por defecto
+        })
+      });
 
-    const updatedUsers = [...storedUsers, newUser];
-    localStorage.setItem("users", JSON.stringify(updatedUsers));
-    localStorage.setItem("currentUser", JSON.stringify(newUser));
-    localStorage.setItem("role", "user");
+      if (!res.ok) {
+        const errorData = await res.json();
+        alert(`❌ Error en el registro: ${errorData.msg || res.statusText}`);
+        return;
+      }
 
-    setUser(newUser);
+      const newUser = await res.json();
+      setUser(newUser);
 
-    alert(`✅ Registro exitoso. Bienvenido/a, ${newUser.name}!`);
-    setFormData({
-      nombre: '',
-      usuario: '',
-      correo: '',
-      celular: '',
-      domicilio: '',
-      cp: '',
-      contraseña: '',
-      tyc: false
-    });
+      alert(`✅ Registro exitoso. Bienvenido/a, ${newUser.nombre} ${newUser.apellido}!`);
+
+      setFormData({
+        nombre: '',
+        apellido: '',
+        correo: '',
+        password: '',
+        tyc: false
+      });
+    } catch (error) {
+      console.error("Error en el registro:", error);
+      alert("❌ No se pudo registrar el usuario.");
+    }
   };
-  const isComplete = formData.nombre && formData.usuario && formData.correo && formData.contraseña && formData.tyc;
+
+  const isComplete =
+    formData.nombre &&
+    formData.apellido &&
+    formData.correo &&
+    formData.password &&
+    formData.tyc;
+
   return (
     <div className={styles.body}>
       <form onSubmit={handleSubmit} className={styles.formulario}>
         <h2>Crea una cuenta</h2>
 
-        <input
-          type="text"
-          id="nombre"
-          placeholder="Nombre y Apellido"
-          value={formData.nombre}
-          onChange={handleChange}
-          required
-        />
-
-        <input
-          type="text"
-          id="usuario"
-          placeholder="Nombre de Usuario"
-          value={formData.usuario}
-          onChange={handleChange}
-          required
-        />
-
-        <input
-          type="email"
-          id="correo"
-          placeholder="Correo Electrónico"
-          value={formData.correo}
-          onChange={handleChange}
-          required
-        />
-
-        <input
-          type="tel"
-          id="celular"
-          placeholder="Teléfono"
-          value={formData.celular}
-          onChange={handleChange}
-        />
-
-        <input
-          type="text"
-          id="domicilio"
-          placeholder="Domicilio"
-          value={formData.domicilio}
-          onChange={handleChange}
-        />
-
-        <input
-          type="text"
-          id="cp"
-          placeholder="Código Postal"
-          value={formData.cp}
-          onChange={handleChange}
-        />
-
-        <input
-          type="password"
-          id="contraseña"
-          placeholder="Contraseña"
-          value={formData.contraseña}
-          onChange={handleChange}
-          required
-        />
-
-        <label>
+        <div className={styles.inputGroup}>
+          <i className="bi bi-person-fill"></i>
           <input
-            type="checkbox"
-            id="tyc"
-            checked={formData.tyc}
+            type="text"
+            id="nombre"
+            placeholder="Nombre"
+            value={formData.nombre}
             onChange={handleChange}
             required
           />
-          Aceptar los Términos y Condiciones
-        </label>
+        </div>
+
+        <div className={styles.inputGroup}>
+          <i className="bi bi-person-fill"></i>
+          <input
+            type="text"
+            id="apellido"
+            placeholder="Apellido"
+            value={formData.apellido}
+            onChange={handleChange}
+            required
+          />
+        </div>
+
+        <div className={styles.inputGroup}>
+          <i className="bi bi-envelope-fill"></i>
+          <input
+            type="email"
+            id="correo"
+            placeholder="Correo Electrónico"
+            value={formData.correo}
+            onChange={handleChange}
+            required
+          />
+        </div>
+
+        <div className={styles.inputGroup}>
+          <i className="bi bi-lock-fill"></i>
+          <input
+            type="password"
+            id="password"
+            placeholder="Contraseña"
+            value={formData.password}
+            onChange={handleChange}
+            required
+          />
+        </div>
+
+        <div className="checkboxContainer">
+          <input type="checkbox" id="tyc" checked={formData.tyc} onChange={handleChange} />
+          <label htmlFor="tyc">Aceptar los Términos y Condiciones</label>
+        </div>
 
         <button
           type="submit"
           className={`${styles.registrar} ${isComplete ? styles.activo : ''}`}
         >
-          Registrar
+          <i className="bi bi-person-plus-fill"></i> Registrar
         </button>
       </form>
     </div>
