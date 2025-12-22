@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import FormCanchas from '../Forms/FormCanchas';
-import styles from '../../styles/FormComida.module.css';
+import styles from "../../styles/View.module.css";
 
 export default function ReservasAdmin() {
   const [canchas, setCanchas] = useState([]);

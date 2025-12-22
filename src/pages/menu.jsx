@@ -7,7 +7,7 @@ export const Menu = () => {
   const [comidas, setComidas] = useState([]);
   const [carrito, setCarrito] = useState([]);
   const [mostrarCarrito, setMostrarCarrito] = useState(false);
-  const [showLoginModal, setShowLoginModal] = useState(false); // ✅ estado para modal
+  const [showLoginModal, setShowLoginModal] = useState(false);
   const { user } = useAuth();
   const API_URL = import.meta.env.VITE_API_URL;
 
@@ -62,22 +62,24 @@ export const Menu = () => {
   const confirmarPedido = () => {
     if (!user) {
       alert("Debes iniciar sesión para confirmar el pedido.");
-      setShowLoginModal(true); // ✅ abre el modal
+      setShowLoginModal(true);
       return;
     }
 
     const pedido = {
-      usuario: user._id,
+      usuarioId: user._id,
       nombreUsuario: user.nombre,
       fecha: new Date().toISOString(),
       items: carrito.map((item) => ({
-        comida: item._id,
+        comidaId: item._id,
         nombre: item.nombre,
         cantidad: item.cantidad,
         precioUnitario: item.precio,
         subtotal: item.precio * item.cantidad,
+        tipo: "comida", 
       })),
       total,
+      entregado: false,
     };
 
     const pedidosPrevios = JSON.parse(localStorage.getItem("pedidos")) || [];
