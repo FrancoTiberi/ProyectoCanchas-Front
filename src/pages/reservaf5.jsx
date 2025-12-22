@@ -1,17 +1,16 @@
 import { useState, useEffect, useRef, forwardRef } from "react";
-import { addDays } from "date-fns/fp";
 import { es } from "date-fns/locale";
-import { format } from "date-fns";
+import { format, addDays } from "date-fns";
 import { Row, Col } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import DatePicker from "react-datepicker";
-
 import canchadefutbol from "../assets/img/cancha-de-futbol.png";
 import reloj from "../assets/img/reloj.png";
 import styles from "../styles/reserva.module.css";
 import "react-datepicker/dist/react-datepicker.css";
-import { reservaEjemplo } from "../data/reserva";
+//import { obtenerMisReservas } from "../helpers/reservaApi";
+import { borrarCancha, canchasTodasGet, obtenerDisponibilidadTodas } from "../helpers/canchaApi";
 
 export const Reservaf5 = () => {
     const [abrirDropdown, setAbrirDropdown] = useState(null);
@@ -41,29 +40,26 @@ export const Reservaf5 = () => {
         for (let i = desde; i <= rango; i++) {
             horasTotales.push({
                 id: Date.now() + i,
-                cantHoras: i >= 24 ? i - 24 : i,
+                horaCelda: i >= 24 ? i - 24 : i,
             });
         }
         return horasTotales;
     }
 
-    function generarCanchasyFilas(obj, indice) {
-        const canchasTotales = [];
-        const limite = parseInt(obj.canchas);
-        const celdasTotales = generarHoras(parseInt(obj.desde), parseInt(obj.hasta));
+    function generarCanchasyFilas(cancha) {
+    const celdasTotales = generarHoras(parseInt(cancha.desde), parseInt(cancha.hasta));
 
-        for (let i = 0; i < limite; i++) {
-            canchasTotales.push({
-                canchaID: i + 1,
-                celdas: celdasTotales.map((celda) => ({
-                    disponible: true,
-                    celdaId: `${indice}-${i + 1}-${celda.cantHoras}`,
-                    horaCelda: parseInt(celda.cantHoras),
-                })),
-            });
-        }
-        return canchasTotales;
-    }
+    return {
+        canchaID: cancha._id,
+        nombre: cancha.cancha,
+        celdas: celdasTotales.map((celda) => ({
+            disponible: true,
+            celdaId: `${cancha._id}-${celda.horaCelda}`, 
+            horaCelda: parseInt(celda.horaCelda),
+            precio: cancha.precio
+        })),
+    };
+}
 
     const darIndiceCelda = (indice, hora, cancha) => {
         setAbrirDropdown(abrirDropdown === indice ? null : indice);
@@ -71,24 +67,8 @@ export const Reservaf5 = () => {
         setCanchaReservada(cancha);
     };
 
-    function confirmarReserva() {
-        const nuevaReserva = {
-            id: Date.now(),
-            fecha: fechaReservada,
-            hora: horaReservada === 0 ? `${horaReservada}0:00` : `${horaReservada}:00`,
-            cancha: canchaReservada,
-        };
-
-        const actualizadas = [...misReservas, nuevaReserva];
-        setMisReservas(actualizadas);
-        localStorage.setItem("misReservas", JSON.stringify(actualizadas));
-        handleClose();
-    }
-
     const eliminarReserva = (id) => {
-        const actualizar = misReservas.filter((r) => r.id !== id);
-        setMisReservas(actualizar);
-        localStorage.setItem("misReservas", JSON.stringify(actualizar));
+        borrarCancha(id)
     };
 
     useEffect(() => {
@@ -97,48 +77,54 @@ export const Reservaf5 = () => {
                 setAbrirDropdown(null);
             }
         }
-        
-        const reservasLS = JSON.parse(localStorage.getItem("reservas")) || [];
-        const reservasTotales = [reservaEjemplo, ...reservasLS];
 
-        let desdeMayor = 0;
-        let hastaMayor = 0;
-        let mayorRango = -1;
+        const cargarDatos = async () => {
+            const fechaParaBackend = format(selectedDate, 'yyyy-MM-dd');
+            try {
+                const [/*respMisReservas,*/ respObtenerTodasCanchas, resObtenerDisponibilidadTodas] = await Promise.all([
+                    //obtenerMisReservas(),
+                    canchasTodasGet(),
+                    obtenerDisponibilidadTodas(fechaParaBackend)
+                ]);
 
-        reservasTotales.forEach((reserva) => {
-            const desde = parseInt(reserva.desde);
-            let hasta = parseInt(reserva.hasta);
+                // setMisReservas(respMisReservas.reservas);
+                console.log(resObtenerDisponibilidadTodas)
+                const todasLasCanchasObtenidas = respObtenerTodasCanchas.canchas;
 
-            if (hasta <= desde) {
-                hasta = hasta + 24;
+                let desdeMayor = 0;
+                let hastaMayor = 0;
+                let mayorRango = -1;
+                let celdasGrilla = [];
+
+                todasLasCanchasObtenidas.forEach((cancha) => {
+                    const desde = parseInt(cancha.desde);
+                    let hasta = parseInt(cancha.hasta);
+
+                    if (hasta <= desde) {
+                        hasta = hasta + 24;
+                    }
+
+                    const rango = hasta - desde;
+                    if (rango > mayorRango) {
+                        mayorRango = rango;
+                        desdeMayor = desde;
+                        hastaMayor = hasta;
+                    }
+
+                    const canchasModificadas = generarCanchasyFilas(cancha);
+                    celdasGrilla = [...celdasGrilla, canchasModificadas]
+                });
+
+                const horasGeneradas = generarHoras(desdeMayor, hastaMayor);
+                setHoras(horasGeneradas);
+                setGrilla(celdasGrilla);
+            } catch (error) {
+                console.error("Error al cargar reservas:", error);
             }
+        };
 
-            const rango = hasta - desde;
-            if (rango > mayorRango) {
-                mayorRango = rango;
-                desdeMayor = desde;
-                hastaMayor = hasta;
-            }
-        });
+        cargarDatos();
 
-        const horasGeneradas = generarHoras(desdeMayor, hastaMayor);
-
-        let canchasAcumuladas = [];
-        let contadorCanchas = 1;
-
-        reservasTotales.forEach((reserva, i) => {
-            const nuevasCanchas = generarCanchasyFilas(reserva, i);
-            nuevasCanchas.forEach((cancha) => {
-                cancha.canchaID = contadorCanchas++;
-            });
-            canchasAcumuladas = [...canchasAcumuladas, ...nuevasCanchas];
-        });
-
-        const reservasGuardadasUsuario = JSON.parse(localStorage.getItem("misReservas")) || [];
-
-        setMisReservas(reservasGuardadasUsuario);
-        setHoras(horasGeneradas);
-        setGrilla(canchasAcumuladas);
         setFechaReservada(format(selectedDate, "d 'de' MMMM", { locale: es }));
 
         document.addEventListener("mousedown", cerrarDropdown);
@@ -161,6 +147,8 @@ export const Reservaf5 = () => {
                             locale={es}
                             dateFormat={"d 'de' MMMM"}
                             customInput={<BotonDatepicker />}
+                            minDate={new Date()}
+                            maxDate={addDays(new Date(), 7)}
                             showIcon
                         />
                     </div>
@@ -175,14 +163,14 @@ export const Reservaf5 = () => {
                             <Col md={1} className={styles.numCancha}></Col>
                             {horas.map((hora) => (
                                 <Col className={styles.gridItemHora} key={hora.id}>
-                                    <b>{hora.cantHoras === 0 ? "00" : hora.cantHoras}</b>
+                                    <b>{hora.horaCelda === 0 ? "00" : hora.horaCelda}</b>
                                 </Col>
                             ))}
                         </Row>
-                        {grilla.map((cancha, i) => (
-                            <Row key={cancha.canchaID + i}>
+                        {grilla.map((cancha) => (
+                            <Row key={cancha.canchaID}>
                                 <Col md={1} className={`${styles.gridItem} ${styles.numCancha}`}>
-                                    <b>cancha {cancha.canchaID}</b>
+                                    <b>cancha {cancha.nombre}</b>
                                 </Col>
                                 {cancha.celdas.map((celda) => (
                                     <Col className={`${styles.gridItem} ${styles.colVacia}`} onClick={() => darIndiceCelda(celda.celdaId, celda.horaCelda, cancha.canchaID)} ref={dropdownRef} key={celda.celdaId}>
@@ -192,7 +180,7 @@ export const Reservaf5 = () => {
                                                     <div className={styles.infoCanchaHora}>
                                                         <img src={canchadefutbol} width="30" height="30" />
                                                         <span className={styles.canchaNum}>
-                                                            <b>Cancha {cancha.canchaID}</b>
+                                                            <b>Cancha {cancha.nombre}</b>
                                                         </span>
                                                     </div>
                                                     <div className={styles.canchaHoraContenedor}>
@@ -204,7 +192,7 @@ export const Reservaf5 = () => {
                                                 </div>
                                                 <div className={styles.canchaPXHContenedor}>
                                                     <div className={styles.infoPXH}>
-                                                        <span className="mx-4"><b>$30.000</b></span>
+                                                        <span className="mx-4"><b>{celda.precio}</b></span>
                                                         <span className="mx-4"><b>60 min</b></span>
                                                     </div>
                                                 </div>
@@ -225,9 +213,9 @@ export const Reservaf5 = () => {
                 <article className={styles.diasReserva}>
                     {[0, 1, 2, 3, 4].map((i) => (
                         <button key={i}>
-                            <span>{format(addDays(i, selectedDate), "E", { locale: es }).toUpperCase()}</span>
-                            <span>{format(addDays(i, selectedDate), "d", { locale: es })}</span>
-                            <span>{format(addDays(i, selectedDate), "MMM", { locale: es }).toUpperCase()}</span>
+                            <span>{format(addDays(selectedDate, i), "E", { locale: es }).toUpperCase()}</span>
+                            <span>{format(addDays(selectedDate, i), "d", { locale: es })}</span>
+                            <span>{format(addDays(selectedDate, i), "MMM", { locale: es }).toUpperCase()}</span>
                         </button>
                     ))}
                 </article>
@@ -236,7 +224,7 @@ export const Reservaf5 = () => {
                     <div className={styles.horasGridContenedor}>
                         {horas.map((hora, i) => (
                             <button className={styles.hora} key={hora.id + (i + 2)}>
-                                {hora.cantHoras === 0 ? "00:00" : `${hora.cantHoras}:00`}
+                                {hora.horaCelda === 0 ? "00:00" : `${hora.horaCelda}:00`}
                             </button>
                         ))}
                     </div>
@@ -260,7 +248,7 @@ export const Reservaf5 = () => {
                 </label>
 
                 <div className={styles.misReservas}>
-                    {misReservas.length === 0 ? (
+                    {misReservas == undefined ? (
                         <p><b>No tienes ninguna reserva</b></p>
                     ) : (
                         misReservas.map((reserva) => (
@@ -268,7 +256,7 @@ export const Reservaf5 = () => {
                                 <p><b>Fecha:</b> {reserva.fecha}</p>
                                 <p><b>Hora:</b> {reserva.hora}</p>
                                 <p><b>Cancha:</b> {reserva.cancha}</p>
-                                <button onClick={() => eliminarReserva(reserva.id)} className={styles.btnEliminar}>Eliminar</button>
+                                <button onClick={() => eliminarReserva(reserva._id)} className={styles.btnEliminar}>Eliminar</button>
                             </div>
                         ))
                     )}
@@ -287,7 +275,7 @@ export const Reservaf5 = () => {
                     <Button variant="secondary" onClick={handleClose}>
                         Cancelar
                     </Button>
-                    <Button variant="primary" onClick={confirmarReserva}>
+                    <Button variant="primary" /*onClick={confirmarReserva}*/>
                         Confirmar
                     </Button>
                 </Modal.Footer>

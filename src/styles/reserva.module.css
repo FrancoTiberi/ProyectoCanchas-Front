@@ -80,6 +80,15 @@ body {
     max-width: 70px;
 }
 
+.colVaciaReservada {
+    background-color: #e94c0e;
+    position: relative;
+    width: 70px;
+    height: 51px;
+    flex: 0 0 70px;
+    max-width: 70px;
+}
+
 .colVacia:hover {
     background-color: #78ff70;
     cursor: pointer;

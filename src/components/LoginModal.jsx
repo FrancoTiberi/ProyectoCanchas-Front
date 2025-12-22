@@ -1,6 +1,5 @@
 import { useState } from "react";
 import Modal from "react-bootstrap/Modal";
-import { loginUser } from "../data/user";
 import { useAuth } from "../context/AuthProvider";
 import styles from '../styles/modal.module.css';
 import { Link, useNavigate } from 'react-router-dom';
@@ -14,20 +13,15 @@ export default function LoginModal({ variant, className }) {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
-  const { user, setUser } = useAuth();
+  const { user, login } = useAuth();
   const navigate = useNavigate();
 
   const handleLogin = async () => {
-    const result = await loginUser(correo, password);
-    console.log("Usuario autenticado:", result.user); // 👀 útil para debug
+    const result = await login(correo, password);
+    console.log("Usuario autenticado:", result.user);
 
     if (result.success) {
       setError('');
-      setUser(result.user);
-      localStorage.setItem('user', JSON.stringify(result.user));
-      localStorage.setItem('token', result.token);
-      localStorage.setItem('rol', result.user.rol);
-
       handleClose();
 
       if (result.user.rol?.toUpperCase() === 'ADMIN_ROLE') {
@@ -44,15 +38,9 @@ export default function LoginModal({ variant, className }) {
         Iniciar Sesión
       </button>
 
-      <Modal
-        show={show}
-        onHide={handleClose}
-        centered
-        dialogClassName={styles.modalDialog}
-      >
+      <Modal show={show} onHide={handleClose} centered dialogClassName={styles.modalDialog}>
         <Modal.Body className={styles.bodymodal}>
           <button type="button" className="btn-close" onClick={handleClose}></button>
-
           <Modal.Title className="mb-4">Iniciar Sesión</Modal.Title>
 
           {user && (
@@ -81,12 +69,10 @@ export default function LoginModal({ variant, className }) {
               <i className={`bi bi-google ${styles.icon}`}></i>
               Continuar con Google
             </button>
-
             <button type="button" className={`${styles.socialBtn} ${styles.facebook}`}>
               <i className={`bi bi-facebook ${styles.icon}`}></i>
               Continuar con Facebook
             </button>
-
             <p className="mt-3">
               ¿No tienes cuenta?
               <Link to="/registrar" onClick={handleClose}> ¡Registrate!</Link>
