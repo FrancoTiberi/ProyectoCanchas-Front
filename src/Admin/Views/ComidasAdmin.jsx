@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import FormComida from "../Forms/FormComida";
 import EditComidaModal from "../Forms/FormEditar";
-import styles from "../../styles/FormComida.module.css";
+import styles from "../../styles/View.module.css";
 
 export default function ComidaAdmin() {
   const [categorias, setCategorias] = useState([]);

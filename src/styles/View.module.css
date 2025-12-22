@@ -79,7 +79,6 @@
   border: none;
   border-radius: 6px;
   padding: 7px 9px;
-  /* botones más pequeños */
   font-size: 0.85rem;
   cursor: pointer;
   transition: background-color 0.2s ease, transform 0.2s ease;
