@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, forwardRef } from "react";
+import { useState, useEffect, useRef, forwardRef, useCallback } from "react";
 import { es } from "date-fns/locale";
 import { format, addDays } from "date-fns";
 import { Row, Col } from "react-bootstrap";
@@ -9,10 +9,13 @@ import canchadefutbol from "../assets/img/cancha-de-futbol.png";
 import reloj from "../assets/img/reloj.png";
 import styles from "../styles/reserva.module.css";
 import "react-datepicker/dist/react-datepicker.css";
-//import { obtenerMisReservas } from "../helpers/reservaApi";
+import { obtenerMisReservas } from "../helpers/reservaApi";
 import { borrarCancha, canchasTodasGet, obtenerDisponibilidadTodas } from "../helpers/canchaApi";
+import { crearReserva } from "../helpers/reservaApi";
+import { useAuth } from "../context/AuthProvider";
 
 export const Reservaf5 = () => {
+    const { user } = useAuth();
     const [abrirDropdown, setAbrirDropdown] = useState(null);
     const [grilla, setGrilla] = useState([]);
     const [horas, setHoras] = useState([]);
@@ -23,6 +26,7 @@ export const Reservaf5 = () => {
     const [show, setShow] = useState(false);
     const [misReservas, setMisReservas] = useState([]);
     const dropdownRef = useRef(null);
+    const [canchaReservadaID, setCanchaReservadaID] = useState(null);
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
@@ -46,30 +50,100 @@ export const Reservaf5 = () => {
         return horasTotales;
     }
 
-    function generarCanchasyFilas(cancha) {
-    const celdasTotales = generarHoras(parseInt(cancha.desde), parseInt(cancha.hasta));
+    function generarCanchasyFilas(cancha, horasDisponibles = []) {
+        const celdasTotales = generarHoras(parseInt(cancha.desde), parseInt(cancha.hasta));
 
-    return {
-        canchaID: cancha._id,
-        nombre: cancha.cancha,
-        celdas: celdasTotales.map((celda) => ({
-            disponible: true,
-            celdaId: `${cancha._id}-${celda.horaCelda}`, 
-            horaCelda: parseInt(celda.horaCelda),
-            precio: cancha.precio
-        })),
-    };
-}
+        return {
+            canchaID: cancha._id,
+            nombre: cancha.cancha,
+            celdas: celdasTotales.map((celda) => ({
+                disponible: horasDisponibles.includes(celda.horaCelda),
+                celdaId: `${cancha._id}-${celda.horaCelda}`,
+                horaCelda: parseInt(celda.horaCelda),
+                precio: cancha.precio
+            })),
+        };
+    }
 
-    const darIndiceCelda = (indice, hora, cancha) => {
+    const darIndiceCelda = (indice, hora, cancha, canchaID) => {
         setAbrirDropdown(abrirDropdown === indice ? null : indice);
         setHoraReservada(hora);
         setCanchaReservada(cancha);
+        setCanchaReservadaID(canchaID);
     };
 
     const eliminarReserva = (id) => {
         borrarCancha(id)
     };
+
+    async function confirmarReserva() {
+        if (!user) {
+            alert("Debes iniciar sesión para reservar");
+            return;
+        }
+        const guardarReserva = {
+            cancha: canchaReservadaID,
+            fecha: selectedDate,
+            hora: horaReservada,
+            usuario: user._id
+        }
+        try {
+            crearReserva(guardarReserva)
+            alert("¡Reserva creada con éxito!");
+            handleClose();
+            await cargarDatos();
+        } catch (error) {
+            console.log(error)
+            throw new Error("Error al hacer la reservar")
+        }
+    }
+
+    const cargarDatos = useCallback(async () => {
+        const fechaParaBackend = format(selectedDate, 'yyyy-MM-dd');
+        try {
+            const [respMisReservas, respObtenerTodasCanchas, resObtenerDisponibilidadTodas] = await Promise.all([
+                obtenerMisReservas(),
+                canchasTodasGet(),
+                obtenerDisponibilidadTodas(fechaParaBackend)
+            ]);
+
+            setMisReservas(respMisReservas?.reservas || []);
+            const todasLasCanchasObtenidas = respObtenerTodasCanchas.canchas;
+
+            let desdeMayor = 0;
+            let hastaMayor = 0;
+            let mayorRango = -1;
+            let celdasGrilla = [];
+
+            todasLasCanchasObtenidas.forEach((cancha) => {
+                const desde = parseInt(cancha.desde);
+                let hasta = parseInt(cancha.hasta);
+
+                if (hasta <= desde) {
+                    hasta = hasta + 24;
+                }
+
+                const rango = hasta - desde;
+                if (rango > mayorRango) {
+                    mayorRango = rango;
+                    desdeMayor = desde;
+                    hastaMayor = hasta;
+                }
+
+                const disponibilidadEncontrada = resObtenerDisponibilidadTodas.find(d => d.id === cancha._id);
+                const horasDisponibles = disponibilidadEncontrada ? disponibilidadEncontrada.horasDisponibles : [];
+
+                const canchasModificadas = generarCanchasyFilas(cancha, horasDisponibles);
+                celdasGrilla = [...celdasGrilla, canchasModificadas];
+            });
+
+            const horasGeneradas = generarHoras(desdeMayor, hastaMayor);
+            setHoras(horasGeneradas);
+            setGrilla(celdasGrilla);
+        } catch (error) {
+            console.error("Error al cargar reservas:", error);
+        }
+    }, [selectedDate]);
 
     useEffect(() => {
         function cerrarDropdown(e) {
@@ -78,51 +152,6 @@ export const Reservaf5 = () => {
             }
         }
 
-        const cargarDatos = async () => {
-            const fechaParaBackend = format(selectedDate, 'yyyy-MM-dd');
-            try {
-                const [/*respMisReservas,*/ respObtenerTodasCanchas, resObtenerDisponibilidadTodas] = await Promise.all([
-                    //obtenerMisReservas(),
-                    canchasTodasGet(),
-                    obtenerDisponibilidadTodas(fechaParaBackend)
-                ]);
-
-                // setMisReservas(respMisReservas.reservas);
-                console.log(resObtenerDisponibilidadTodas)
-                const todasLasCanchasObtenidas = respObtenerTodasCanchas.canchas;
-
-                let desdeMayor = 0;
-                let hastaMayor = 0;
-                let mayorRango = -1;
-                let celdasGrilla = [];
-
-                todasLasCanchasObtenidas.forEach((cancha) => {
-                    const desde = parseInt(cancha.desde);
-                    let hasta = parseInt(cancha.hasta);
-
-                    if (hasta <= desde) {
-                        hasta = hasta + 24;
-                    }
-
-                    const rango = hasta - desde;
-                    if (rango > mayorRango) {
-                        mayorRango = rango;
-                        desdeMayor = desde;
-                        hastaMayor = hasta;
-                    }
-
-                    const canchasModificadas = generarCanchasyFilas(cancha);
-                    celdasGrilla = [...celdasGrilla, canchasModificadas]
-                });
-
-                const horasGeneradas = generarHoras(desdeMayor, hastaMayor);
-                setHoras(horasGeneradas);
-                setGrilla(celdasGrilla);
-            } catch (error) {
-                console.error("Error al cargar reservas:", error);
-            }
-        };
-
         cargarDatos();
 
         setFechaReservada(format(selectedDate, "d 'de' MMMM", { locale: es }));
@@ -130,7 +159,7 @@ export const Reservaf5 = () => {
         document.addEventListener("mousedown", cerrarDropdown);
 
         return () => document.removeEventListener("mousedown", cerrarDropdown);
-    }, [selectedDate, abrirDropdown]);
+    }, [selectedDate, abrirDropdown, cargarDatos]);
 
     return (
         <div className={styles.contenedorPrincipal}>
@@ -173,7 +202,7 @@ export const Reservaf5 = () => {
                                     <b>cancha {cancha.nombre}</b>
                                 </Col>
                                 {cancha.celdas.map((celda) => (
-                                    <Col className={`${styles.gridItem} ${styles.colVacia}`} onClick={() => darIndiceCelda(celda.celdaId, celda.horaCelda, cancha.canchaID)} ref={dropdownRef} key={celda.celdaId}>
+                                    <Col className={`${styles.gridItem} ${celda.disponible ? styles.colVacia : styles.colVaciaReservada}`} onClick={() => { if (celda.disponible) { darIndiceCelda(celda.celdaId, celda.horaCelda, cancha.nombre, cancha.canchaID) } }} ref={dropdownRef} key={celda.celdaId}>
                                         <div className={`${styles.dropdownReserva} ${abrirDropdown === celda.celdaId ? styles.show : ""}`}>
                                             <div className={styles.dropdownContenedor}>
                                                 <div className={styles.canchaNumContenedor}>
@@ -248,14 +277,14 @@ export const Reservaf5 = () => {
                 </label>
 
                 <div className={styles.misReservas}>
-                    {misReservas == undefined ? (
+                    {!misReservas || misReservas.length === 0 ? (
                         <p><b>No tienes ninguna reserva</b></p>
                     ) : (
                         misReservas.map((reserva) => (
-                            <div key={reserva.id} className={styles.reservaConfirmada}>
-                                <p><b>Fecha:</b> {reserva.fecha}</p>
-                                <p><b>Hora:</b> {reserva.hora}</p>
-                                <p><b>Cancha:</b> {reserva.cancha}</p>
+                            <div key={reserva._id} className={styles.reservaConfirmada}>
+                                <p><b>Fecha:</b> {format(new Date(reserva.fecha), 'dd/MM/yyyy', { locale: es })}</p>
+                                <p><b>Hora:</b> {reserva.hora}:00</p>
+                                <p><b>Cancha:</b> {reserva.cancha?.nombre || "Cancha"}</p>
                                 <button onClick={() => eliminarReserva(reserva._id)} className={styles.btnEliminar}>Eliminar</button>
                             </div>
                         ))
@@ -275,7 +304,7 @@ export const Reservaf5 = () => {
                     <Button variant="secondary" onClick={handleClose}>
                         Cancelar
                     </Button>
-                    <Button variant="primary" /*onClick={confirmarReserva}*/>
+                    <Button variant="primary" onClick={confirmarReserva}>
                         Confirmar
                     </Button>
                 </Modal.Footer>

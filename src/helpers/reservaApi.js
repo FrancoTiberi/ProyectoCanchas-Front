@@ -37,12 +37,14 @@ export const reservaGet = async (id) => {
 };
 
 export const crearReserva = async (datos) => {
+    const token = localStorage.getItem('token');
     try {
         const resp = await fetch(url, {
             method: 'POST',
             body: JSON.stringify(datos),
             headers: {
                 'Content-type': 'application/json; charset=UTF-8',
+                'x-token': token
             }
         });
 
@@ -93,11 +95,13 @@ export const borrarReserva = async (id) => {
 };
 
 export const obtenerMisReservas = async () => {
+    const token = localStorage.getItem('token');
     try {
         const resp = await fetch(url + '/misReservas', {
             method: 'GET',
             headers: {
-                'Content-type': 'application/json; charset=UTF-8'
+                'Content-type': 'application/json; charset=UTF-8',
+                'x-token': token
             }
         });
 
