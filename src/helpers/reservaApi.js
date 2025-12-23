@@ -1,4 +1,5 @@
-const url = `${import.meta.env.VITE_API_URL}/reservas`;
+//const url = `${import.meta.env.VITE_API_URL}/reservas`;
+const url = 'http://localhost:4000/api/reservas';
 
 export const reservasTodasGet = async (limite = 0, pagina = 0) => {
     try {
@@ -44,7 +45,7 @@ export const crearReserva = async (datos) => {
             body: JSON.stringify(datos),
             headers: {
                 'Content-type': 'application/json; charset=UTF-8',
-                'x-token': token
+                'Authorization': `Bearer ${token}`
             }
         });
 
@@ -77,11 +78,13 @@ export const actualizarReserva = async (id, datos) => {
 };
 
 export const borrarReserva = async (id) => {
+    const token = localStorage.getItem('token');
     try {
         const resp = await fetch(url + '/' + id, {
             method: 'DELETE',
             headers: {
                 'Content-type': 'application/json; charset=UTF-8',
+                'Authorization': `Bearer ${token}`
             }
         });
 
@@ -101,7 +104,7 @@ export const obtenerMisReservas = async () => {
             method: 'GET',
             headers: {
                 'Content-type': 'application/json; charset=UTF-8',
-                'x-token': token
+                'Authorization': `Bearer ${token}`
             }
         });
 

@@ -9,7 +9,7 @@ import canchadefutbol from "../assets/img/cancha-de-futbol.png";
 import reloj from "../assets/img/reloj.png";
 import styles from "../styles/reserva.module.css";
 import "react-datepicker/dist/react-datepicker.css";
-import { obtenerMisReservas } from "../helpers/reservaApi";
+import { obtenerMisReservas, borrarReserva } from "../helpers/reservaApi";
 import { borrarCancha, canchasTodasGet, obtenerDisponibilidadTodas } from "../helpers/canchaApi";
 import { crearReserva } from "../helpers/reservaApi";
 import { useAuth } from "../context/AuthProvider";
@@ -72,8 +72,9 @@ export const Reservaf5 = () => {
         setCanchaReservadaID(canchaID);
     };
 
-    const eliminarReserva = (id) => {
-        borrarCancha(id)
+    const eliminarReserva = async (id) => {
+        await borrarReserva(id);
+        await cargarDatos();
     };
 
     async function confirmarReserva() {
@@ -83,12 +84,12 @@ export const Reservaf5 = () => {
         }
         const guardarReserva = {
             cancha: canchaReservadaID,
-            fecha: selectedDate,
+            fecha: format(selectedDate, 'yyyy-MM-dd'),
             hora: horaReservada,
             usuario: user._id
         }
         try {
-            crearReserva(guardarReserva)
+            await crearReserva(guardarReserva)
             alert("¡Reserva creada con éxito!");
             handleClose();
             await cargarDatos();
