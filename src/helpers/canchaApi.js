@@ -1,4 +1,4 @@
-const url = 'http://localhost:4000/api/canchas';
+const url = `${import.meta.env.VITE_API_URL}/canchas`;
 
 export const canchasTodasGet = async (limite = 0, desde = 0) => {
     try {
