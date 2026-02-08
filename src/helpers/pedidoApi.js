@@ -1,42 +1,44 @@
-const url = `${import.meta.env.VITE_API_URL}/reservas`;
+const url = `${import.meta.env.VITE_API_URL}/pedidos`;
 
-export const reservasTodasGet = async (limite = 0, pagina = 0) => {
+export const pedidosTodosGet = async (limite = 0, pagina = 0) => {
+    const token = localStorage.getItem('token');
     try {
         const resp = await fetch(url + '?limite=' + limite + '&desde=' + pagina, {
             method: 'GET',
             headers: {
                 'Content-type': 'application/json; charset=UTF-8',
+                'x-token': token
             }
         });
 
         const data = await resp.json();
-
         return data;
     } catch (error) {
         console.log(error);
-        throw new Error("No se pudo obtener la info")
+        throw new Error("No se pudo obtener los pedidos");
     }
 };
 
-export const reservaGet = async (id) => {
+export const pedidoGet = async (id) => {
+    const token = localStorage.getItem('token');
     try {
         const resp = await fetch(url + '/' + id, {
             method: 'GET',
             headers: {
                 'Content-type': 'application/json; charset=UTF-8',
+                'x-token': token
             }
         });
 
         const data = await resp.json();
-
         return data;
     } catch (error) {
         console.log(error);
-        throw new Error("No se pudo obtener la info")
+        throw new Error("No se pudo obtener el pedido");
     }
 };
 
-export const crearReserva = async (datos) => {
+export const crearPedido = async (datos) => {
     const token = localStorage.getItem('token');
     try {
         const resp = await fetch(url, {
@@ -49,34 +51,52 @@ export const crearReserva = async (datos) => {
         });
 
         const data = await resp.json();
-
         return data;
     } catch (error) {
         console.log(error);
-        return { msg: "No se contectó con backend" };
+        return { msg: "No se conectó con backend" };
     }
 };
 
-export const actualizarReserva = async (id, datos) => {
+export const actualizarPedido = async (id, datos) => {
+    const token = localStorage.getItem('token');
     try {
         const resp = await fetch(url + '/' + id, {
             method: 'PUT',
             body: JSON.stringify(datos),
             headers: {
                 'Content-type': 'application/json; charset=UTF-8',
+                'x-token': token
             }
         });
 
         const data = await resp.json();
-
         return data;
     } catch (error) {
         console.log(error);
-        return { msg: "No se contectó con backend" };
+        return { msg: "No se conectó con backend" };
     }
 };
 
-export const borrarReserva = async (id) => {
+export const obtenerMisPedidos = async () => {
+    const token = localStorage.getItem('token');
+    try {
+        const resp = await fetch(url + '/misPedidos', {
+            method: 'GET',
+            headers: {
+                'Content-type': 'application/json; charset=UTF-8',
+                'x-token': token
+            }
+        });
+
+        const data = await resp.json();
+        return data;
+    } catch (error) {
+        console.log("Hubo un error al obtener los pedidos", error);
+    }
+};
+
+export const borrarPedido = async (id) => {
     const token = localStorage.getItem('token');
     try {
         const resp = await fetch(url + '/' + id, {
@@ -88,29 +108,9 @@ export const borrarReserva = async (id) => {
         });
 
         const data = await resp.json();
-
         return data;
     } catch (error) {
         console.log(error);
-        return { msg: "No se contectó con backend" };
+        return { msg: "No se conectó con backend" };
     }
 };
-
-export const obtenerMisReservas = async () => {
-    const token = localStorage.getItem('token');
-    try {
-        const resp = await fetch(url + '/misReservas', {
-            method: 'GET',
-            headers: {
-                'Content-type': 'application/json; charset=UTF-8',
-                'x-token': token
-            }
-        });
-
-        const data = await resp.json();
-
-        return data;
-    } catch (error) {
-        console.log("Hubo un error al obtener las reservas", error);
-    }
-}

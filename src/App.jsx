@@ -13,6 +13,7 @@ import Contacto from './pages/contacto';
 import SobreNosotros from './pages/sobreNosotros';
 import Registrar from './pages/registrar';
 import { Construccion } from './pages/construccion';
+import Pagos from './components/PagoReservas';
 
 // Admin
 import DashboardAdmin from './Admin/Views/DashboardAdmin';
@@ -37,6 +38,7 @@ function App() {
         <Route path="/sobrenosotros" element={<SobreNosotros />} />
         <Route path="/registrar" element={<Registrar />} />
         <Route path="/construccion" element={<Construccion />} />
+        <Route path='/pagos' element={<Pagos/>}></Route>
       </Route>
 
       {/* Rutas protegidas para admin */}

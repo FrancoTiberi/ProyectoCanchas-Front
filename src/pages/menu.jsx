@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import styles from "../styles/menu.module.css";
 import { useAuth } from "../context/AuthProvider";
 import LoginModal from "../components/LoginModal";
+import { crearPedido } from "../helpers/pedidoApi";
+
 
 export const Menu = () => {
   const [comidas, setComidas] = useState([]);
@@ -59,7 +61,7 @@ export const Menu = () => {
     0
   );
 
-  const confirmarPedido = () => {
+  const confirmarPedido = async () => {
     if (!user) {
       alert("Debes iniciar sesión para confirmar el pedido.");
       setShowLoginModal(true);
@@ -67,27 +69,38 @@ export const Menu = () => {
     }
 
     const pedido = {
-      usuarioId: user._id,
-      nombreUsuario: user.nombre,
-      fecha: new Date().toISOString(),
       items: carrito.map((item) => ({
         comidaId: item._id,
         nombre: item.nombre,
         cantidad: item.cantidad,
         precioUnitario: item.precio,
         subtotal: item.precio * item.cantidad,
-        tipo: "comida", 
+        tipo: "comida"
       })),
-      total,
-      entregado: false,
+      total
     };
 
-    const pedidosPrevios = JSON.parse(localStorage.getItem("pedidos")) || [];
-    localStorage.setItem("pedidos", JSON.stringify([...pedidosPrevios, pedido]));
-
-    alert(`✅ Pedido confirmado:\n\nTotal: $${total}\n\n¡Gracias por tu compra!`);
-    setCarrito([]);
-    setMostrarCarrito(false);
+    try {
+      const respuesta = await crearPedido(pedido);
+      if (respuesta.msg && respuesta.msg.includes("Error")) {
+        alert("❌ " + respuesta.msg);
+        return;
+      }
+      const pedidosPrevios = JSON.parse(localStorage.getItem("pedidos")) || [];
+      localStorage.setItem("pedidos", JSON.stringify([...pedidosPrevios, {
+        ...pedido,
+        usuarioId: user._id,
+        nombreUsuario: user.nombre,
+        fecha: new Date().toISOString(),
+        entregado: false
+      }]));
+      alert(`✅ Pedido confirmado:\n\nTotal: $${total}\n\n¡Gracias por tu compra!`);
+      setCarrito([]);
+      setMostrarCarrito(false);
+    } catch (error) {
+      console.error("Error al crear pedido:", error);
+      alert("❌ Error al procesar tu pedido. Por favor intenta nuevamente.");
+    }
   };
 
   // Agrupar comidas por categoría
