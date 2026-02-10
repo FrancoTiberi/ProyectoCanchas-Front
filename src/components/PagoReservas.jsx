@@ -7,21 +7,29 @@ import { initMercadoPago, Wallet } from '@mercadopago/sdk-react';
 import { mercadoPagoPreference } from "../helpers/mercadoPagoApi";
 import { useEffect, useState } from "react"
 import { useLocation } from "react-router-dom"
+import { useAuth } from "../context/AuthProvider"
 
 export default function Pagos() {
     const location = useLocation();
+    const { user } = useAuth();
     const { fecha, hora, cancha, precio } = location.state;
     const [preferenceId, setPreferenceId] = useState(null);
     initMercadoPago('APP_USR-fa811e0a-a643-4ea1-9028-62668401bb03');
 
     const product = {
-        title: `Reserva de ${cancha} en Golazo Gourmet`,
+        title: `Reserva de cancha Nº ${cancha} en Golazo Gourmet`,
         unit_price: precio
     };
 
     useEffect(() => {
         const fetchPreference = async () => {
-            const respMercadoPago = await mercadoPagoPreference(product)
+            const reservaData = {
+                cancha_id: cancha,
+                fecha_reserva: fecha,
+                hora_reserva: hora,
+                usuario_id: user._id
+            };
+            const respMercadoPago = await mercadoPagoPreference(product, reservaData)
             setPreferenceId(respMercadoPago)
         }
         fetchPreference()
@@ -87,7 +95,11 @@ export default function Pagos() {
                     Asegúrese de que sean los datos correctos antes de proceder a la sección de pago.
                 </p>
                 <div style={{ width: '300px' }}>
-                    <Wallet initialization={{ preferenceId: preferenceId }} />
+                    {preferenceId ? (
+                        <Wallet initialization={{ preferenceId: preferenceId }} />
+                    ) : (
+                        <p>Cargando opciones de pago...</p>
+                    )}
                 </div>
             </section>
         </div>

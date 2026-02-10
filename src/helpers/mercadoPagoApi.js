@@ -1,6 +1,6 @@
 const url = `${import.meta.env.VITE_API_URL}/create-preference`;
 
-export const mercadoPagoPreference = async (product) => {
+export const mercadoPagoPreference = async (product, reservaData) => {
     try {
         let id;
         const resp = await fetch(url, {
@@ -13,7 +13,8 @@ export const mercadoPagoPreference = async (product) => {
                     title: product.title,
                     quantity: 1,
                     unit_price: product.unit_price,
-                }]
+                }],
+                metadata: reservaData
             }),
         })
         if (resp.ok) {
