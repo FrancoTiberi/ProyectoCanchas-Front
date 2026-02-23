@@ -14,7 +14,7 @@ export default function Pagos() {
     const { user } = useAuth();
     const { fecha, hora, cancha, precio } = location.state;
     const [preferenceId, setPreferenceId] = useState(null);
-    initMercadoPago('APP_USR-fa811e0a-a643-4ea1-9028-62668401bb03');
+    initMercadoPago(import.meta.env.VITE_MP_TOKEN);
 
     const product = {
         title: `Reserva de cancha Nº ${cancha} en Golazo Gourmet`,
