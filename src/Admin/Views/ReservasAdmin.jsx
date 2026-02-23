@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import FormCanchas from '../Forms/FormCanchas';
 import styles from "../../styles/View.module.css";
+import { canchasTodasGet, crearCancha, borrarCancha } from '../../helpers/canchaApi';
 
 export default function ReservasAdmin() {
   const [canchas, setCanchas] = useState([]);
@@ -44,7 +45,7 @@ export default function ReservasAdmin() {
       <FormCanchas onCanchaCreada={handleNuevasCanchas} />
       <div className={styles.grid}>
         {canchas.map((cancha) => (
-          <div key={cancha.id} className={styles.card}>
+          <div key={cancha._id} className={styles.card}>
             <h3 className={styles.subtitulo}>Canchas Creadas: {cancha.canchas}</h3>
             <h3 className={styles.subtitulo}>Horas Disponibles:</h3>
             <div className={styles.horas}>

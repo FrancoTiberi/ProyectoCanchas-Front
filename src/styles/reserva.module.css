@@ -4,6 +4,7 @@
 
 body {
     background-color: var(--main-clr5);
+    overflow-x: hidden;
 }
 
 .tituloPag {
@@ -136,6 +137,7 @@ body {
     z-index: 1000;
     background-color: #fff;
     border-radius: 20px;
+    border: 1px solid #000;
 }
 
 .dropdownReserva::before {
@@ -303,6 +305,62 @@ body {
     gap: 10px;
     margin-top: 24px;
 
+}
+
+.infoLocalContenedor {
+    margin: 20px 15px 0 15px;
+    border-radius: 10px;
+    display: flex;
+    gap: 5px;
+}
+
+.servicios {
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 15px;
+    width: 50%;
+    border: 2px solid #000;
+}
+
+.servicios div {
+    margin: 10px 0 10px 0;
+}
+
+.servicios div img {
+    margin-right: 5px;
+}
+
+.servicios div div {
+    display: flex;
+    align-items: center;
+}
+
+.direccion {
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+    border: 2px solid #000;
+}
+
+.horario {
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 15px;
+    width: 50%;
+    border: 2px solid #000;
+    display: flex;
+    flex-direction: column;
+}
+
+.horario span, .direccion span {
+    margin: 2px 0 2px 0;
+}
+
+hr {
+    margin: 0;
 }
 
 /* ==========================

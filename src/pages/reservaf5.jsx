@@ -3,16 +3,20 @@ import { es } from "date-fns/locale";
 import { format, addDays } from "date-fns";
 import { Row, Col } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
-import Modal from "react-bootstrap/Modal";
 import DatePicker from "react-datepicker";
 import canchadefutbol from "../assets/img/cancha-de-futbol.png";
 import reloj from "../assets/img/reloj.png";
+import wifi from "../assets/img/wifi.png";
+import pastel from "../assets/img/pastel.png"
+import vestuario from "../assets/img/ducha.png"
+import torneo from "../assets/img/torneo.png"
 import styles from "../styles/reserva.module.css";
 import "react-datepicker/dist/react-datepicker.css";
-import { obtenerMisReservas } from "../helpers/reservaApi";
-import { borrarCancha, canchasTodasGet, obtenerDisponibilidadTodas } from "../helpers/canchaApi";
+import { obtenerMisReservas, borrarReserva } from "../helpers/reservaApi";
+import { canchasTodasGet, obtenerDisponibilidadTodas } from "../helpers/canchaApi";
 import { crearReserva } from "../helpers/reservaApi";
 import { useAuth } from "../context/AuthProvider";
+import { Link } from 'react-router-dom';
 
 export const Reservaf5 = () => {
     const { user } = useAuth();
@@ -29,7 +33,6 @@ export const Reservaf5 = () => {
     const [canchaReservadaID, setCanchaReservadaID] = useState(null);
 
     const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
 
     const BotonDatepicker = forwardRef(({ value, onClick }, ref) => (
         <button className={styles.calendario} onClick={onClick} ref={ref}>
@@ -72,8 +75,9 @@ export const Reservaf5 = () => {
         setCanchaReservadaID(canchaID);
     };
 
-    const eliminarReserva = (id) => {
-        borrarCancha(id)
+    const eliminarReserva = async (id) => {
+        await borrarReserva(id);
+        await cargarDatos();
     };
 
     async function confirmarReserva() {
@@ -83,12 +87,12 @@ export const Reservaf5 = () => {
         }
         const guardarReserva = {
             cancha: canchaReservadaID,
-            fecha: selectedDate,
+            fecha: format(selectedDate, 'yyyy-MM-dd'),
             hora: horaReservada,
             usuario: user._id
         }
         try {
-            crearReserva(guardarReserva)
+            await crearReserva(guardarReserva)
             alert("¡Reserva creada con éxito!");
             handleClose();
             await cargarDatos();
@@ -225,9 +229,16 @@ export const Reservaf5 = () => {
                                                         <span className="mx-4"><b>60 min</b></span>
                                                     </div>
                                                 </div>
-                                                <Button className={styles.btnReserva} onClick={handleShow}>
-                                                    Reservar
-                                                </Button>
+                                                <Link to='/pagos' state={{
+                                                    fecha: format(selectedDate, 'yyyy-MM-dd', { locale: es }),
+                                                    hora: celda.horaCelda === 0 ? "00:00" : `${celda.horaCelda}:00`,
+                                                    cancha: cancha.nombre,
+                                                    precio: celda.precio
+                                                }}>
+                                                    <Button className={styles.btnReserva}>
+                                                        Reservar
+                                                    </Button>
+                                                </Link>
                                             </div>
                                         </div>
                                     </Col>
@@ -235,6 +246,43 @@ export const Reservaf5 = () => {
                             </Row>
                         ))}
                     </div>
+                </div>
+                <div className={styles.infoLocalContenedor}>
+                    <article className={styles.servicios}>
+                        <h4>Servicios</h4>
+                        <hr />
+                        <div>
+                            <div>
+                                <img src={wifi} alt="wifi" width="30" height="27" />
+                                <span>Wi-Fi</span>
+                            </div>
+                            <div className="d-flex align-items-center">
+                                <img src={pastel} alt="pastel" width="30" height="30" />
+                                <span>Cumpleaños</span>
+                            </div>
+                            <div>
+                                <img src={vestuario} alt="vestuario" width="30" height="30" />
+                                <span>Vestuario</span>
+                            </div>
+                            <div>
+                                <img src={torneo} alt="torneo" width="30" height="30" />
+                                <span>Torneos</span>
+                            </div>
+                        </div>
+                    </article>
+                    <article className={styles.direccion}>
+                        <h4>Dirección</h4>
+                        <hr />
+                        <span>Argentina</span>
+                        <span>Tucuman</span>
+                        <span>Av. Juan Domingo Perón 125</span>
+                    </article>
+                    <article className={styles.horario}>
+                        <h4>Horario</h4>
+                        <hr />
+                        <span><b>Todos los dias</b></span>
+                        <span>de 11:00 a.m a 1:00 p.m</span>
+                    </article>
                 </div>
             </section>
             <section className={styles.reservaResponsiveContenedor}>
@@ -291,24 +339,6 @@ export const Reservaf5 = () => {
                     )}
                 </div>
             </section>
-            <Modal show={show} onHide={handleClose} animation={false}>
-                <Modal.Header>
-                    <Modal.Title>Reserva Realizada</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    Fecha: {fechaReservada} <br />
-                    Hora: {horaReservada === 0 ? "00:00" : `${horaReservada}:00`} <br />
-                    Cancha: {canchaReservada}
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button variant="secondary" onClick={handleClose}>
-                        Cancelar
-                    </Button>
-                    <Button variant="primary" onClick={confirmarReserva}>
-                        Confirmar
-                    </Button>
-                </Modal.Footer>
-            </Modal>
         </div>
     );
 };

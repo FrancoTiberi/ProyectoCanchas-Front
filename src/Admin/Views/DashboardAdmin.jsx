@@ -34,7 +34,7 @@ export default function DashboardAdmin() {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
-            "x-token": token
+            'Authorization': `Bearer ${token}`
           }
         });
         const data = await resp.json();
@@ -47,7 +47,7 @@ export default function DashboardAdmin() {
 
             try {
               const respUsuario = await fetch(`${import.meta.env.VITE_API_URL}/usuarios/${reserva.usuario}`, {
-                headers: { "x-token": token }
+                headers: { 'Authorization': `Bearer ${token}` }
               });
               const dataUsuario = await respUsuario.json();
               usuarioNombre = dataUsuario.usuario?.nombre || reserva.usuario;
@@ -57,7 +57,7 @@ export default function DashboardAdmin() {
 
             try {
               const respCancha = await fetch(`${import.meta.env.VITE_API_URL}/canchas/${reserva.cancha}`, {
-                headers: { "x-token": token }
+                headers: { 'Authorization': `Bearer ${token}` }
               });
               const dataCancha = await respCancha.json();
               canchaInfo = {
