@@ -11,7 +11,7 @@ export const Registrar = () => {
     tyc: false
   });
 
-  const { setUser } = useAuth();
+  const { login } = useAuth(); // usamos login del contexto
   const API_URL = import.meta.env.VITE_API_URL;
 
   const handleChange = (e) => {
@@ -26,7 +26,7 @@ export const Registrar = () => {
     e.preventDefault();
 
     if (!formData.tyc) {
-      alert("⚠️ Debes aceptar los Términos y Condiciones.");
+      alert("Debes aceptar los Términos y Condiciones.");
       return;
     }
 
@@ -39,21 +39,27 @@ export const Registrar = () => {
           apellido: formData.apellido,
           correo: formData.correo,
           password: formData.password,
-          rol: "USER_ROLE" // por defecto
         })
       });
 
       if (!res.ok) {
         const errorData = await res.json();
-        alert(`❌ Error en el registro: ${errorData.msg || res.statusText}`);
+        alert(`Error en el registro: ${errorData.msg || errorData.mensaje || res.statusText}`);
         return;
       }
 
-      const newUser = await res.json();
-      setUser(newUser);
+      const data = await res.json();
 
-      alert(`✅ Registro exitoso. Bienvenido/a, ${newUser.nombre} ${newUser.apellido}!`);
+      // login automático usando el método del contexto
+      const result = await login(formData.correo, formData.password);
 
+      if (result.success) {
+        alert(`Registro exitoso. Bienvenido/a, ${result.user.nombre} ${result.user.apellido}!`);
+      } else {
+        alert("El usuario se creó pero no se pudo iniciar sesión automáticamente.");
+      }
+
+      // resetear formulario
       setFormData({
         nombre: '',
         apellido: '',
@@ -63,7 +69,7 @@ export const Registrar = () => {
       });
     } catch (error) {
       console.error("Error en el registro:", error);
-      alert("❌ No se pudo registrar el usuario.");
+      alert("No se pudo registrar el usuario.");
     }
   };
 
