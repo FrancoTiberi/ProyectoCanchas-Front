@@ -5,6 +5,7 @@ import Nav from 'react-bootstrap/Nav';
 import { Link } from 'react-router-dom';
 import LoginModal from '../components/LoginModal.jsx';
 import { useAuth } from '../context/AuthProvider.jsx';
+import Buscador from './Buscador.jsx';
 
 export const Header = () => {
   const { user, logout } = useAuth();
@@ -16,18 +17,11 @@ export const Header = () => {
           <Link to='/' className={styles.navLinks}>Inicio</Link>
           <Link to='/reservas' className={styles.navLinks}>Reserva-F5</Link>
           <Link to='/menu' className={styles.navLinks}>Menú</Link>
+          <Link to='/tienda' className={styles.navLinks}>Tienda</Link>
           <Link to='/contacto' className={styles.navLinks}>Contacto</Link>
           <Link to='/sobrenosotros' className={styles.navLinks}>Sobre Nosotros</Link>
 
-          <form className={`d-flex ${styles.formBuscador} ms-3`} role="search">
-            <input
-              aria-label="Buscar"
-              className={`form-control me-2 ${styles.buscador}`}
-              placeholder="Buscar"
-              type="search"
-            />
-            <button className="btn btn-outline-success" type="submit">Buscar</button>
-          </form>
+          <Buscador formClass={`${styles.formBuscador} ms-3`} inputClass={styles.buscador} />
         </Nav>
 
         <div className={styles.loginBtns}>

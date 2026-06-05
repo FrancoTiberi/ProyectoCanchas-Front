@@ -65,17 +65,9 @@ export default function LoginModal({ variant, className }) {
           />
 
           <div className={styles.bton}>
-            <button type="button" className={`${styles.socialBtn} ${styles.google}`}>
-              <i className={`bi bi-google ${styles.icon}`}></i>
-              Continuar con Google
-            </button>
-            <button type="button" className={`${styles.socialBtn} ${styles.facebook}`}>
-              <i className={`bi bi-facebook ${styles.icon}`}></i>
-              Continuar con Facebook
-            </button>
-            <p className="mt-3">
-              ¿No tienes cuenta?
-              <Link to="/registrar" onClick={handleClose}> ¡Registrate!</Link>
+            <p className="mt-3 mb-1">¿No tienes cuenta? <Link to="/registrar" onClick={handleClose}> ¡Registrate!</Link>
+            </p>
+            <p className="mt-3">Olvide mi contraseña <Link to="/confirmarCorreo" onClick={handleClose}> Recuperar</Link>
             </p>
           </div>
 

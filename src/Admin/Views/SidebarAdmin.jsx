@@ -9,7 +9,9 @@ export default function SidebarAdmin({ onLogout, onVolverInicio }) {
         <ul>
           <li><Link to="/admin"><i className="bi bi-speedometer2"></i> Dashboard</Link></li>
           <li><Link to="/admin/comidas"><i className="bi bi-basket"></i> Comidas</Link></li>
+          <li><Link to="/admin/canchas"><i className="bi bi-tags"></i> Canchas</Link></li>
           <li><Link to="/admin/reservas"><i className="bi bi-calendar-check"></i> Reservas</Link></li>
+          <li><Link to="/admin/productos"><i className="bi bi-shop"></i> Productos</Link></li>
           <li>
             <button onClick={onVolverInicio} className={styles.btnVolver}>
               <i className="bi bi-house-door"></i> Volver al inicio

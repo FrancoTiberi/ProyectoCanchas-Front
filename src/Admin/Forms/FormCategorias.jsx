@@ -13,7 +13,7 @@ export default function FormCategoria({ onCategoriaCreada }) {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                Authorization: `Bearer ${localStorage.getItem("token")}`,
+                'x-token': localStorage.getItem("token"),
             },
             body: JSON.stringify({ nombre: nombreCategoria }),
         });

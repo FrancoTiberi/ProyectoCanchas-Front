@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, forwardRef, useCallback } from "react";
 import { es } from "date-fns/locale";
-import { format, addDays } from "date-fns";
+import { format, addDays, parseISO } from "date-fns";
 import { Row, Col } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import DatePicker from "react-datepicker";
@@ -12,26 +12,25 @@ import vestuario from "../assets/img/ducha.png"
 import torneo from "../assets/img/torneo.png"
 import styles from "../styles/reserva.module.css";
 import "react-datepicker/dist/react-datepicker.css";
-import { obtenerMisReservas, borrarReserva } from "../helpers/reservaApi";
+import { obtenerMisReservas } from "../helpers/reservaApi";
 import { canchasTodasGet, obtenerDisponibilidadTodas } from "../helpers/canchaApi";
-import { crearReserva } from "../helpers/reservaApi";
 import { useAuth } from "../context/AuthProvider";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 export const Reservaf5 = () => {
     const { user } = useAuth();
+    const navigate = useNavigate();
     const [abrirDropdown, setAbrirDropdown] = useState(null);
     const [grilla, setGrilla] = useState([]);
     const [horas, setHoras] = useState([]);
     const [selectedDate, setSelectedDate] = useState(new Date());
-    const [fechaReservada, setFechaReservada] = useState("");
-    const [horaReservada, setHoraReservada] = useState("");
+    const [horaReservada, setHoraReservada] = useState(null);
     const [canchaReservada, setCanchaReservada] = useState("");
+    const [canchaReservadaID, setCanchaReservadaID] = useState(null);
+    const [precioReservado, setPrecioReservado] = useState(0);
     const [show, setShow] = useState(false);
     const [misReservas, setMisReservas] = useState([]);
     const dropdownRef = useRef(null);
-    const [canchaReservadaID, setCanchaReservadaID] = useState(null);
-
     const handleClose = () => setShow(false);
 
     const BotonDatepicker = forwardRef(({ value, onClick }, ref) => (
@@ -70,48 +69,21 @@ export const Reservaf5 = () => {
 
     const darIndiceCelda = (indice, hora, cancha, canchaID) => {
         setAbrirDropdown(abrirDropdown === indice ? null : indice);
-        setHoraReservada(hora);
-        setCanchaReservada(cancha);
-        setCanchaReservadaID(canchaID);
     };
-
-    const eliminarReserva = async (id) => {
-        await borrarReserva(id);
-        await cargarDatos();
-    };
-
-    async function confirmarReserva() {
-        if (!user) {
-            alert("Debes iniciar sesión para reservar");
-            return;
-        }
-        const guardarReserva = {
-            cancha: canchaReservadaID,
-            fecha: format(selectedDate, 'yyyy-MM-dd'),
-            hora: horaReservada,
-            usuario: user._id
-        }
-        try {
-            await crearReserva(guardarReserva)
-            alert("¡Reserva creada con éxito!");
-            handleClose();
-            await cargarDatos();
-        } catch (error) {
-            console.log(error)
-            throw new Error("Error al hacer la reservar")
-        }
-    }
 
     const cargarDatos = useCallback(async () => {
         const fechaParaBackend = format(selectedDate, 'yyyy-MM-dd');
         try {
-            const [respMisReservas, respObtenerTodasCanchas, resObtenerDisponibilidadTodas] = await Promise.all([
-                obtenerMisReservas(),
+            const [respObtenerTodasCanchas, resObtenerDisponibilidadTodas] = await Promise.all([
                 canchasTodasGet(),
                 obtenerDisponibilidadTodas(fechaParaBackend)
             ]);
 
-            setMisReservas(respMisReservas?.reservas || []);
+            if (user) {
+                const respMisReservas = await obtenerMisReservas()
+                setMisReservas(respMisReservas?.reservas || []);
+            }
+
             const todasLasCanchasObtenidas = respObtenerTodasCanchas.canchas;
 
             let desdeMayor = 0;
@@ -157,8 +129,6 @@ export const Reservaf5 = () => {
         }
 
         cargarDatos();
-
-        setFechaReservada(format(selectedDate, "d 'de' MMMM", { locale: es }));
 
         document.addEventListener("mousedown", cerrarDropdown);
 
@@ -233,6 +203,7 @@ export const Reservaf5 = () => {
                                                     fecha: format(selectedDate, 'yyyy-MM-dd', { locale: es }),
                                                     hora: celda.horaCelda === 0 ? "00:00" : `${celda.horaCelda}:00`,
                                                     cancha: cancha.nombre,
+                                                    cancha_id: cancha.canchaID,
                                                     precio: celda.precio
                                                 }}>
                                                     <Button className={styles.btnReserva}>
@@ -288,19 +259,39 @@ export const Reservaf5 = () => {
             <section className={styles.reservaResponsiveContenedor}>
                 <h2 className={styles.tituloDias}>Realiza tu reserva</h2>
                 <article className={styles.diasReserva}>
-                    {[0, 1, 2, 3, 4].map((i) => (
-                        <button key={i}>
-                            <span>{format(addDays(selectedDate, i), "E", { locale: es }).toUpperCase()}</span>
-                            <span>{format(addDays(selectedDate, i), "d", { locale: es })}</span>
-                            <span>{format(addDays(selectedDate, i), "MMM", { locale: es }).toUpperCase()}</span>
-                        </button>
-                    ))}
+                    {[0, 1, 2, 3, 4].map((i) => {
+                        const dateObj = addDays(new Date(), i);
+                        const isSelected = format(selectedDate, 'yyyy-MM-dd') === format(dateObj, 'yyyy-MM-dd');
+                        return (
+                            <button
+                                key={i}
+                                onClick={() => {
+                                    setSelectedDate(dateObj);
+                                    setHoraReservada(null);
+                                    setCanchaReservadaID(null);
+                                }}
+                                style={{ backgroundColor: isSelected ? '#d1e7dd' : '#fcf9f9', borderColor: isSelected ? '#0f5132' : 'currentColor' }}
+                            >
+                                <span>{format(dateObj, "E", { locale: es }).toUpperCase()}</span>
+                                <span>{format(dateObj, "d", { locale: es })}</span>
+                                <span>{format(dateObj, "MMM", { locale: es }).toUpperCase()}</span>
+                            </button>
+                        );
+                    })}
                 </article>
                 <h2 className={styles.tituloHorarios}>Horarios Disponibles</h2>
                 <div className={styles.horariosContenedor}>
                     <div className={styles.horasGridContenedor}>
                         {horas.map((hora, i) => (
-                            <button className={styles.hora} key={hora.id + (i + 2)}>
+                            <button
+                                className={styles.hora}
+                                key={hora.id + (i + 2)}
+                                onClick={() => {
+                                    setHoraReservada(hora.horaCelda);
+                                    setCanchaReservadaID(null);
+                                }}
+                                style={{ backgroundColor: horaReservada === hora.horaCelda ? '#d1e7dd' : '#fff', borderColor: horaReservada === hora.horaCelda ? '#0f5132' : '#c0b8b8' }}
+                            >
                                 {hora.horaCelda === 0 ? "00:00" : `${hora.horaCelda}:00`}
                             </button>
                         ))}
@@ -309,36 +300,90 @@ export const Reservaf5 = () => {
                 <article>
                     <h3 className={styles.tituloCanchaDisp}>Canchas Disponibles</h3>
                     <div className={styles.canchasDisponibles}>
-                        {grilla.map((cancha, i) => (
-                            <button key={cancha.canchaID + i}>Cancha {cancha.canchaID}</button>
-                        ))}
+                        {grilla.map((cancha, i) => {
+                            const celdaDisponible = horaReservada !== null ? cancha.celdas.find(c => c.horaCelda === horaReservada && c.disponible) : null;
+                            const estaDisponible = !!celdaDisponible;
+
+                            return (
+                                <button
+                                    key={cancha.canchaID + i}
+                                    disabled={!estaDisponible}
+                                    onClick={() => {
+                                        setCanchaReservadaID(cancha.canchaID);
+                                        setCanchaReservada(cancha.nombre);
+                                        setPrecioReservado(celdaDisponible.precio);
+                                    }}
+                                    style={{
+                                        opacity: estaDisponible ? 1 : 0.5,
+                                        backgroundColor: canchaReservadaID === cancha.canchaID ? '#d1e7dd' : (estaDisponible ? '#fff' : '#f0f0f0'),
+                                        borderColor: canchaReservadaID === cancha.canchaID ? '#0f5132' : '#ccc',
+                                        cursor: estaDisponible ? 'pointer' : 'not-allowed'
+                                    }}
+                                >
+                                    Cancha {cancha.nombre}
+                                </button>
+                            );
+                        })}
                     </div>
                 </article>
                 <article className={styles.confirmarContenedor}>
-                    <button className={styles.btnConfirmar}><b>CONFIRMAR</b></button>
+                    <button
+                        className={styles.btnConfirmar}
+                        onClick={() => {
+                            if (!horaReservada || !canchaReservadaID) {
+                                alert("Por favor selecciona una fecha, hora y cancha disponibles.");
+                                return;
+                            }
+                            if (!user) {
+                                alert("Debes iniciar sesión para realizar una reserva.");
+                                return;
+                            }
+                            navigate('/pagos', {
+                                state: {
+                                    fecha: format(selectedDate, 'yyyy-MM-dd', { locale: es }),
+                                    hora: horaReservada === 0 ? "00:00" : `${horaReservada}:00`,
+                                    cancha: canchaReservada,
+                                    cancha_id: canchaReservadaID,
+                                    precio: precioReservado
+                                }
+                            });
+                        }}
+                    >
+                        <b>CONFIRMAR</b>
+                    </button>
                 </article>
             </section>
-            <section>
-                <input type="checkbox" id="checkbox" className={styles.checkbox} />
-                <label htmlFor="checkbox">
-                    <span className={styles.desplegable}>Mis Reservas</span>
-                </label>
 
-                <div className={styles.misReservas}>
-                    {!misReservas || misReservas.length === 0 ? (
-                        <p><b>No tienes ninguna reserva</b></p>
-                    ) : (
-                        misReservas.map((reserva) => (
-                            <div key={reserva._id} className={styles.reservaConfirmada}>
-                                <p><b>Fecha:</b> {format(new Date(reserva.fecha), 'dd/MM/yyyy', { locale: es })}</p>
-                                <p><b>Hora:</b> {reserva.hora}:00</p>
-                                <p><b>Cancha:</b> {reserva.cancha?.nombre || "Cancha"}</p>
-                                <button onClick={() => eliminarReserva(reserva._id)} className={styles.btnEliminar}>Eliminar</button>
-                            </div>
-                        ))
-                    )}
-                </div>
-            </section>
+            {user && (
+                <section>
+                    <input type="checkbox" id="checkboxPedidos" className={styles.checkboxPedidos} />
+                    <label htmlFor="checkboxPedidos">
+                        <span className={styles.desplegablePedidos}><i className="bi bi-calendar-check me-2"></i>Mis Reservas</span>
+                    </label>
+
+                    <div className={styles.misPedidosContenedor}>
+                        <h4 className="border-bottom pb-2 mb-2 fw-bold text-success">Mis Reservas</h4>
+                        <p className="small text-muted mb-3" style={{ lineHeight: '1.2' }}>Para cambiar la reserva o anularla comunicarse con el local.</p>
+                        {!misReservas || misReservas.length === 0 ? (
+                            <p className="text-muted"><b>No tienes ninguna reserva aún.</b></p>
+                        ) : (
+                            misReservas.map((reserva) => (
+                                <div key={reserva._id} className={styles.pedidoCard}>
+                                    <span className={`${styles.badgeEstado} ${styles.badgeEntregado}`}>
+                                        Confirmada
+                                    </span>
+                                    <span className="text-muted">Fecha: {reserva.fecha ? format(parseISO(reserva.fecha.replace('Z', '')), 'dd/MM/yyyy', { locale: es }) : ''}</span>
+                                    <span className="fw-bold text-success fs-5">Hora: {reserva.hora}:00</span>
+                                    <hr className="my-1" />
+                                    <div className="d-flex align-items-center mb-1">
+                                        <span className="fs-5"><b>Cancha Nº {reserva.cancha?.cancha || ""}</b></span>
+                                    </div>
+                                </div>
+                            ))
+                        )}
+                    </div>
+                </section>
+            )}
         </div>
     );
 };

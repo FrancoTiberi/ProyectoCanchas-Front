@@ -31,9 +31,11 @@ export const Registrar = () => {
     }
 
     try {
-      const res = await fetch(`${API_URL}/usuarios`, {
+      const res = await fetch(API_URL, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          'Content-type': 'application/json; charset=UTF-8',
+        },
         body: JSON.stringify({
           nombre: formData.nombre,
           apellido: formData.apellido,

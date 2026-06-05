@@ -3,11 +3,10 @@ import logo from '../assets/img/logo.png';
 import { Link, useNavigate } from 'react-router-dom';
 import LoginModal from './LoginModal';
 import { useAuth } from '../context/AuthProvider';
+import Buscador from './Buscador';
 
 export default function HeaderInicio() {
     const { user, logout } = useAuth();
-    const navigate = useNavigate();
-
     const handleLogout = () => {
         logout();
         navigate('/');
@@ -22,13 +21,14 @@ export default function HeaderInicio() {
                     <Link to="/" className={styles.navLinks}>Inicio</Link>
                     <Link to="/reservas" className={styles.navLinks}>Reserva-F5</Link>
                     <Link to="/menu" className={styles.navLinks}>Menú</Link>
+                    <Link to='/tienda' className={styles.navLinks}>Tienda</Link>
                     <Link to="/contacto" className={styles.navLinks}>Contacto</Link>
                     <Link to="/sobrenosotros" className={styles.navLinks}>Sobre Nosotros</Link>
 
-                    <form className={`d-flex ${styles.formBuscador}`} role="search">
-                        <input className={`form-control me-2 ${styles.buscador}`} type="search" placeholder="Buscar" aria-label="Buscar" />
-                        <button className="btn btn-outline-success" type="submit">Buscar</button>
-                    </form>
+                    <Buscador 
+                        formClass={styles.formBuscador}
+                        inputClass={styles.buscador}
+                    />
                 </nav>
             </section>
 
