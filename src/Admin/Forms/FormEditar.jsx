@@ -26,7 +26,7 @@ export default function EditComidaModal({ show, onClose, comida, categorias, onC
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          'x-token': localStorage.getItem("token"),
         },
         body: JSON.stringify(formData),
       });
@@ -51,42 +51,11 @@ export default function EditComidaModal({ show, onClose, comida, categorias, onC
         <Modal.Body className={styles.modalBody}>
           {formData && (
             <form onSubmit={handleSubmit} className={styles.formulario}>
-              <input
-                type="text"
-                name="nombre"
-                value={formData.nombre || ""}
-                onChange={handleChange}
-                placeholder="Nombre"
-                required
-              />
-              <textarea
-                name="descripcion"
-                value={formData.descripcion || ""}
-                onChange={handleChange}
-                placeholder="Descripción"
-                required
-              />
-              <input
-                type="number"
-                name="precio"
-                value={formData.precio || ""}
-                onChange={handleChange}
-                placeholder="Precio"
-                required
-              />
-              <input
-                type="text"
-                name="img"
-                value={formData.img || ""}
-                onChange={handleChange}
-                placeholder="URL de imagen"
-              />
-              <select
-                name="categoria"
-                value={formData.categoria?._id || formData.categoria || ""}
-                onChange={handleChange}
-                required
-              >
+              <input type="text" name="nombre" value={formData.nombre || ""} onChange={handleChange} placeholder="Nombre" required />
+              <textarea name="descripcion" value={formData.descripcion || ""} onChange={handleChange} placeholder="Descripción" required />
+              <input type="number" name="precio" value={formData.precio || ""} onChange={handleChange} placeholder="Precio" required />
+              <input type="text" name="img" value={formData.img || ""} onChange={handleChange} placeholder="URL de imagen" />
+              <select name="categoria" value={formData.categoria?._id || formData.categoria || ""} onChange={handleChange} required>
                 <option value="" disabled>
                   Categoría
                 </option>
@@ -96,34 +65,14 @@ export default function EditComidaModal({ show, onClose, comida, categorias, onC
                   </option>
                 ))}
               </select>
-              <input
-                type="number"
-                name="stock"
-                value={formData.stock || 0}
-                onChange={handleChange}
-                placeholder="Stock"
-                min="0"
-              />
-
+              <input type="number" name="stock" value={formData.stock || 0} onChange={handleChange} placeholder="Stock" min="0" />
               <div className={styles.checkboxRow}>
-                <input
-                  type="checkbox"
-                  name="destacado"
-                  checked={formData.destacado || false}
-                  onChange={handleChange}
-                  id="destacado"
-                />
+                <input type="checkbox" name="destacado" checked={formData.destacado || false} onChange={handleChange} id="destacado" />
                 <label htmlFor="destacado">Destacado</label>
               </div>
 
               <div className={styles.checkboxRow}>
-                <input
-                  type="checkbox"
-                  name="estado"
-                  checked={formData.estado || false}
-                  onChange={handleChange}
-                  id="estado"
-                />
+                <input type="checkbox" name="estado" checked={formData.estado || false} onChange={handleChange} id="estado" />
                 <label htmlFor="estado">Activo</label>
               </div>
 

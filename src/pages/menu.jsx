@@ -1,16 +1,21 @@
 import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import styles from "../styles/menu.module.css";
 import { useAuth } from "../context/AuthProvider";
 import LoginModal from "../components/LoginModal";
-import { crearPedido } from "../helpers/pedidoApi";
-
+import { obtenerMisPedidos } from "../helpers/pedidoApi";
 
 export const Menu = () => {
   const [comidas, setComidas] = useState([]);
   const [carrito, setCarrito] = useState([]);
   const [mostrarCarrito, setMostrarCarrito] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
+  const [misPedidos, setMisPedidos] = useState([]);
+
   const { user } = useAuth();
+  const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
   const API_URL = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
@@ -26,6 +31,24 @@ export const Menu = () => {
     };
     fetchComidas();
   }, [API_URL]);
+
+  useEffect(() => {
+    const fetchPedidos = async () => {
+      if (user) {
+        const data = await obtenerMisPedidos();
+        setMisPedidos(data.pedidos || []);
+      }
+    };
+    fetchPedidos();
+  }, [user]);
+
+  useEffect(() => {
+    if (searchParams.get('pago') === 'exitoso') {
+      alert('¡Pedido Exitoso! Tu pago fue aprobado. Revisa "Mis Pedidos" para ver los detalles.');
+      searchParams.delete('pago');
+      setSearchParams(searchParams, { replace: true });
+    }
+  }, [searchParams, setSearchParams]);
 
   const agregarAlCarrito = (comida) => {
     if (comida.stock === 0) return;
@@ -61,46 +84,19 @@ export const Menu = () => {
     0
   );
 
-  const confirmarPedido = async () => {
+  const confirmarPedido = () => {
     if (!user) {
       alert("Debes iniciar sesión para confirmar el pedido.");
       setShowLoginModal(true);
       return;
     }
-
-    const pedido = {
-      items: carrito.map((item) => ({
-        comidaId: item._id,
-        nombre: item.nombre,
-        cantidad: item.cantidad,
-        precioUnitario: item.precio,
-        subtotal: item.precio * item.cantidad,
-        tipo: "comida"
-      })),
-      total
-    };
-
-    try {
-      const respuesta = await crearPedido(pedido);
-      if (respuesta.msg && respuesta.msg.includes("Error")) {
-        alert("❌ " + respuesta.msg);
-        return;
+    navigate('/pago-tienda', {
+      state: {
+        carrito,
+        total,
+        esComida: true
       }
-      const pedidosPrevios = JSON.parse(localStorage.getItem("pedidos")) || [];
-      localStorage.setItem("pedidos", JSON.stringify([...pedidosPrevios, {
-        ...pedido,
-        usuarioId: user._id,
-        nombreUsuario: user.nombre,
-        fecha: new Date().toISOString(),
-        entregado: false
-      }]));
-      alert(`✅ Pedido confirmado:\n\nTotal: $${total}\n\n¡Gracias por tu compra!`);
-      setCarrito([]);
-      setMostrarCarrito(false);
-    } catch (error) {
-      console.error("Error al crear pedido:", error);
-      alert("❌ Error al procesar tu pedido. Por favor intenta nuevamente.");
-    }
+    });
   };
 
   // Agrupar comidas por categoría
@@ -162,47 +158,102 @@ export const Menu = () => {
 
       {mostrarCarrito && (
         <div className={styles.carritoContainer}>
-          <h3>Carrito</h3>
+          <div className={styles.carritoHeader}>
+            <h3 className="m-0">Carrito</h3>
+            <button
+              className={styles.cerrarCarrito}
+              onClick={() => setMostrarCarrito(false)}
+            >
+              ✕
+            </button>
+          </div>
           {carrito.length === 0 ? (
-            <p>Vacío</p>
+            <p className="text-muted text-center my-4">Vacío</p>
           ) : (
-            carrito.map((item) => (
-              <div key={item._id} className={styles.carritoItem}>
-                <span>
-                  {item.nombre} x {item.cantidad} = ${item.precio * item.cantidad}
-                </span>
-                <div>
-                  <button
-                    onClick={() => disminuirCantidad(item._id)}
-                    className={styles.button}
-                    disabled={item.cantidad === 1}
-                  >
-                    -
-                  </button>
-                  <button
-                    onClick={() => agregarAlCarrito(item)}
-                    className={styles.button}
-                  >
-                    +
-                  </button>
-                  <button
-                    onClick={() => eliminarDelCarrito(item._id)}
-                    className={styles.button}
-                  >
-                    Quitar
-                  </button>
+            <>
+              {carrito.map((item) => (
+                <div key={item._id} className={styles.carritoItem}>
+                  <img
+                    src={item.img}
+                    alt={item.nombre}
+                    className={styles.carritoItemImg}
+                  />
+                  <div className={styles.carritoItemInfo}>
+                    <span className={styles.carritoItemNombre}>{item.nombre}</span>
+                    <span className={styles.carritoItemPrecio}>${item.precio * item.cantidad}</span>
+                  </div>
+                  <div className={styles.carritoItemAcciones}>
+                    <button
+                      onClick={() => disminuirCantidad(item._id)}
+                      className={styles.btnCantidad}
+                    >
+                      -
+                    </button>
+                    <span className={styles.cantidadNum}>{item.cantidad}</span>
+                    <button
+                      onClick={() => agregarAlCarrito(item)}
+                      className={styles.btnCantidad}
+                    >
+                      +
+                    </button>
+                    <button
+                      onClick={() => eliminarDelCarrito(item._id)}
+                      className={styles.btnQuitar}
+                    >
+                      <i className="bi bi-trash"></i>
+                    </button>
+                  </div>
                 </div>
+              ))}
+              <div className={styles.carritoFooter}>
+                <p className={styles.carritoTotal}>Total: ${total}</p>
+                <button
+                  onClick={confirmarPedido}
+                  className={styles.btnPagar}
+                >
+                  Pagar pedido
+                </button>
               </div>
-            ))
+            </>
           )}
-          <p className={styles.total}>Total: ${total}</p>
-          <button
-            onClick={confirmarPedido}
-            className={`${styles.button} ${styles.confirmarBtn}`}
-          >
-            Confirmar pedido
-          </button>
         </div>
+      )}
+
+      {/* Panel Desplegable de Mis Pedidos */}
+      {user && (
+        <section>
+          <input type="checkbox" id="checkboxPedidosMenu" className={styles.checkboxPedidos} />
+          <label htmlFor="checkboxPedidosMenu">
+            <span className={styles.desplegablePedidos}><i className="bi bi-bag-check me-2"></i>Mis Pedidos</span>
+          </label>
+
+          <div className={styles.misPedidosContenedor}>
+            <h4 className="border-bottom pb-2 mb-3 fw-bold text-success">Mis Pedidos</h4>
+            {!misPedidos || misPedidos.length === 0 ? (
+              <p className="text-muted"><b>No tienes ningún pedido aún.</b></p>
+            ) : (
+              misPedidos.filter(p => p.items.some(i => i.tipo === 'comida')).map((pedido) => (
+                <div key={pedido._id} className={styles.pedidoCard}>
+                  <span className={`${styles.badgeEstado} ${pedido.entregado ? styles.badgeEntregado : styles.badgePendiente}`}>
+                    {pedido.entregado ? "Entregado" : "En camino"}
+                  </span>
+                  <span className="text-muted small">Fecha: {new Date(pedido.fecha).toLocaleDateString('es-AR', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</span>
+                  <span className="fw-bold text-success fs-5">Total: ${pedido.total}</span>
+                  <hr className="my-1" />
+                  {pedido.items.map((item, i) => (
+                    <div key={i} className="d-flex align-items-center mb-1">
+                      {item.comidaId?.img && (
+                        <img src={item.comidaId.img} alt={item.nombre} style={{ width: '30px', height: '30px', objectFit: 'cover', borderRadius: '4px', marginRight: '8px' }} />
+                      )}
+                      <span className="small"><b>{item.nombre}</b> x{item.cantidad}</span>
+                      <span className="small ms-auto fw-bold">${item.subtotal}</span>
+                    </div>
+                  ))}
+                </div>
+              ))
+            )}
+          </div>
+        </section>
       )}
     </main>
   );

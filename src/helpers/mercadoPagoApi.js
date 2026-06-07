@@ -28,3 +28,34 @@ export const mercadoPagoPreference = async (product, reservaData) => {
         throw new Error("No se pudo obtener la info de la preferencia")
     }
 }
+
+export const mercadoPagoPreferenceTienda = async (carrito, metadata) => {
+    try {
+        let id;
+        const items = carrito.map(item => ({
+            title: item.nombre,
+            quantity: item.cantidad,
+            unit_price: item.precio,
+        }));
+
+        const resp = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                items,
+                metadata
+            }),
+        })
+        if (resp.ok) {
+            const data = await resp.json();
+            id = data.preference_id;
+            console.log(data);
+        }
+        return id;
+    } catch (error) {
+        console.log(error);
+        throw new Error("No se pudo obtener la info de la preferencia de tienda")
+    }
+}

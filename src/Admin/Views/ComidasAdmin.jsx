@@ -35,7 +35,7 @@ export default function ComidaAdmin() {
       const res = await fetch(`${API_URL}/comidas/${id}`, {
         method: "DELETE",
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          'x-token': localStorage.getItem("token"),
         },
       });
 

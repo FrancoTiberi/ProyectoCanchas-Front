@@ -14,11 +14,17 @@ import SobreNosotros from './pages/sobreNosotros';
 import Registrar from './pages/registrar';
 import { Construccion } from './pages/construccion';
 import Pagos from './components/PagoReservas';
+import RecuperarContrasenia from './pages/recuperarContrasenia'
+import ConfirmarCorreo from './pages/confirmarCorreo';
+import { Tienda } from './pages/tienda';
+import PagoTienda from './components/PagoTienda';
 
 // Admin
 import DashboardAdmin from './Admin/Views/DashboardAdmin';
 import ComidasAdmin from './Admin/Views/ComidasAdmin';
+import CanchasAdmin from './Admin/Views/CanchasAdmin';
 import ReservasAdmin from './Admin/Views/ReservasAdmin';
+import ProductosAdmin from './Admin/Views/ProductosAdmin';
 
 // Rutas protegidas
 import { ProtectedRoute } from './components/ProtectedRoute';
@@ -38,7 +44,11 @@ function App() {
         <Route path="/sobrenosotros" element={<SobreNosotros />} />
         <Route path="/registrar" element={<Registrar />} />
         <Route path="/construccion" element={<Construccion />} />
-        <Route path='/pagos' element={<Pagos/>}></Route>
+        <Route path='/pagos' element={<Pagos />}></Route>
+        <Route path="/confirmarCorreo" element={<ConfirmarCorreo />} />
+        <Route path="/recuperarContrasenia/:id/:token" element={<RecuperarContrasenia />} />
+        <Route path="/tienda" element={<Tienda />} />
+        <Route path='/pago-tienda' element={<PagoTienda />}></Route>
       </Route>
 
       {/* Rutas protegidas para admin */}
@@ -47,7 +57,9 @@ function App() {
           <Route path="/admin" element={<AdminPanel />}>
             <Route index element={<DashboardAdmin />} />
             <Route path="comidas" element={<ComidasAdmin />} />
+            <Route path="canchas" element={<CanchasAdmin />} />
             <Route path="reservas" element={<ReservasAdmin />} />
+            <Route path="productos" element={<ProductosAdmin />} />
           </Route>
         </Route>
       </Route>

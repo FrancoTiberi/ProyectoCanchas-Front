@@ -8,11 +8,12 @@ import { mercadoPagoPreference } from "../helpers/mercadoPagoApi";
 import { useEffect, useState } from "react"
 import { useLocation } from "react-router-dom"
 import { useAuth } from "../context/AuthProvider"
+import LoginModal from '../components/LoginModal.jsx';
 
 export default function Pagos() {
     const location = useLocation();
     const { user } = useAuth();
-    const { fecha, hora, cancha, precio } = location.state;
+    const { fecha, hora, cancha, cancha_id, precio } = location.state;
     const [preferenceId, setPreferenceId] = useState(null);
     initMercadoPago(import.meta.env.VITE_MP_TOKEN);
 
@@ -22,9 +23,11 @@ export default function Pagos() {
     };
 
     useEffect(() => {
+        if (!user) return;
+
         const fetchPreference = async () => {
             const reservaData = {
-                cancha_id: cancha,
+                cancha_id: cancha_id,
                 fecha_reserva: fecha,
                 hora_reserva: hora,
                 usuario_id: user._id
@@ -32,8 +35,20 @@ export default function Pagos() {
             const respMercadoPago = await mercadoPagoPreference(product, reservaData)
             setPreferenceId(respMercadoPago)
         }
+
         fetchPreference()
-    }, [])
+    }, [user])
+
+    if (!user) {
+        return (
+            <div className='p-5 vh-100 d-flex flex-column justify-content-center align-items-center text-center'>
+                <div className="bg-white p-5 rounded-4">
+                    <h2 className="mb-4">Debes iniciar sesión para continuar con el pago</h2>
+                    <LoginModal className="btn btn-success btn-lg" />
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className='p-5 vh-100 d-flex justify-content-center align-items-start gap-2'>

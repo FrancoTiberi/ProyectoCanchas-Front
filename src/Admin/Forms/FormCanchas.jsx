@@ -39,32 +39,12 @@ export default function FormCanchas({ onCanchaCreada }) {
           </Modal.Header>
           <Modal.Body className={styles.modalBody}>
             <form className={styles.formulario} onSubmit={handleSubmit}>
-              <input
-                type="number"
-                placeholder="Cantidad de Canchas"
-                value={canchas}
-                onChange={(e) => setCanchas(e.target.value)}
-                required
-              />
-
+              <input type="number" placeholder="Cantidad de Canchas" value={canchas} onChange={(e) => setCanchas(e.target.value)} required />
               <h5>Indique las horas</h5>
               <div className={styles.checkboxRow}>
-                <input
-                  type="number"
-                  placeholder="Desde"
-                  value={desde}
-                  onChange={(e) => setDesde(e.target.value)}
-                  required
-                />
-                <input
-                  type="number"
-                  placeholder="Hasta"
-                  value={hasta}
-                  onChange={(e) => setHasta(e.target.value)}
-                  required
-                />
+                <input type="number" placeholder="Desde" value={desde} onChange={(e) => setDesde(e.target.value)} required />
+                <input type="number" placeholder="Hasta" value={hasta} onChange={(e) => setHasta(e.target.value)} required />
               </div>
-
               <div className={styles.botones}>
                 <button type="submit" className={styles.crearBtn}>
                   Crear cancha

@@ -1,5 +1,9 @@
 import { useEffect, useState } from "react";
 import styles from "../../styles/dashboard.module.css";
+import { obtenerProductos } from "../../helpers/productoApi";
+import { reservasTodasGet } from "../../helpers/reservaApi";
+import { canchaGet } from "../../helpers/canchaApi";
+import { format, parseISO } from 'date-fns';
 
 export default function DashboardAdmin() {
   const [ventasComidas, setVentasComidas] = useState(0);
@@ -7,10 +11,11 @@ export default function DashboardAdmin() {
   const [pedidos, setPedidos] = useState([]);
   const [reservas, setReservas] = useState([]);
   const [reservasActivas, setReservasActivas] = useState(0);
+  const [productos, setProductos] = useState([]);
+  const API_URL = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     const pedidosGuardados = JSON.parse(localStorage.getItem("pedidos")) || [];
-
     let totalComidas = 0;
     let ingresos = 0;
 
@@ -27,39 +32,38 @@ export default function DashboardAdmin() {
     setIngresosComidas(ingresos);
     setPedidos(pedidosGuardados);
 
+    const fetchUsuario = async (id) => {
+      const token = localStorage.getItem("token");
+      const resp = await fetch(`${API_URL}/api/usuarios/${id}`, {
+        headers: { 'x-token': token }
+      });
+      return await resp.json();
+    };
+
     const fetchReservas = async () => {
       try {
-        const token = localStorage.getItem("token");
-        const resp = await fetch(`${import.meta.env.VITE_API_URL}/reservas`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            'Authorization': `Bearer ${token}`
-          }
-        });
-        const data = await resp.json();
+        const data = await reservasTodasGet();
         const reservasData = data.reservas || [];
 
+        const hoyLocalStr = format(new Date(), 'yyyy-MM-dd');
+        const reservasDeHoy = reservasData.filter(r =>
+          r.fecha && format(parseISO(r.fecha.replace('Z', '')), 'yyyy-MM-dd') === hoyLocalStr
+        );
+
         const reservasConDatos = await Promise.all(
-          reservasData.map(async (reserva) => {
+          reservasDeHoy.map(async (reserva) => {
             let usuarioNombre = reserva.usuario;
             let canchaInfo = { cancha: reserva.cancha };
 
             try {
-              const respUsuario = await fetch(`${import.meta.env.VITE_API_URL}/usuarios/${reserva.usuario}`, {
-                headers: { 'Authorization': `Bearer ${token}` }
-              });
-              const dataUsuario = await respUsuario.json();
+              const dataUsuario = await fetchUsuario(reserva.usuario);
               usuarioNombre = dataUsuario.usuario?.nombre || reserva.usuario;
             } catch (err) {
               console.error("Error al traer usuario:", err);
             }
 
             try {
-              const respCancha = await fetch(`${import.meta.env.VITE_API_URL}/canchas/${reserva.cancha}`, {
-                headers: { 'Authorization': `Bearer ${token}` }
-              });
-              const dataCancha = await respCancha.json();
+              const dataCancha = await canchaGet(reserva.cancha);
               canchaInfo = {
                 cancha: dataCancha.cancha?.cancha || reserva.cancha,
                 desde: dataCancha.cancha?.desde,
@@ -71,7 +75,6 @@ export default function DashboardAdmin() {
             } catch (err) {
               console.error("Error al traer cancha:", err);
             }
-
             return {
               ...reserva,
               usuarioNombre,
@@ -79,9 +82,7 @@ export default function DashboardAdmin() {
             };
           })
         );
-
         const ingresosReservas = reservasConDatos.reduce((acc, r) => acc + (r.canchaInfo.precio || 0), 0);
-
         setReservas(reservasConDatos);
         setReservasActivas(reservasConDatos.filter(r => r.estado).length);
         setIngresosComidas(prev => prev + ingresosReservas);
@@ -90,7 +91,17 @@ export default function DashboardAdmin() {
       }
     };
 
+    const fetchProductos = async () => {
+      try {
+        const respProductos = await obtenerProductos();
+        setProductos(respProductos);
+      } catch (error) {
+        console.error("Error al traer productos:", error);
+      }
+    };
+
     fetchReservas();
+    fetchProductos();
   }, []);
 
   const pedidosPendientes = pedidos.filter(p => !p.entregado);
@@ -100,7 +111,6 @@ export default function DashboardAdmin() {
     <div className={styles.dashboard}>
       <h2 className={styles.titulo}>Dashboard</h2>
       <p className={styles.subtitulo}>Resumen general del sistema</p>
-
       {/* Resumen */}
       <div className={styles.grid}>
         <div className={styles.card}>
@@ -112,11 +122,10 @@ export default function DashboardAdmin() {
           <p>${ingresosComidas}</p>
         </div>
         <div className={styles.card}>
-          <h3>Reservas activas</h3>
+          <h3>Reservas activas (Hoy)</h3>
           <p>{reservasActivas}</p>
         </div>
       </div>
-
       {/* Pedidos pendientes */}
       <h3 className={styles.sectionTitle}>Pedidos pendientes</h3>
       <div className={styles.pedidosGrid}>
@@ -140,7 +149,6 @@ export default function DashboardAdmin() {
           ))
         )}
       </div>
-
       {/* Pedidos entregados */}
       <h3 className={styles.sectionTitle}>Pedidos entregados</h3>
       <div className={styles.pedidosGrid}>
@@ -157,9 +165,8 @@ export default function DashboardAdmin() {
           ))
         )}
       </div>
-
       {/* Reservas */}
-      <h3 className={styles.sectionTitle}>Reservas</h3>
+      <h3 className={styles.sectionTitle}>Reservas de Hoy</h3>
       <div className={styles.pedidosGrid}>
         {reservas.length === 0 ? (
           <p>No hay reservas</p>
@@ -171,10 +178,27 @@ export default function DashboardAdmin() {
               <p><strong>Precio:</strong> ${reserva.canchaInfo.precio}</p>
               <p><strong>Desde:</strong> {reserva.canchaInfo.desde}:00</p>
               <p><strong>Hasta:</strong> {reserva.canchaInfo.hasta}:00</p>
-              <p><strong>Fecha:</strong> {new Date(reserva.fecha).toLocaleDateString()}</p>
+              <p><strong>Fecha:</strong> {reserva.fecha ? format(parseISO(reserva.fecha.replace('Z', '')), 'dd/MM/yyyy') : ''}</p>
               <p><strong>Hora:</strong> {reserva.hora}:00</p>
               <p><strong>Registrada:</strong> {new Date(reserva.fechaRegistro).toLocaleString()}</p>
               <p><strong>Estado:</strong> {reserva.estado ? "✅ Activa" : "❌ Cancelada"}</p>
+            </div>
+          ))
+        )}
+      </div>
+      {/* Productos y Stock */}
+      <h3 className={styles.sectionTitle}>Stock de Productos</h3>
+      <div className={styles.pedidosGrid}>
+        {productos.length === 0 ? (
+          <p>No hay productos cargados</p>
+        ) : (
+          productos.map((producto, idx) => (
+            <div key={idx} className={styles.pedidoCard}>
+              <p><strong>Producto:</strong> {producto.nombre}</p>
+              <p><strong>Categoría:</strong> {producto.categoria}</p>
+              <p><strong>Precio:</strong> ${producto.precio}</p>
+              <p><strong>Stock:</strong> {producto.stock}</p>
+              <p><strong>Estado:</strong> {producto.estado ? "✅ Activo" : "❌ Inactivo"}</p>
             </div>
           ))
         )}
