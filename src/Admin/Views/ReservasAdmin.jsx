@@ -13,7 +13,7 @@ export default function ReservasAdmin() {
 
   const fetchUsuario = async (id) => {
     const token = localStorage.getItem("token");
-    const resp = await fetch(`${API_URL}/api/usuarios/${id}`, {
+    const resp = await fetch(`${API_URL}/usuarios/${id}`, {
       headers: { 'x-token': token }
     });
     return await resp.json();
