@@ -15,8 +15,8 @@ export default function Buscador({ formClass, inputClass, btnClass }) {
         const fetchData = async () => {
             try {
                 const [resProd, resCom] = await Promise.all([
-                    fetch(`${API_URL}/api/productos`),
-                    fetch(`${API_URL}/api/comidas`)
+                    fetch(`${API_URL}/productos`),
+                    fetch(`${API_URL}/comidas`)
                 ]);
                 const dataProd = await resProd.json();
                 const dataCom = await resCom.json();
