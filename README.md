@@ -18,7 +18,7 @@ Aplicacion web desarrolada para el sistema de reservas de un local de comida rap
 2. **Instalar dependencias:**
    Escribir en la terminal los siguientes comandos:
    ```bash
-   cd ProyectosCanchas-Back
+   cd ProyectosCanchas-Front
    npm install
 
 ## Autores 👨‍💻
