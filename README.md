@@ -1,17 +1,27 @@
-# React + Vite
+# Página Golazo Gourmet ⚽
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Aplicacion web desarrolada para el sistema de reservas de un local de comida rapida con instalaciones deportivas. Proporciona una interfaz intuitiva para que los usuarios puedan explorar las canchas disponibles, seleccionar horarios y con un sistema de pedidos de comida para retiros en el local.
 
-Currently, two official plugins are available:
+## Tecnologías Utilizadas
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+* **Librería Principal:** React
+* **Estilos y UI:** Bootstrap
+* **Integración de Pagos:** Mercado Pago (Checkout Pro)
+* **Despliegue:** Netlify
 
-## React Compiler
+## Ejecución y Instalación del proyecto
 
-The React Compiler is not enabled on this template. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+1. **Clonar el repositorio:**
+   Escribir en la terminal el siguiente comando:
+   ```bash
+   git clone https://github.com/FrancoTiberi/ProyectoCanchas-Front.git
+2. **Instalar dependencias:**
+   Escribir en la terminal los siguientes comandos:
+   ```bash
+   cd ProyectosCanchas-Back
+   npm install
 
-## Expanding the ESLint configuration
+## Autores 👨‍💻
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
-# ProyectoCanchas-react-
+* Franco Tiberi
+* Hecclem Vargas
